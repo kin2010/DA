@@ -1,0 +1,17 @@
+.less .ant-list-item-meta-avatar {
+  background: #fff;
+  border: 1px solid #2e7d32;
+  border-radius: 100rem;
+  padding: 6px;
+  margin-right: 30px;
+  margin-left: 1px;
+}
+.anchor .ant-anchor-link-title {
+  font-weight: bold;
+}
+.anchor .ant-anchor-link + .ant-anchor-link {
+  margin-top: 5px;
+}
+.content {
+  background-color: rgb(253, 253, 253);
+}

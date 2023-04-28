@@ -1,0 +1,14 @@
+.card_meeting {
+  background: #75757515;
+  margin-top: 30px;
+  max-width: 420px;
+  display: inline-block;
+}
+.mtg {
+  display: inline-block;
+  width: 100%;
+}
+.mtg-video {
+  width: 100%;
+  margin: 0 auto;
+}

@@ -1,0 +1,70 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+* {
+  box-sizing: border-box;
+}
+.labell {
+  color: blue;
+  font-weight: bold;
+  font-size: 20px;
+}
+.ant-picker-ranges {
+  padding: 10px 12px !important;
+}
+.ant-picker-ok button {
+  padding: 0 20px;
+}
+.ant-list-item {
+  padding: 12px 20px !important;
+  box-sizing: border-box;
+}
+.ant-list-item:hover {
+  cursor: pointer;
+  background: #f1f1f1;
+}
+svg {
+  cursor: pointer;
+}
+.chapters {
+  border: 1px solid gray;
+  border-radius: 50px;
+  padding: 0 20px;
+}
+/* .lessions {
+  border: 1px solid gray;
+  border-radius: 50px;
+  padding: 0 20px;
+} */
+.ant-tabs-tab {
+  /* border: 1px solid gray !important; */
+}
+
+.ant-tabs-tab .ant-tabs-tab-active {
+  background: #f1f1f1 !important;
+  /* background: #fff !important; */
+}
+.ck.ck-editor__editable_inline > :last-child {
+  min-height: 100px;
+}
+.ant-select-selector > *,
+.ant-select-selector {
+  display: none !important;
+}
+.text_pri {
+  font-weight: 700;
+  font-size: 17px;
+}
+body {
+  background: #75757515;
+}
