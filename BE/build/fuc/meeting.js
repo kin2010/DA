@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -86,21 +86,22 @@ var userStartMeeting = function (socket, room, user) { return __awaiter(void 0, 
     });
 }); };
 exports.userStartMeeting = userStartMeeting;
-var userExit = function (userId) { return __awaiter(void 0, void 0, void 0, function () {
+var userExit = function (userId, room) { return __awaiter(void 0, void 0, void 0, function () {
     var newmtg;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, (0, fetch_1.serviceFetch)({
-                    url: "api/meeting",
-                    method: "PUT",
+                    url: "api/meeting/online",
+                    method: "POST",
                     data: {
-                        _id: userId,
-                        // data: { users: newuser },
+                        userId: userId,
+                        room: room,
+                        type: "delete",
                     },
                 })];
             case 1:
                 newmtg = _a.sent();
-                return [2 /*return*/];
+                return [2 /*return*/, newmtg];
         }
     });
 }); };

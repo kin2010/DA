@@ -39,9 +39,12 @@ const Stream = (props) => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    const room = searchParams.get("room");
+
     const socket = socketIOClient(host, {
       query: {
         userId: user?._id,
+        roomUrl:room
       },
     });
     const arr = [];
@@ -52,7 +55,6 @@ const Stream = (props) => {
     let username = "admin";
     var recordedStream = [];
     var mediaRecorder = "";
-    const room = searchParams.get("room");
     // console.log("connecting", socket, id, room, socketId, socketRef.current.id);
     function init(createOffer, partnerName, member = []) {
       if (!arr[partnerName]) {
@@ -288,6 +290,11 @@ const Stream = (props) => {
         setRoomMember(data?.meeting?.users);
       }
     };
+
+    const userExit=async (data)=>{
+        console.log("user-exit",data);
+        setRoomMember(data?.data);
+    }
 
     function handleShareScreen() {
       shareScreen()
@@ -643,6 +650,7 @@ const Stream = (props) => {
       socket.on("sdp", SDP);
       socket.on("chat", handleChat);
       socket.on("member", handleMember);
+      socket.on("user_exit", userExit);
     });
 
     return () => {
@@ -653,6 +661,7 @@ const Stream = (props) => {
       socket.off("sdp", SDP);
       socket.off("chat", handleChat);
       socket.off("member", handleMember);
+      socket.off("user_exit", userExit);
       socket.disconnect(user?._id);
       document
         .getElementById("toggle-video")

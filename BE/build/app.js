@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -149,9 +149,10 @@ app.use(function (req, res, next) {
 app.use("/api", index_1.default);
 var onlineUsers = new Map();
 io.on("connect", function (socket) {
-    var _a;
+    var _a, _b;
     console.log(socket === null || socket === void 0 ? void 0 : socket.id, " connected");
     var userId = (_a = socket.handshake.query) === null || _a === void 0 ? void 0 : _a.userId;
+    var roomQuery = (_b = socket.handshake.query) === null || _b === void 0 ? void 0 : _b.roomUrl;
     try {
         socket.on("subscribe", function (data) { return __awaiter(void 0, void 0, void 0, function () {
             var mtgRoom, roomInfo;
@@ -219,18 +220,24 @@ io.on("connect", function (socket) {
         socket.on("chat", function (data) {
             socket.to(data.room).emit("chat", { sender: data.sender, msg: data.msg });
         });
-        socket.on("disconnect", function () {
-            console.log(65656, userId);
-            // room.forEach((ro: any) => {
-            //   if (!!room[ro]?.length) {
-            //     const index = room[ro].findIndex((i: any) => i === socket?.id);
-            //     const cp = room[ro];
-            //     cp.splice(index, 1);
-            //     room[ro] = cp;
-            //   }
-            // });
-            console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
-        });
+        socket.on("disconnect", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var rs, newOnlines;
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, (0, meeting_1.userExit)(userId, roomQuery)];
+                    case 1:
+                        rs = _b.sent();
+                        newOnlines = ((_a = rs === null || rs === void 0 ? void 0 : rs.meeting) === null || _a === void 0 ? void 0 : _a.users) || [];
+                        console.log(rs, "exit");
+                        socket.to(roomQuery).emit("user_exit", {
+                            data: newOnlines,
+                        });
+                        console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
+                        return [2 /*return*/];
+                }
+            });
+        }); });
     }
     catch (error) {
         // console.log(2333, error);

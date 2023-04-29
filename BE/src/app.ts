@@ -9,7 +9,7 @@ import { Socket } from "socket.io";
 import axios from "axios";
 import configs from "./configs/appConfig";
 import { serviceFetch } from "./utils/fetch";
-import { userStartMeeting } from "./fuc/meeting";
+import { userExit, userStartMeeting } from "./fuc/meeting";
 
 const express = require("express");
 const app = express();
@@ -130,6 +130,7 @@ io.on("connect", (socket: any) => {
   console.log(socket?.id, " connected");
 
   const userId = socket.handshake.query?.userId;
+  const roomQuery = socket.handshake.query?.roomUrl;
   try {
     socket.on("subscribe", async (data: any) => {
       //subscribe/join a room
@@ -193,17 +194,13 @@ io.on("connect", (socket: any) => {
     socket.on("chat", (data: any) => {
       socket.to(data.room).emit("chat", { sender: data.sender, msg: data.msg });
     });
-    socket.on("disconnect", () => {
-      console.log(65656, userId);
-
-      // room.forEach((ro: any) => {
-      //   if (!!room[ro]?.length) {
-      //     const index = room[ro].findIndex((i: any) => i === socket?.id);
-      //     const cp = room[ro];
-      //     cp.splice(index, 1);
-      //     room[ro] = cp;
-      //   }
-      // });
+    socket.on("disconnect", async () => {
+      const rs = await userExit(userId, roomQuery);
+      const newOnlines = rs?.meeting?.users || [];
+      console.log(rs, "exit");
+      socket.to(roomQuery).emit("user_exit", {
+        data: newOnlines,
+      });
       console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
     });
   } catch (error) {

@@ -41,13 +41,15 @@ export const userStartMeeting = async (
   }
 };
 
-export const userExit = async (userId: string) => {
+export const userExit = async (userId: string, room: string) => {
   const newmtg = await serviceFetch({
-    url: "api/meeting",
-    method: "PUT",
+    url: "api/meeting/online",
+    method: "POST",
     data: {
-      _id: userId,
-      // data: { users: newuser },
+      userId: userId,
+      room: room,
+      type: "delete",
     },
   });
+  return newmtg;
 };

@@ -14,6 +14,12 @@ type MeetingUpdateType = {
   data: IMeeting;
 };
 
+type MeetingOnlineType = {
+  userId: string;
+  room: string;
+  type?: string;
+};
+
 export default class MeetingApi {
   static create = async (
     req: Request<IMeeting, Query, Params>,
@@ -143,6 +149,106 @@ export default class MeetingApi {
       res
         .json({
           meeting: mtg,
+          status: 200,
+        })
+        .status(200)
+        .end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  //
+  static online = async (
+    req: Request<MeetingOnlineType, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { userId, room, type } = req.body;
+      const roomExist = await Meeting.findOne({
+        url: room,
+      });
+      let rs: any;
+      if (!roomExist) {
+        rs = await (
+          await Meeting.create({
+            user: [userId],
+          })
+        ).populate([
+          {
+            path: "teacher",
+            select: "fullName",
+          },
+          {
+            path: "users",
+            select: "avatar email fullName address phone online",
+          },
+          {
+            path: "ralseHand",
+            select: "time user",
+            populate: {
+              path: "user",
+              select: "avatar email fullName address phone online",
+            },
+          },
+          {
+            path: "plusMark",
+            select: "time user",
+            populate: {
+              path: "user",
+              select: "avatar email fullName address phone online",
+            },
+          },
+        ]);
+      } else {
+        const r = await Meeting.findOne({ url: room });
+        const users = r?.users;
+        const set = new Set(users);
+        if (type === "delete") {
+          set.delete(userId);
+        } else {
+          set.add(userId);
+        }
+        rs = await (
+          await Meeting.findOneAndUpdate(
+            {
+              url: room,
+            },
+            {
+              users: Array.from(set),
+            },
+            { new: true }
+          )
+        )?.populate([
+          {
+            path: "teacher",
+            select: "fullName",
+          },
+          {
+            path: "users",
+            select: "avatar email fullName address phone online",
+          },
+          {
+            path: "ralseHand",
+            select: "time user",
+            populate: {
+              path: "user",
+              select: "avatar email fullName address phone online",
+            },
+          },
+          {
+            path: "plusMark",
+            select: "time user",
+            populate: {
+              path: "user",
+              select: "avatar email fullName address phone online",
+            },
+          },
+        ]);
+      }
+      res
+        .json({
+          meeting: rs,
           status: 200,
         })
         .status(200)

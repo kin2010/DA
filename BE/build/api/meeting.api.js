@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -210,6 +210,116 @@ var MeetingApi = /** @class */ (function () {
                     next(error_3);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
+            }
+        });
+    }); };
+    //
+    MeetingApi.online = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, userId, room, type, roomExist, rs, r, users, set, error_4;
+        var _c;
+        return __generator(_a, function (_d) {
+            switch (_d.label) {
+                case 0:
+                    _d.trys.push([0, 9, , 10]);
+                    _b = req.body, userId = _b.userId, room = _b.room, type = _b.type;
+                    return [4 /*yield*/, models_1.Meeting.findOne({
+                            url: room,
+                        })];
+                case 1:
+                    roomExist = _d.sent();
+                    rs = void 0;
+                    if (!!roomExist) return [3 /*break*/, 4];
+                    return [4 /*yield*/, models_1.Meeting.create({
+                            user: [userId],
+                        })];
+                case 2: return [4 /*yield*/, (_d.sent()).populate([
+                        {
+                            path: "teacher",
+                            select: "fullName",
+                        },
+                        {
+                            path: "users",
+                            select: "avatar email fullName address phone online",
+                        },
+                        {
+                            path: "ralseHand",
+                            select: "time user",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
+                        {
+                            path: "plusMark",
+                            select: "time user",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
+                    ])];
+                case 3:
+                    rs = _d.sent();
+                    return [3 /*break*/, 8];
+                case 4: return [4 /*yield*/, models_1.Meeting.findOne({ url: room })];
+                case 5:
+                    r = _d.sent();
+                    users = r === null || r === void 0 ? void 0 : r.users;
+                    set = new Set(users);
+                    if (type === "delete") {
+                        set.delete(userId);
+                    }
+                    else {
+                        set.add(userId);
+                    }
+                    return [4 /*yield*/, models_1.Meeting.findOneAndUpdate({
+                            url: room,
+                        }, {
+                            users: Array.from(set),
+                        }, { new: true })];
+                case 6: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
+                        {
+                            path: "teacher",
+                            select: "fullName",
+                        },
+                        {
+                            path: "users",
+                            select: "avatar email fullName address phone online",
+                        },
+                        {
+                            path: "ralseHand",
+                            select: "time user",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
+                        {
+                            path: "plusMark",
+                            select: "time user",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
+                    ]))];
+                case 7:
+                    rs = _d.sent();
+                    _d.label = 8;
+                case 8:
+                    res
+                        .json({
+                        meeting: rs,
+                        status: 200,
+                    })
+                        .status(200)
+                        .end();
+                    return [3 /*break*/, 10];
+                case 9:
+                    error_4 = _d.sent();
+                    next(error_4);
+                    return [3 /*break*/, 10];
+                case 10: return [2 /*return*/];
             }
         });
     }); };
