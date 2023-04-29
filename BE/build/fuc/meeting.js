@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userStartMeeting = void 0;
+exports.userExit = exports.userStartMeeting = void 0;
 var fetch_1 = require("../utils/fetch");
 var userStartMeeting = function (socket, room, user) { return __awaiter(void 0, void 0, void 0, function () {
     var isRoomExist, newRoom, member, set, newuser, newmtg;
@@ -86,3 +86,22 @@ var userStartMeeting = function (socket, room, user) { return __awaiter(void 0, 
     });
 }); };
 exports.userStartMeeting = userStartMeeting;
+var userExit = function (userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var newmtg;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, fetch_1.serviceFetch)({
+                    url: "api/meeting",
+                    method: "PUT",
+                    data: {
+                        _id: userId,
+                        // data: { users: newuser },
+                    },
+                })];
+            case 1:
+                newmtg = _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.userExit = userExit;

@@ -40,3 +40,14 @@ export const userStartMeeting = async (
     return newmtg;
   }
 };
+
+export const userExit = async (userId: string) => {
+  const newmtg = await serviceFetch({
+    url: "api/meeting",
+    method: "PUT",
+    data: {
+      _id: userId,
+      // data: { users: newuser },
+    },
+  });
+};

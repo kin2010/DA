@@ -39,7 +39,11 @@ const Stream = (props) => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const socket = socketIOClient(host);
+    const socket = socketIOClient(host, {
+      query: {
+        userId: user?._id,
+      },
+    });
     const arr = [];
     const socketId = socket.id;
     console.log("connected", socket.id);
@@ -649,7 +653,7 @@ const Stream = (props) => {
       socket.off("sdp", SDP);
       socket.off("chat", handleChat);
       socket.off("member", handleMember);
-      socket.disconnect();
+      socket.disconnect(user?._id);
       document
         .getElementById("toggle-video")
         .removeEventListener("click", handleClickVideo);

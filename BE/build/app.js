@@ -147,8 +147,11 @@ app.use(function (req, res, next) {
     return next();
 });
 app.use("/api", index_1.default);
+var onlineUsers = new Map();
 io.on("connect", function (socket) {
+    var _a;
     console.log(socket === null || socket === void 0 ? void 0 : socket.id, " connected");
+    var userId = (_a = socket.handshake.query) === null || _a === void 0 ? void 0 : _a.userId;
     try {
         socket.on("subscribe", function (data) { return __awaiter(void 0, void 0, void 0, function () {
             var mtgRoom, roomInfo;
@@ -217,16 +220,15 @@ io.on("connect", function (socket) {
             socket.to(data.room).emit("chat", { sender: data.sender, msg: data.msg });
         });
         socket.on("disconnect", function () {
-            room.forEach(function (ro) {
-                var _a;
-                if (!!((_a = room[ro]) === null || _a === void 0 ? void 0 : _a.length)) {
-                    var index = room[ro].findIndex(function (i) { return i === (socket === null || socket === void 0 ? void 0 : socket.id); });
-                    var cp = room[ro];
-                    cp.splice(index, 1);
-                    room[ro] = cp;
-                    // console.log(ro, room[ro], index, room);
-                }
-            });
+            console.log(65656, userId);
+            // room.forEach((ro: any) => {
+            //   if (!!room[ro]?.length) {
+            //     const index = room[ro].findIndex((i: any) => i === socket?.id);
+            //     const cp = room[ro];
+            //     cp.splice(index, 1);
+            //     room[ro] = cp;
+            //   }
+            // });
             console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
         });
     }

@@ -124,9 +124,12 @@ app.use((req: any, res: any, next: any) => {
 
 app.use("/api", route);
 
+const onlineUsers = new Map();
+
 io.on("connect", (socket: any) => {
   console.log(socket?.id, " connected");
 
+  const userId = socket.handshake.query?.userId;
   try {
     socket.on("subscribe", async (data: any) => {
       //subscribe/join a room
@@ -191,15 +194,16 @@ io.on("connect", (socket: any) => {
       socket.to(data.room).emit("chat", { sender: data.sender, msg: data.msg });
     });
     socket.on("disconnect", () => {
-      room.forEach((ro: any) => {
-        if (!!room[ro]?.length) {
-          const index = room[ro].findIndex((i: any) => i === socket?.id);
-          const cp = room[ro];
-          cp.splice(index, 1);
-          room[ro] = cp;
-          // console.log(ro, room[ro], index, room);
-        }
-      });
+      console.log(65656, userId);
+
+      // room.forEach((ro: any) => {
+      //   if (!!room[ro]?.length) {
+      //     const index = room[ro].findIndex((i: any) => i === socket?.id);
+      //     const cp = room[ro];
+      //     cp.splice(index, 1);
+      //     room[ro] = cp;
+      //   }
+      // });
       console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
     });
   } catch (error) {
