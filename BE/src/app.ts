@@ -137,9 +137,7 @@ io.on("connect", (socket: any) => {
       //  room: room,
       // socketId: socket.id,
       const mtgRoom = data?.room;
-      const roomInfo = await userStartMeeting(socket, mtgRoom, data?.user);
-      console.log(22, roomInfo);
-      // console.log(isExist?.data);
+      const roomInfo = await userStartMeeting(mtgRoom, userId);
       socket.join(data.room);
       //join with socker id
       // socket.join(socket.id);

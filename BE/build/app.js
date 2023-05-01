@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+        while (_) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -160,11 +160,9 @@ io.on("connect", function (socket) {
                 switch (_a.label) {
                     case 0:
                         mtgRoom = data === null || data === void 0 ? void 0 : data.room;
-                        return [4 /*yield*/, (0, meeting_1.userStartMeeting)(socket, mtgRoom, data === null || data === void 0 ? void 0 : data.user)];
+                        return [4 /*yield*/, (0, meeting_1.userStartMeeting)(mtgRoom, userId)];
                     case 1:
                         roomInfo = _a.sent();
-                        console.log(22, roomInfo);
-                        // console.log(isExist?.data);
                         socket.join(data.room);
                         //join with socker id
                         // socket.join(socket.id);

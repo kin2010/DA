@@ -1,9 +1,10 @@
+import { ObjectId } from "mongodb";
 import { Document, Schema, model } from "mongoose";
 export interface IMeeting extends Document {
   _id: string;
   url: string;
   teacher: string[];
-  users: string[];
+  users: ObjectId[];
   start: Date;
   chat: Object[];
   end: Date;

@@ -1,10 +1,6 @@
 import { serviceFetch } from "../utils/fetch";
 
-export const userStartMeeting = async (
-  socket: any,
-  room: any,
-  user: string
-) => {
+export const userStartMeeting = async (room: any, user: string) => {
   const isRoomExist = await serviceFetch({
     url: "api/meeting",
     method: "GET",
@@ -26,9 +22,7 @@ export const userStartMeeting = async (
     const member = isRoomExist?.meeting?.users as Array<any>;
     const set = new Set<string>(member);
     set.add(user);
-    console.log(333, set, user);
     const newuser = Array.from(set);
-    console.log(44, newuser, isRoomExist);
     const newmtg = await serviceFetch({
       url: "api/meeting",
       method: "PUT",

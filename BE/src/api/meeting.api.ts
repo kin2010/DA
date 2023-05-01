@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import { Query, Params, Request } from "../configs/types";
 import { IMeeting, Meeting } from "../models";
 import APIError from "../utils/APIError";
+import { ObjectId } from "mongodb";
 
 type GetRoomRequestType = {
   url?: string;
@@ -27,7 +28,6 @@ export default class MeetingApi {
     next: NextFunction
   ) => {
     try {
-      console.log(44, req.body);
       const mtg = await (
         await Meeting.create({ ...req.body })
       ).populate([
@@ -202,13 +202,15 @@ export default class MeetingApi {
         ]);
       } else {
         const r = await Meeting.findOne({ url: room });
-        const users = r?.users;
+        const users = r?.users?.map((vl) => vl?.valueOf());
         const set = new Set(users);
         if (type === "delete") {
+          console.log(22, users);
           set.delete(userId);
         } else {
           set.add(userId);
         }
+        console.log("after", set);
         rs = await (
           await Meeting.findOneAndUpdate(
             {

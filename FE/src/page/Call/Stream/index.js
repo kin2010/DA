@@ -13,18 +13,19 @@ import {
   setLocalStream,
   shareScreen,
   singleStreamToggleMute,
-  toggleChatNotificationBadge,
   toggleModal,
   toggleShareIcons,
   toggleVideoBtnDisabled,
 } from "../../../ultis/helper";
 import "../../Call/index.css";
 import FooterVideo from "./FooterVideo";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { PRIMARY } from "../../../Constant/app";
 import { AuthContextProvider } from "../../../Context/AuthContext";
 import { Avatar } from "@mui/material";
 import User from "../../../component/User";
+import { Col, Row } from "react-bootstrap";
+import Member from "../Member";
 // const host = "http://192.168.1.15:3333";
 const host = process.env.API || "http://localhost:3333";
 
@@ -37,6 +38,7 @@ const Stream = (props) => {
   const localVideoref1 = useRef();
   const [socId, setSocId] = useState();
   const [searchParams] = useSearchParams();
+  const [isMemberShow, setIsMemberShown] = useState(false);
 
   useEffect(() => {
     const room = searchParams.get("room");
@@ -44,7 +46,7 @@ const Stream = (props) => {
     const socket = socketIOClient(host, {
       query: {
         userId: user?._id,
-        roomUrl:room
+        roomUrl: room,
       },
     });
     const arr = [];
@@ -291,10 +293,10 @@ const Stream = (props) => {
       }
     };
 
-    const userExit=async (data)=>{
-        console.log("user-exit",data);
-        setRoomMember(data?.data);
-    }
+    const userExit = async (data) => {
+      console.log("user-exit", data);
+      setRoomMember(data?.data);
+    };
 
     function handleShareScreen() {
       shareScreen()
@@ -426,22 +428,22 @@ const Stream = (props) => {
     const toogleChat = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      // let chatElem = document.querySelector("#chat-pane");
-      // let mainSecElem = document.querySelector("#main-section");
-      // if (chatElem.classList.contains("chat-opened")) {
-      //   chatElem.setAttribute("hidden", true);
-      //   mainSecElem.classList.remove("col-md-9");
-      //   mainSecElem.classList.add("col-md-12");
-      //   chatElem.classList.remove("chat-opened");
-      // } else {
-      //   // chatElem.attributes.removeNamedItem("hidden");
-      //   chatElem.removeAttribute("hidden");
-      //   mainSecElem.classList.remove("col-md-12");
-      //   mainSecElem.classList.add("col-md-9");
-      //   chatElem.classList.add("chat-opened");
-      // }
+      let chatElem = document.querySelector("#chat-pane");
+      let mainSecElem = document.querySelector("#main-section");
+      if (chatElem.classList.contains("chat-opened")) {
+        chatElem.setAttribute("hidden", true);
+        mainSecElem.classList.remove("col-md-9");
+        mainSecElem.classList.add("col-md-12");
+        chatElem.classList.remove("chat-opened");
+      } else {
+        // chatElem.attributes.removeNamedItem("hidden");
+        chatElem.removeAttribute("hidden");
+        mainSecElem.classList.remove("col-md-12");
+        mainSecElem.classList.add("col-md-9");
+        chatElem.classList.add("chat-opened");
+      }
 
-      // //remove the 'New' badge on chat icon (if any) once chat is opened.
+      //remove the 'New' badge on chat icon (if any) once chat is opened.
       // setTimeout(() => {
       //   if (
       //     document.querySelector("#chat-pane").classList.contains("chat-opened")
@@ -681,12 +683,13 @@ const Stream = (props) => {
   const handleShowChat = () => {
     setshowchat(!showchat);
   };
+
+  const handleMemberShown = () => {
+    setIsMemberShown(!isMemberShow);
+  };
+
   return (
     <div>
-      {roomMember?.map((user) => (
-        <User key={user?._id} {...user} />
-      ))}
-
       <div className="custom-modal" id="recording-options-modal">
         <div className="custom-modal-content">
           <div className="row text-center">
@@ -725,6 +728,14 @@ const Stream = (props) => {
         <div className="pull-right room-comm">
           <button
             className="btn btn-sm rounded-0 btn-no-effect"
+            id="toggle-member"
+            title="Member "
+            onClick={handleMemberShown}
+          >
+            <i className="text-white fa-solid fa-users"></i>
+          </button>
+          <button
+            className="btn btn-sm rounded-0 btn-no-effect"
             id="toggle-video"
             title="Hide Video"
           >
@@ -737,7 +748,6 @@ const Stream = (props) => {
           >
             <i className="fa fa-microphone-alt text-white"></i>
           </button>
-
           <button
             className="btn btn-sm rounded-0 btn-no-effect"
             id="share-screen"
@@ -745,7 +755,6 @@ const Stream = (props) => {
           >
             <i className="fa-solid fa-desktop text-white"></i>
           </button>
-
           <button
             className="btn btn-sm rounded-0 btn-no-effect"
             id="record"
@@ -753,7 +762,6 @@ const Stream = (props) => {
           >
             <i className="fa fa-dot-circle text-white"></i>
           </button>
-
           <button
             onClick={handleShowChat}
             className="btn btn-sm text-white pull-right btn-no-effect"
@@ -774,27 +782,33 @@ const Stream = (props) => {
           </a>
         </button>
       </nav>
-      <div>
-        <div className="vd">
-          <div className="video">
-            <video
-              className="  local-video mirror-mode present "
-              id="local"
-              volume="0"
-              autoPlay
-              muted
-              poster="../images/thum.png"
-            ></video>
-            <FooterVideo></FooterVideo>
+      <Row className="mt-3">
+        <Col xs={isMemberShow ? 9 : 12}>
+          <div>
+            <div className="vd">
+              <div className="video">
+                <video
+                  className="  local-video mirror-mode present "
+                  id="local"
+                  volume="0"
+                  autoPlay
+                  muted
+                  poster="../images/thum.png"
+                ></video>
+                <FooterVideo></FooterVideo>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="row mt-2 mb-2" id="videos"></div>
+        </Col>
+        <Col xs={isMemberShow ? 3 : 0}>
+          {isMemberShow && <Member member={roomMember} />}
+        </Col>
+      </Row>
+      {/* <div className="row mt-2 mb-2" id="videos"></div> */}
       <div className="row">
         <div className="col-md-12 main" id="main-section">
           <div className="row mt-2 mb-2" id="videos"></div>
         </div>
-
         <div
           className={`col-md-3 chat-col d-print-none mb-2  ${
             showchat ? "chat-opened" : ""
@@ -809,9 +823,7 @@ const Stream = (props) => {
               Trò chuyện :
             </div>
           </div>
-
           <div id="chat-messages"></div>
-
           <form>
             <div className="input-group mb-3">
               <textarea

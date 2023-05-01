@@ -678,6 +678,13 @@ const Streamsssss = () => {
             id="toggle-video"
             title="Hide Video"
           >
+            <i className="text-white fa-solid fa-users"></i>
+          </button>
+          <button
+            className="btn btn-sm rounded-0 btn-no-effect"
+            id="toggle-video"
+            title="Hide Video"
+          >
             <i className="fa-solid fa-video text-white"></i>
           </button>
 
