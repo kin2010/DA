@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -45,6 +45,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -85,6 +94,14 @@ var MeetingApi = /** @class */ (function () {
                         {
                             path: "plusMark",
                             select: "time user",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
+                        {
+                            path: "chat",
+                            select: "user time msg",
                             populate: {
                                 path: "user",
                                 select: "avatar email fullName address phone online",
@@ -187,6 +204,14 @@ var MeetingApi = /** @class */ (function () {
                                 select: "avatar email fullName address phone online",
                             },
                         },
+                        {
+                            path: "chat",
+                            select: "user time msg",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
                     ]))];
                 case 2:
                     mtg = _d.sent();
@@ -256,6 +281,14 @@ var MeetingApi = /** @class */ (function () {
                                 select: "avatar email fullName address phone online",
                             },
                         },
+                        {
+                            path: "chat",
+                            select: "user time msg",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
                     ])];
                 case 3:
                     rs = _e.sent();
@@ -303,6 +336,14 @@ var MeetingApi = /** @class */ (function () {
                                 select: "avatar email fullName address phone online",
                             },
                         },
+                        {
+                            path: "chat",
+                            select: "user time msg",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
                     ]))];
                 case 7:
                     rs = _e.sent();
@@ -321,6 +362,94 @@ var MeetingApi = /** @class */ (function () {
                     next(error_4);
                     return [3 /*break*/, 10];
                 case 10: return [2 /*return*/];
+            }
+        });
+    }); };
+    MeetingApi.chat = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, room, userId, message, time, r, user, messages, newChats, rs, error_5;
+        var _c;
+        return __generator(_a, function (_d) {
+            switch (_d.label) {
+                case 0:
+                    _d.trys.push([0, 5, , 6]);
+                    _b = req.body, room = _b.room, userId = _b.userId, message = _b.message, time = _b.time;
+                    return [4 /*yield*/, models_1.Meeting.findOne({ url: room })];
+                case 1:
+                    r = _d.sent();
+                    if (!r) {
+                        throw new APIError_1.default({
+                            status: http_status_1.default.NOT_FOUND,
+                            message: "Room is not exist!",
+                        });
+                    }
+                    return [4 /*yield*/, models_1.User.findById(userId)];
+                case 2:
+                    user = _d.sent();
+                    if (!user) {
+                        throw new APIError_1.default({
+                            status: http_status_1.default.NOT_FOUND,
+                            message: "User not found",
+                        });
+                    }
+                    messages = r.chat;
+                    console.log(22, messages);
+                    newChats = __spreadArray(__spreadArray([], messages, true), [
+                        {
+                            user: userId,
+                            time: time || new Date(),
+                            msg: message,
+                        },
+                    ], false);
+                    return [4 /*yield*/, models_1.Meeting.findOneAndUpdate({ url: room }, { chat: newChats }, { new: true })];
+                case 3: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
+                        {
+                            path: "teacher",
+                            select: "fullName",
+                        },
+                        {
+                            path: "users",
+                            select: "avatar email fullName address phone online",
+                        },
+                        {
+                            path: "ralseHand",
+                            select: "time user",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
+                        {
+                            path: "plusMark",
+                            select: "time user",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
+                        {
+                            path: "chat",
+                            select: "user time msg",
+                            populate: {
+                                path: "user",
+                                select: "avatar email fullName address phone online",
+                            },
+                        },
+                    ]))];
+                case 4:
+                    rs = _d.sent();
+                    res
+                        .json({
+                        msg: rs,
+                        status: 200,
+                    })
+                        .status(200)
+                        .end();
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_5 = _d.sent();
+                    next(error_5);
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     }); };

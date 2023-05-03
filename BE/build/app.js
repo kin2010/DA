@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -215,21 +215,40 @@ io.on("connect", function (socket) {
                 // member:
             });
         });
-        socket.on("chat", function (data) {
-            socket.to(data.room).emit("chat", { sender: data.sender, msg: data.msg });
-        });
+        socket.on("chat", function (data) { return __awaiter(void 0, void 0, void 0, function () {
+            var room, sender, msg, time, newMsg;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        room = data.room, sender = data.sender, msg = data.msg, time = data.time;
+                        return [4 /*yield*/, (0, meeting_1.meetingChat)({
+                                userId: sender,
+                                message: msg,
+                                room: room,
+                                time: time,
+                            })];
+                    case 1:
+                        newMsg = _a.sent();
+                        io.to(data.room).emit("chat", {
+                            sender: data.sender,
+                            msg: data.msg,
+                            newMsg: newMsg,
+                        });
+                        return [2 /*return*/];
+                }
+            });
+        }); });
         socket.on("disconnect", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var rs, newOnlines;
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var rs;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0: return [4 /*yield*/, (0, meeting_1.userExit)(userId, roomQuery)];
                     case 1:
-                        rs = _b.sent();
-                        newOnlines = ((_a = rs === null || rs === void 0 ? void 0 : rs.meeting) === null || _a === void 0 ? void 0 : _a.users) || [];
+                        rs = _a.sent();
+                        // const newOnlines = rs?.meeting?.users || [];
                         console.log(rs, "exit");
                         socket.to(roomQuery).emit("user_exit", {
-                            data: newOnlines,
+                            data: rs,
                         });
                         console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
                         return [2 /*return*/];

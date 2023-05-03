@@ -9,9 +9,10 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AuthContextProvider } from "../../Context/AuthContext";
 import { Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 const Header = () => {
   const { user } = React.useContext(AuthContextProvider);
-
+  const navigate = useNavigate();
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -39,7 +40,11 @@ const Header = () => {
                 : ""}
             </Avatar>
           ) : (
-            <Button color="inherit">Login</Button>
+            <Button color="inherit" onClick={()=>{
+              navigate(
+                "/login"
+              )
+            }}>Login</Button>
           )}
         </Toolbar>
       </AppBar>

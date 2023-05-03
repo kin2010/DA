@@ -9,7 +9,7 @@ import { Socket } from "socket.io";
 import axios from "axios";
 import configs from "./configs/appConfig";
 import { serviceFetch } from "./utils/fetch";
-import { userExit, userStartMeeting } from "./fuc/meeting";
+import { meetingChat, userExit, userStartMeeting } from "./fuc/meeting";
 
 const express = require("express");
 const app = express();
@@ -189,15 +189,27 @@ io.on("connect", (socket: any) => {
       });
     });
 
-    socket.on("chat", (data: any) => {
-      socket.to(data.room).emit("chat", { sender: data.sender, msg: data.msg });
+    socket.on("chat", async (data: any) => {
+      const { room, sender, msg, time } = data;
+      const newMsg = await meetingChat({
+        userId: sender,
+        message: msg,
+        room: room,
+        time: time,
+      });
+      io.to(data.room).emit("chat", {
+        sender: data.sender,
+        msg: data.msg,
+        newMsg: newMsg,
+      });
     });
+
     socket.on("disconnect", async () => {
       const rs = await userExit(userId, roomQuery);
-      const newOnlines = rs?.meeting?.users || [];
+      // const newOnlines = rs?.meeting?.users || [];
       console.log(rs, "exit");
       socket.to(roomQuery).emit("user_exit", {
-        data: newOnlines,
+        data: rs,
       });
       console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
     });

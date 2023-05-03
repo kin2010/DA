@@ -10,4 +10,5 @@ router.route("/").post(api_1.MeetingSerivce.create);
 router.route("/").get(api_1.MeetingSerivce.getRoom);
 router.route("/").put(api_1.MeetingSerivce.update);
 router.route("/online").post(api_1.MeetingSerivce.online);
+router.route("/chat").post(api_1.MeetingSerivce.chat);
 exports.default = router;

@@ -1,9 +1,8 @@
-import { NextFunction, RequestHandler, Response } from "express";
+import { NextFunction, Response } from "express";
 import httpStatus from "http-status";
 import { Query, Params, Request } from "../configs/types";
-import { IMeeting, Meeting } from "../models";
+import { IMeeting, Meeting, User } from "../models";
 import APIError from "../utils/APIError";
-import { ObjectId } from "mongodb";
 
 type GetRoomRequestType = {
   url?: string;
@@ -19,6 +18,13 @@ type MeetingOnlineType = {
   userId: string;
   room: string;
   type?: string;
+};
+
+export type MeetingChatType = {
+  room: string;
+  userId: string;
+  message: string;
+  time?: Date;
 };
 
 export default class MeetingApi {
@@ -50,6 +56,14 @@ export default class MeetingApi {
         {
           path: "plusMark",
           select: "time user",
+          populate: {
+            path: "user",
+            select: "avatar email fullName address phone online",
+          },
+        },
+        {
+          path: "chat",
+          select: "user time msg",
           populate: {
             path: "user",
             select: "avatar email fullName address phone online",
@@ -139,6 +153,14 @@ export default class MeetingApi {
             select: "avatar email fullName address phone online",
           },
         },
+        {
+          path: "chat",
+          select: "user time msg",
+          populate: {
+            path: "user",
+            select: "avatar email fullName address phone online",
+          },
+        },
       ]);
       if (!mtg) {
         throw new APIError({
@@ -199,6 +221,14 @@ export default class MeetingApi {
               select: "avatar email fullName address phone online",
             },
           },
+          {
+            path: "chat",
+            select: "user time msg",
+            populate: {
+              path: "user",
+              select: "avatar email fullName address phone online",
+            },
+          },
         ]);
       } else {
         const r = await Meeting.findOne({ url: room });
@@ -246,11 +276,102 @@ export default class MeetingApi {
               select: "avatar email fullName address phone online",
             },
           },
+          {
+            path: "chat",
+            select: "user time msg",
+            populate: {
+              path: "user",
+              select: "avatar email fullName address phone online",
+            },
+          },
         ]);
       }
       res
         .json({
           meeting: rs,
+          status: 200,
+        })
+        .status(200)
+        .end();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  static chat = async (
+    req: Request<MeetingChatType, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { room, userId, message, time } = req.body;
+      const r = await Meeting.findOne({ url: room });
+      if (!r) {
+        throw new APIError({
+          status: httpStatus.NOT_FOUND,
+          message: "Room is not exist!",
+        });
+      }
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new APIError({
+          status: httpStatus.NOT_FOUND,
+          message: "User not found",
+        });
+      }
+      const messages = r.chat;
+      console.log(22, messages);
+      const newChats = [
+        ...messages,
+        {
+          user: userId,
+          time: time || new Date(),
+          msg: message,
+        },
+      ];
+      const rs = await (
+        await Meeting.findOneAndUpdate(
+          { url: room },
+          { chat: newChats },
+          { new: true }
+        )
+      )?.populate([
+        {
+          path: "teacher",
+          select: "fullName",
+        },
+        {
+          path: "users",
+          select: "avatar email fullName address phone online",
+        },
+        {
+          path: "ralseHand",
+          select: "time user",
+          populate: {
+            path: "user",
+            select: "avatar email fullName address phone online",
+          },
+        },
+        {
+          path: "plusMark",
+          select: "time user",
+          populate: {
+            path: "user",
+            select: "avatar email fullName address phone online",
+          },
+        },
+        {
+          path: "chat",
+          select: "user time msg",
+          populate: {
+            path: "user",
+            select: "avatar email fullName address phone online",
+          },
+        },
+      ]);
+      res
+        .json({
+          msg: rs,
           status: 200,
         })
         .status(200)

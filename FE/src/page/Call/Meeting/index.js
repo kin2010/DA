@@ -51,7 +51,7 @@ const Meeting = () => {
                 <Typography gutterBottom variant="h5" component="div">
                   Setting
                 </Typography>
-                <div classNmme="mtg-video">
+                <div className="mtg-video">
                   <video
                     ref={videoRef}
                     volume="0"

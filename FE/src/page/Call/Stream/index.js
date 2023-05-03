@@ -22,10 +22,13 @@ import FooterVideo from "./FooterVideo";
 import { useSearchParams } from "react-router-dom";
 import { PRIMARY } from "../../../Constant/app";
 import { AuthContextProvider } from "../../../Context/AuthContext";
-import { Avatar } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import User from "../../../component/User";
 import { Col, Row } from "react-bootstrap";
 import Member from "../Member";
+import ChatMessage from "../ChatMessage";
+import TextArea from "antd/lib/input/TextArea";
+import { Space } from "antd";
 // const host = "http://192.168.1.15:3333";
 const host = process.env.API || "http://localhost:3333";
 
@@ -39,6 +42,8 @@ const Stream = (props) => {
   const [socId, setSocId] = useState();
   const [searchParams] = useSearchParams();
   const [isMemberShow, setIsMemberShown] = useState(false);
+  const [showchat, setshowchat] = useState(true);
+  const [message, setMessages] = useState([]);
 
   useEffect(() => {
     const room = searchParams.get("room");
@@ -289,13 +294,17 @@ const Stream = (props) => {
     const handleMember = async (data) => {
       console.log("mem", data);
       if (data?.meeting) {
-        setRoomMember(data?.meeting?.users);
+        setRoomMember(data?.meeting?.users || []);
+        setMessages(data?.meeting?.chat || []);
       }
     };
 
     const userExit = async (data) => {
       console.log("user-exit", data);
-      setRoomMember(data?.data);
+      if (data?.meeting) {
+        setRoomMember(data?.meeting?.users || []);
+        setMessages(data?.meeting?.chat || []);
+      }
     };
 
     function handleShareScreen() {
@@ -404,57 +413,50 @@ const Stream = (props) => {
       let data = {
         room: room,
         msg: msg,
-        sender: `${username}`,
+        sender: user?._id,
       };
-
-      //emit chat message
       socket.emit("chat", data);
-
-      //add localchat
-      addChat(data, "local");
     }
     const chatBtn = (e) => {
-      if (document.getElementById("chat-input").value.trim()) {
-        sendMsg(document.getElementById("chat-input").value);
+      if (document?.getElementById("chat-input")?.value?.trim()) {
+        sendMsg(document?.getElementById("chat-input")?.value);
 
-        setTimeout(() => {
-          document.getElementById("chat-input").value = "";
-        }, 50);
+        document.getElementById("chat-input").value = "";
       }
     };
     document
-      .getElementById("chat-input-btn")
-      .addEventListener("click", chatBtn);
-    const toogleChat = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      let chatElem = document.querySelector("#chat-pane");
-      let mainSecElem = document.querySelector("#main-section");
-      if (chatElem.classList.contains("chat-opened")) {
-        chatElem.setAttribute("hidden", true);
-        mainSecElem.classList.remove("col-md-9");
-        mainSecElem.classList.add("col-md-12");
-        chatElem.classList.remove("chat-opened");
-      } else {
-        // chatElem.attributes.removeNamedItem("hidden");
-        chatElem.removeAttribute("hidden");
-        mainSecElem.classList.remove("col-md-12");
-        mainSecElem.classList.add("col-md-9");
-        chatElem.classList.add("chat-opened");
-      }
+      ?.getElementById("meeting_chat_btn")
+      ?.addEventListener("click", chatBtn);
+    // const toogleChat = (e) => {
+    //   e.preventDefault();
+    //   e.stopPropagation();
+    //   let chatElem = document.querySelector("#chat-pane");
+    //   let mainSecElem = document.querySelector("#main-section");
+    //   if (chatElem.classList.contains("chat-opened")) {
+    //     chatElem.setAttribute("hidden", true);
+    //     mainSecElem.classList.remove("col-md-9");
+    //     mainSecElem.classList.add("col-md-12");
+    //     chatElem.classList.remove("chat-opened");
+    //   } else {
+    //     // chatElem.attributes.removeNamedItem("hidden");
+    //     chatElem.removeAttribute("hidden");
+    //     mainSecElem.classList.remove("col-md-12");
+    //     mainSecElem.classList.add("col-md-9");
+    //     chatElem.classList.add("chat-opened");
+    //   }
 
-      //remove the 'New' badge on chat icon (if any) once chat is opened.
-      // setTimeout(() => {
-      //   if (
-      //     document.querySelector("#chat-pane").classList.contains("chat-opened")
-      //   ) {
-      //     toggleChatNotificationBadge();
-      //   }
-      // }, 300);
-    };
-    document
-      .querySelector("#toggle-chat-pane")
-      .addEventListener("click", toogleChat);
+    //remove the 'New' badge on chat icon (if any) once chat is opened.
+    // setTimeout(() => {
+    //   if (
+    //     document.querySelector("#chat-pane").classList.contains("chat-opened")
+    //   ) {
+    //     toggleChatNotificationBadge();
+    //   }
+    // }, 300);
+    // };
+    // document
+    //   .querySelector("#toggle-chat-pane")
+    //   .addEventListener("click", toogleChat);
     //Chat textarea
     const keypress = (e) => {
       if (e.which === 13 && e.target.value.trim()) {
@@ -471,7 +473,7 @@ const Stream = (props) => {
       .getElementById("chat-input")
       .addEventListener("keypress", keypress);
 
-    // document.getElementById("chat-input-btn").addEventListener("click", (e) => {
+    // document.getElementById("meeting_chat_btn").addEventListener("click", (e) => {
     //   console.log("here: ", document.getElementById("chat-input").value);
     //   if (document.getElementById("chat-input").value.trim()) {
     //     sendMsg(document.getElementById("chat-input").value);
@@ -633,7 +635,10 @@ const Stream = (props) => {
       }
     });
     const handleChat = (data) => {
-      addChat(data, "remote");
+      // addChat(data, "remote");
+      // setMsg()//
+      console.log("chat", data);
+      setMessages(data?.newMsg || []);
     };
 
     getAndSetUserStream();
@@ -669,17 +674,14 @@ const Stream = (props) => {
         .getElementById("toggle-video")
         .removeEventListener("click", handleClickVideo);
       document
-        .getElementById("chat-input-btn")
+        .getElementById("meeting_chat_btn")
         .removeEventListener("click", chatBtn);
-      document
-        .querySelector("#toggle-chat-pane")
-        .removeEventListener("click", toogleChat);
       document
         .getElementById("chat-input")
         .removeEventListener("keypress", keypress);
     };
   }, []);
-  const [showchat, setshowchat] = useState(true);
+
   const handleShowChat = () => {
     setshowchat(!showchat);
   };
@@ -783,7 +785,7 @@ const Stream = (props) => {
         </button>
       </nav>
       <Row className="mt-3">
-        <Col xs={isMemberShow ? 9 : 12}>
+        <Col xs={showchat || isMemberShow ? 9 : 12}>
           <div>
             <div className="vd">
               <div className="video">
@@ -800,8 +802,58 @@ const Stream = (props) => {
             </div>
           </div>
         </Col>
-        <Col xs={isMemberShow ? 3 : 0}>
+        <Col xs={showchat || isMemberShow ? 3 : 0}>
           {isMemberShow && <Member member={roomMember} />}
+          {/*          
+            // <ChatMessage
+            //   message={message}
+            //   setMessages={setMessages}
+            // ></ChatMessage> */}
+
+          <div
+            className="member-pannel pannel"
+            style={{
+              opacity: showchat ? 1 : 0,
+            }}
+          >
+            <h4>Trò chuyện :</h4>
+            <div id="chat-pane">
+              <div className="chat-messages">
+                {message?.map((item) => (
+                  <div
+                    key={item?._id}
+                    className={`msg ${
+                      user?._id === item?.user?._id ? "msg-local" : "msg-remote"
+                    }`}
+                  >
+                    <User
+                      time={item?.time}
+                      message={item?.msg}
+                      status={false}
+                      user={item?.user}
+                      size={30}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="pannel-form">
+                <Space direction="horizontal">
+                  <TextArea
+                    onChange={(e) => {
+                      console.log("chamnge", e.target?.value);
+                    }}
+                    id="chat-input"
+                    defaultValue={""}
+                    showCount
+                    maxLength={100}
+                  ></TextArea>
+                  <Button id="meeting_chat_btn" variant="contained">
+                    Gởi
+                  </Button>
+                </Space>
+              </div>
+            </div>
+          </div>
         </Col>
       </Row>
       {/* <div className="row mt-2 mb-2" id="videos"></div> */}
@@ -809,40 +861,40 @@ const Stream = (props) => {
         <div className="col-md-12 main" id="main-section">
           <div className="row mt-2 mb-2" id="videos"></div>
         </div>
-        <div
-          className={`col-md-3 chat-col d-print-none mb-2  ${
-            showchat ? "chat-opened" : ""
-          }`}
-          style={{ backgroundColor: "#f5f5f5", border: " 1px solid gray" }}
-          id="chat-pane"
-          hidden
-          //  hidden={showchat}
-        >
-          <div className="row">
-            <div className="px-5 pt-2 col-12 text-black h2 mb-3">
-              Trò chuyện :
+        {/* <div
+        className={`col-md-3 chat-col d-print-none mb-2  ${
+          showchat ? "chat-opened" : ""
+        }`}
+        style={{ backgroundColor: "#f5f5f5", border: " 1px solid gray" }}
+        id="chat-pane"
+        hidden
+        //  hidden={showchat}
+      >
+        <div className="row">
+          <div className="px-5 pt-2 col-12 text-black h2 mb-3">
+            Trò chuyện :
+          </div>
+        </div>
+        <div id="chat-messages"></div>
+        <form>
+          <div className="input-group mb-3">
+            <textarea
+              id="chat-input"
+              className="form-control rounded-0 chat-box border-info"
+              rows="3"
+              placeholder="Type here..."
+            ></textarea>
+            <div className="input-group-append" id="meeting_chat_btn">
+              <button
+                type="button"
+                className="btn btn-dark rounded-0 border-info btn-no-effect"
+              >
+                Send
+              </button>
             </div>
           </div>
-          <div id="chat-messages"></div>
-          <form>
-            <div className="input-group mb-3">
-              <textarea
-                id="chat-input"
-                className="form-control rounded-0 chat-box border-info"
-                rows="3"
-                placeholder="Type here..."
-              ></textarea>
-              <div className="input-group-append" id="chat-input-btn">
-                <button
-                  type="button"
-                  className="btn btn-dark rounded-0 border-info btn-no-effect"
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+        </form>
+      </div> */}
       </div>
     </div>
   );

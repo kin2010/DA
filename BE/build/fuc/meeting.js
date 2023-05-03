@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userExit = exports.userStartMeeting = void 0;
+exports.meetingChat = exports.userExit = exports.userStartMeeting = void 0;
 var fetch_1 = require("../utils/fetch");
 var userStartMeeting = function (room, user) { return __awaiter(void 0, void 0, void 0, function () {
     var isRoomExist, newRoom, member, set, newuser, newmtg;
@@ -104,3 +104,30 @@ var userExit = function (userId, room) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 exports.userExit = userExit;
+var meetingChat = function (body) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, message, room, time, rs;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                userId = body.userId, message = body.message, room = body.room, time = body.time;
+                return [4 /*yield*/, (0, fetch_1.serviceFetch)({
+                        url: "api/meeting/chat",
+                        method: "POST",
+                        data: {
+                            userId: userId,
+                            room: room,
+                            message: message,
+                            time: time || new Date(),
+                        },
+                    })];
+            case 1:
+                rs = _b.sent();
+                if ((rs === null || rs === void 0 ? void 0 : rs.status) === 200) {
+                    return [2 /*return*/, (_a = rs === null || rs === void 0 ? void 0 : rs.msg) === null || _a === void 0 ? void 0 : _a.chat];
+                }
+                return [2 /*return*/, []];
+        }
+    });
+}); };
+exports.meetingChat = meetingChat;

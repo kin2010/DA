@@ -1,3 +1,4 @@
+import { MeetingChatType } from "../api/meeting.api";
 import { serviceFetch } from "../utils/fetch";
 
 export const userStartMeeting = async (room: any, user: string) => {
@@ -46,4 +47,23 @@ export const userExit = async (userId: string, room: string) => {
     },
   });
   return newmtg;
+};
+
+export const meetingChat = async (body: MeetingChatType) => {
+  const { userId, message, room, time } = body;
+
+  const rs = await serviceFetch({
+    url: "api/meeting/chat",
+    method: "POST",
+    data: {
+      userId: userId,
+      room: room,
+      message: message,
+      time: time || new Date(),
+    },
+  });
+  if (rs?.status === 200) {
+    return rs?.msg?.chat;
+  }
+  return [];
 };
