@@ -855,7 +855,6 @@ const Stream = (props) => {
                     }}
                     id="chat-input"
                     defaultValue={""}
-                    showCount
                     maxLength={100}
                   ></textarea>
                   <Button id="meeting_chat_btn" variant="contained">

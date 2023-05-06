@@ -260,15 +260,15 @@
   justify-content: center;
 }
 .card_3 {
-  width: calc(33.3333% - 20 / 3px);
+  width: calc((33.33% - 20px) / 3);
   z-index: 1000;
 }
 .card_4 {
-  width: calc(25% - 30 / 4px);
+  width: calc((25% - 30px) / 4);
   z-index: 1000;
 }
 .card_5 {
-  width: calc(20% - 40 / 5px);
+  width: calc((20% - 40px) / 5);
   z-index: 1000;
 }
 #videos {

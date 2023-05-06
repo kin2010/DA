@@ -6,8 +6,8 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { login, useLogin, useLoginService } from "../../hook/HAuth";
 import { mapError } from "../../ultis/alert";
-import { useNavigate } from "react-router-dom";
-import { setToken } from "../../ultis/Common";
+import { Navigate, redirect, useNavigate } from "react-router-dom";
+import { getToken, setToken } from "../../ultis/Common";
 const Login = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -34,10 +34,15 @@ const Login = () => {
     if (data?.status === 200) {
       setToken(data?.token);
     }
-    // setTimeout(() => {
-    //   navigate("/");
-    // }, 5000);
+    setTimeout(() => {
+      navigate("/");
+    }, 5000);
   };
+
+  if (!!getToken()) {
+    return <Navigate to={"/"} />;
+  }
+
   return (
     <div>
       <Header />

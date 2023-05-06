@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 export const capitalizeFullName = (name) => {
   if (!name) return "";
   return name

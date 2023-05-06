@@ -1,23 +1,16 @@
-import React from "react";
-import { Redirect, Route, withRouter } from "react-router-dom";
+/* eslint-disable no-unused-vars */
+import { Navigate } from "react-router-dom";
 import { getToken, getRoleID } from "./Common";
 //user authen
-const PrivateRoute = ({ component: Component, ...rest }) => {
-	return (
-		<Route
-			{...rest}
-			render={(props) => {
-				if (!getToken() && !getRoleID()) return <Redirect to="/login" />;
-				else {
-					// const role = getRoleID();
-					// if (role === "1") return <Redirect to="/admin" />;
-					// else if (role === "Customer") return <Redirect to="/shop" />;
-					// else return <Redirect to="/shop" />;
-					// else if (role === '0') return <Redirect to='/admin'/>;
-					return <Component {...props} {...rest} />;
-				}
-			}}
-		/>
-	);
+
+import React from "react";
+import { Outlet } from "react-router-dom";
+
+const PrivateRoute = () => {
+  if (!getToken()) return <Navigate to="/login" />;
+  else {
+    return <Outlet />;
+  }
 };
-export default withRouter(PrivateRoute);
+
+export default PrivateRoute;

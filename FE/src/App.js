@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Call from "./page/Call";
@@ -16,6 +17,7 @@ import PeerCall from "./component/Peer";
 import Ca from "./component/Ca/Ca";
 import StreamVideo from "./component/Video";
 import AuthContext from "./Context/AuthContext";
+import PrivateRoute from "./ultis/PrivateRoute";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -31,7 +33,9 @@ function App() {
               <Route path="/call" element={<Call />}>
                 <Route exact path="/call" element={<StreamVideo />}></Route>
               </Route>
-              <Route exact path="/meeting" element={<Meeting />}></Route>
+              <Route exact path="/meeting" element={<PrivateRoute />}>
+                <Route exact path="/meeting" element={<Meeting />}></Route>
+              </Route>
               <Route exact path="/c" element={<Ca />}></Route>
               <Route path="/peer" element={<PeerCall />}>
                 <Route exact path="/peer" element={<Meeting />}></Route>

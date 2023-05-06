@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable no-unused-vars */
 import { createContext, useState } from "react";
 import { SmileOutlined } from "@ant-design/icons";
