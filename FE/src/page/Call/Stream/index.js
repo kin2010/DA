@@ -28,7 +28,9 @@ import { Col, Row } from "react-bootstrap";
 import Member from "../Member";
 import ChatMessage from "../ChatMessage";
 import TextArea from "antd/lib/input/TextArea";
-import { Space } from "antd";
+import { Comment, Space } from "antd";
+import { DefaultAvatar, capitalizeFullName } from "../../../ultis/user";
+import { format } from "date-fns";
 // const host = "http://192.168.1.15:3333";
 const host = process.env.API || "http://localhost:3333";
 
@@ -420,8 +422,11 @@ const Stream = (props) => {
     const chatBtn = (e) => {
       if (document?.getElementById("chat-input")?.value?.trim()) {
         sendMsg(document?.getElementById("chat-input")?.value);
-
         document.getElementById("chat-input").value = "";
+        const myDiv = document.getElementById("messages");
+        myDiv.scrollTo({
+          top: myDiv.scrollHeight - myDiv.clientHeight,
+        });
       }
     };
     document
@@ -818,7 +823,7 @@ const Stream = (props) => {
           >
             <h4>Trò chuyện :</h4>
             <div id="chat-pane">
-              <div className="chat-messages">
+              <div className="chat-messages" id="messages">
                 {message?.map((item) => (
                   <div
                     key={item?._id}
@@ -826,19 +831,25 @@ const Stream = (props) => {
                       user?._id === item?.user?._id ? "msg-local" : "msg-remote"
                     }`}
                   >
-                    <User
-                      time={item?.time}
-                      message={item?.msg}
-                      status={false}
-                      user={item?.user}
-                      size={30}
+                    <Comment
+                      actions={item.actions}
+                      author={capitalizeFullName(item?.user?.fullName)}
+                      avatar={
+                        item?.user?.avatar ? (
+                          item?.user?.avatar
+                        ) : (
+                          <DefaultAvatar name={item?.user?.fullName} />
+                        )
+                      }
+                      content={item?.msg}
+                      datetime={format(new Date(item?.time), "h:mm")}
                     />
                   </div>
                 ))}
               </div>
               <div className="pannel-form">
                 <Space direction="horizontal">
-                  <TextArea
+                  <textarea
                     onChange={(e) => {
                       console.log("chamnge", e.target?.value);
                     }}
@@ -846,7 +857,7 @@ const Stream = (props) => {
                     defaultValue={""}
                     showCount
                     maxLength={100}
-                  ></TextArea>
+                  ></textarea>
                   <Button id="meeting_chat_btn" variant="contained">
                     Gởi
                   </Button>

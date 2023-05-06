@@ -18,24 +18,27 @@
 .chat-messages::-webkit-scrollbar-thumb {
   background-color: #71aada;
 }
+.ant-comment-inner {
+  padding: 4px 0 0 0 !important;
+}
 .msg > * {
-  padding: 8px !important;
-  border: 1px solid gray;
-  border-radius: 20px;
+  padding: 5px !important;
+  border-radius: 10px;
   width: fit-content !important;
+  background-color: #75757520 !important;
 }
 .msg + .msg {
-  margin-top: 10px;
+  margin-top: 3px;
 }
 .msg {
   display: flex;
 }
 .msg-local > * {
-  background: #b1cfe7;
+  background: #b1cfe780 !important;
 }
-.msg-remote > * {
+/* .msg-remote > * {
   background: #ece9e9;
-}
+} */
 .msg-local {
   justify-content: flex-end;
 }

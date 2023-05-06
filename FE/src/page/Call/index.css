@@ -146,11 +146,11 @@
   align-self: flex-end;
 }
 
-.msg {
+/* .msg {
   font-weight: 400;
   font-size: 12px;
   color: black;
-}
+} */
 
 .chat-card {
   border-radius: 6px;
