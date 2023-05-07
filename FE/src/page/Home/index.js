@@ -14,10 +14,11 @@ import { Col } from "antd";
 import Lotrinh from "../../component/Lotrinh";
 import Comments from "../../component/Comment";
 import Ratee from "../../component/Rating";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [value, setValue] = React.useState("1");
-
+  const navigate = useNavigate();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -26,6 +27,13 @@ const Home = () => {
       <div className="cont">
         <Header></Header>
         <Container className="cont" style={{ backgroudColor: "#f9f9f9 " }}>
+          <button
+            onClick={() => {
+              navigate("/meeting?room=abcd12345");
+            }}
+          >
+            mtg
+          </button>
           <h3 className="mt-3">PEN-C TIẾNG ANH - THẦY PHẠM TRỌNG HIẾU</h3>
           <h1 className="mt-2 short">
             Luyện thi đại học môn Tiếng Anh hiệu quả và dễ dàng hơn cùng thầy

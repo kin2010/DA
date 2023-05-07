@@ -1,5 +1,5 @@
 import { Alert, Container } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -8,6 +8,8 @@ import { login, useLogin, useLoginService } from "../../hook/HAuth";
 import { mapError } from "../../ultis/alert";
 import { Navigate, redirect, useNavigate } from "react-router-dom";
 import { getToken, setToken } from "../../ultis/Common";
+import { serviceFetch } from "../../ultis/service";
+import { apiURL } from "../../Context/constant";
 const Login = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -19,6 +21,7 @@ const Login = () => {
   //   form.email,
   //   form.password
   // );
+  const [api, setApi] = useState("");
   const loginServices = useLoginService();
   const onChangeValue = (e) => {
     setForm({
@@ -39,6 +42,19 @@ const Login = () => {
     }, 5000);
   };
 
+  useEffect(() => {
+    const ff = async () => {
+      const dt = await serviceFetch({
+        url: "ddd",
+        method: "GET",
+      });
+      console.log("check", dt);
+      setApi(dt?.message);
+      console.log(apiURL);
+    };
+    ff();
+  }, []);
+
   if (!!getToken()) {
     return <Navigate to={"/"} />;
   }
@@ -55,7 +71,7 @@ const Login = () => {
             fontWeight: 900,
           }}
         >
-          Login
+          Login {api}
         </div>
         <Row className="pt-2 my-auto w-50 mx-auto">
           <Form onSubmit={submit}>

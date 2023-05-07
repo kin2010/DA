@@ -32,7 +32,10 @@ import { Comment, Space } from "antd";
 import { DefaultAvatar, capitalizeFullName } from "../../../ultis/user";
 import { format } from "date-fns";
 // const host = "http://192.168.1.15:3333";
-const host = process.env.API || "http://localhost:3333";
+const host =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3333"
+    : process.env.REACT_APP_API_URL;
 
 const Stream = (props) => {
   const { initStream } = props;
