@@ -1,19 +1,22 @@
 import React from "react";
 const FooterVideo = () => {
   return (
-    <div className="ui">
-      <span>
-        <i className="fa-solid fa-microphone"></i>
-      </span>
-      <span>
-        <i className="fa-solid fa-microphone-slash"></i>
-      </span>
-      <span>
-        <i className="fa-solid fa-video"></i>
-      </span>
-      <span>
-        <i className="fa-solid fa-video-slash"></i>
-      </span>
+    <div className="ui" id="video-setting">
+      <i
+        style={{ color: "#fff" }}
+        className="fa-solid fa-microphone mute-remote-mic"
+        title="mic_on_local-video"
+      ></i>
+      <i
+        title="camera_on_local-video"
+        style={{ color: "#fff" }}
+        className="fa-solid fa-video mute-remote-camera"
+      ></i>
+      <i
+        title="camera_on_local-video"
+        style={{ color: "#fff" }}
+        className="fa-solid fa-expand expand-remote-video"
+      ></i>
     </div>
   );
 };

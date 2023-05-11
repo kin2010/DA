@@ -88,22 +88,9 @@
   visibility: visible;
 }
 
-/* .local-video {
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  width: 15vw;
-} */
-.vd {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
 .ui {
   position: absolute;
-  height: 40px;
+  height: 30px;
   width: 70%;
   bottom: 0;
   left: 50%;
@@ -116,12 +103,13 @@
   gap: 0 10px;
   justify-content: center;
 }
-.vd:hover .ui {
+.video .ui {
   opacity: 1;
 }
 
 .video {
-  width: 70%;
+  width: 100%;
+  position: relative;
 }
 .video video {
   width: 100%;
@@ -272,14 +260,24 @@
   z-index: 1000;
 }
 #videos {
-  display: flex;
   gap: 10px;
-  flex-wrap: wrap;
-  width: 80vw;
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* chia đều thành 4 cột */
 }
 
 .room-comm {
   display: flex;
   gap: 0 15px;
+}
+
+@media only screen and (max-width: 990px) {
+  #tools {
+    position: fixed;
+    z-index: 999;
+    right: 16px;
+    top: 105px;
+    width: 270px;
+    background: white;
+    padding: 0 0 0 0;
+  }
 }

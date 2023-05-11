@@ -4,7 +4,9 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 import {
   addChat,
+  adjustVideoElemSize,
   closeVideo,
+  createDemoRemotes,
   getIceServer,
   getUserFullMedia,
   maximiseStream,
@@ -12,6 +14,7 @@ import {
   saveRecordedStream,
   setLocalStream,
   shareScreen,
+  singleStreamToggleCamera,
   singleStreamToggleMute,
   toggleModal,
   toggleShareIcons,
@@ -67,6 +70,8 @@ const Stream = (props) => {
     let username = "admin";
     var recordedStream = [];
     var mediaRecorder = "";
+    // createDemoRemotes(myStream);
+
     // console.log("connecting", socket, id, room, socketId, socketRef.current.id);
     function init(createOffer, partnerName, member = []) {
       if (!arr[partnerName]) {
@@ -145,16 +150,30 @@ const Stream = (props) => {
             newVid.srcObject = str;
             newVid.autoplay = true;
             newVid.className = " remote-video";
-
+            newVid.poster = "../images/thum.png";
             //video controls elements
             let controlDiv = document.createElement("div");
-            controlDiv.className = "video remote-video-controls";
-            controlDiv.innerHTML = `<i className="fa-solid fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
-                            <i className="fa fa-solid  fa-expand text-white expand-remote-video" title="Expand"></i>`;
-
+            controlDiv.className = "ui";
+            controlDiv.innerHTML = `
+            <i
+            style="color:#fff"
+            class="fa-solid fa-microphone mute-remote-mic"
+            title="mic_on_local-video"
+          ></i>
+          <i
+            title="camera_on_local-video"
+            style="color:#fff"
+            class="fa-solid fa-video mute-remote-camera"
+          ></i>
+          <i
+            title="camera_on_local-video"
+            style="color:#fff"
+            class="fa-solid fa-expand expand-remote-video"
+          ></i>
+            `;
             //create a new div for card
             let cardDiv = document.createElement("div");
-            cardDiv.className = "card card-sm";
+            cardDiv.className = "video grid-item";
             cardDiv.id = partnerName;
             cardDiv.appendChild(newVid);
             cardDiv.appendChild(controlDiv);
@@ -162,7 +181,7 @@ const Stream = (props) => {
             //put div in main-section elem
             document.getElementById("videos").appendChild(cardDiv);
 
-            // h.adjustVideoElemSize();
+            adjustVideoElemSize();
           }
         };
 
@@ -263,7 +282,7 @@ const Stream = (props) => {
 
         getUserFullMedia()
           .then(async (stream) => {
-            if (!document.getElementById("local")?.srcObject) {
+            if (!document.getElementById("local-video")?.srcObject) {
               setLocalStream(stream);
             }
 
@@ -515,13 +534,11 @@ const Stream = (props) => {
         e.target.classList.remove("fa-video");
         e.target.classList.add("fa-video-slash");
         elem.setAttribute("title", "Show Video");
-
         myStream.getVideoTracks()[0].enabled = false;
       } else {
         e.target.classList.remove("fa-video-slash");
         e.target.classList.add("fa-video");
         elem.setAttribute("title", "Hide Video");
-
         myStream.getVideoTracks()[0].enabled = true;
       }
 
@@ -619,10 +636,10 @@ const Stream = (props) => {
     });
 
     //When the video frame is clicked. This will enable picture-in-picture
-    document.getElementById("local").addEventListener("click", () => {
+    document.getElementById("local-video").addEventListener("click", () => {
       if (!document.pictureInPictureElement) {
         document
-          .getElementById("local")
+          .getElementById("local-video")
           .requestPictureInPicture()
           .catch((error) => {
             // Video failed to enter Picture-in-Picture mode.
@@ -635,21 +652,66 @@ const Stream = (props) => {
         });
       }
     });
-    document.addEventListener("click", (e) => {
+
+    const handleClick = (e) => {
       if (e.target && e.target.classList.contains("expand-remote-video")) {
         maximiseStream(e);
       } else if (e.target && e.target.classList.contains("mute-remote-mic")) {
         singleStreamToggleMute(e);
+      } else if (
+        e.target &&
+        e.target.classList.contains("mute-remote-camera")
+      ) {
+        singleStreamToggleCamera(e);
       }
-    });
+    };
+
+    document.addEventListener("click", handleClick);
+
+    // const videoSetting = (event) => {
+    //   try {
+    //     const title = event.target.getAttribute("title");
+    //     const arr = title?.split("_") || [];
+    //     const [type, state, id] = arr;
+    //     const newState = !!(state === "on") ? "off" : "on";
+    //     const video = document?.getElementById(id);
+    //     const icon = document.getElementById(type + "_" + id);
+    //     let html = "";
+    //     html = ` <i
+    //     style="color:#fff"
+    //     class="fa-solid fa-${type === "camera" ? "video" : "microphone"}${
+    //       newState === "on" ? "" : "-slash"
+    //     }"
+    //     title="${type}_${newState}_${id}"
+    //   ></i>`;
+    //     if (type === "camera") {
+    //       // video.style.display = "none";
+    //     } else {
+    //       console.log(video, "mute");
+    //       video.muted = newState === "off";
+    //     }
+    //     icon.innerHTML = html;
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+
+    //   console.log(event.target, arr);
+    // };
+
+    // const listCamera = document.querySelectorAll(".video-setting");
+
+    // listCamera?.forEach((box) => {
+    //   box.addEventListener("click", videoSetting);
+    // });
+
     const handleChat = (data) => {
       // addChat(data, "remote");
       // setMsg()//
       console.log("chat", data);
       setMessages(data?.newMsg || []);
     };
-
     getAndSetUserStream();
+    adjustVideoElemSize();
     socket.on("connect", () => {
       socket.emit("subscribe", {
         room: room,
@@ -680,13 +742,17 @@ const Stream = (props) => {
       socket.disconnect(user?._id);
       document
         .getElementById("toggle-video")
-        .removeEventListener("click", handleClickVideo);
+        ?.removeEventListener("click", handleClickVideo);
       document
-        .getElementById("meeting_chat_btn")
-        .removeEventListener("click", chatBtn);
+        ?.getElementById("meeting_chat_btn")
+        ?.removeEventListener("click", chatBtn);
       document
-        .getElementById("chat-input")
-        .removeEventListener("keypress", keypress);
+        ?.getElementById("chat-input")
+        ?.removeEventListener("keypress", keypress);
+      document.removeEventListener("click", handleClick);
+      // listCamera?.forEach((box) => {
+      //   box?.removeEventListener("click", videoSetting);
+      // });
     };
   }, []);
 
@@ -792,32 +858,28 @@ const Stream = (props) => {
           </a>
         </button>
       </nav>
-      <Row className="mt-3">
-        <Col xs={showchat || isMemberShow ? 9 : 12}>
-          <div>
-            <div className="vd">
-              <div className="video">
-                <video
-                  className="  local-video mirror-mode present "
-                  id="local"
-                  volume="0"
-                  autoPlay
-                  muted
-                  poster="../images/thum.png"
-                ></video>
-                <FooterVideo></FooterVideo>
-              </div>
+      <Row className="mt-3 p-5">
+        <Col sm={12} lg={showchat || isMemberShow ? 9 : 12}>
+          <div className="grid-container" id="videos">
+            <div className="video grid-item">
+              <video
+                className="local-video"
+                id="local-video"
+                autoPlay
+                poster="../images/thum.png"
+              ></video>
+              <FooterVideo></FooterVideo>
             </div>
           </div>
         </Col>
-        <Col xs={showchat || isMemberShow ? 3 : 0}>
+        <Col
+          id="tools"
+          style={{
+            display: !showchat && !isMemberShow ? "none" : "block",
+          }}
+          lg={showchat || isMemberShow ? 3 : 0}
+        >
           {isMemberShow && <Member member={roomMember} />}
-          {/*          
-            // <ChatMessage
-            //   message={message}
-            //   setMessages={setMessages}
-            // ></ChatMessage> */}
-
           <div
             className="member-pannel pannel"
             style={{
@@ -851,64 +913,22 @@ const Stream = (props) => {
                 ))}
               </div>
               <div className="pannel-form">
-                <Space direction="horizontal">
-                  <textarea
-                    onChange={(e) => {
-                      console.log("chamnge", e.target?.value);
-                    }}
-                    id="chat-input"
-                    defaultValue={""}
-                    maxLength={100}
-                  ></textarea>
-                  <Button id="meeting_chat_btn" variant="contained">
-                    Gởi
-                  </Button>
-                </Space>
+                <textarea
+                  onChange={(e) => {
+                    console.log("chamnge", e.target?.value);
+                  }}
+                  id="chat-input"
+                  defaultValue={""}
+                  maxLength={100}
+                ></textarea>
+                <Button id="meeting_chat_btn" variant="contained">
+                  Gởi
+                </Button>
               </div>
             </div>
           </div>
         </Col>
       </Row>
-      {/* <div className="row mt-2 mb-2" id="videos"></div> */}
-      <div className="row">
-        <div className="col-md-12 main" id="main-section">
-          <div className="row mt-2 mb-2" id="videos"></div>
-        </div>
-        {/* <div
-        className={`col-md-3 chat-col d-print-none mb-2  ${
-          showchat ? "chat-opened" : ""
-        }`}
-        style={{ backgroundColor: "#f5f5f5", border: " 1px solid gray" }}
-        id="chat-pane"
-        hidden
-        //  hidden={showchat}
-      >
-        <div className="row">
-          <div className="px-5 pt-2 col-12 text-black h2 mb-3">
-            Trò chuyện :
-          </div>
-        </div>
-        <div id="chat-messages"></div>
-        <form>
-          <div className="input-group mb-3">
-            <textarea
-              id="chat-input"
-              className="form-control rounded-0 chat-box border-info"
-              rows="3"
-              placeholder="Type here..."
-            ></textarea>
-            <div className="input-group-append" id="meeting_chat_btn">
-              <button
-                type="button"
-                className="btn btn-dark rounded-0 border-info btn-no-effect"
-              >
-                Send
-              </button>
-            </div>
-          </div>
-        </form>
-      </div> */}
-      </div>
     </div>
   );
 };

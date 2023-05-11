@@ -27,7 +27,7 @@ export const RemoteVideo = (props) => {
       }}
     >
       <video
-        id={id || "local"}
+        id={id || "local-video"}
         volume="0"
         autoPlay
         muted

@@ -1,11 +1,18 @@
 .pannel {
   position: relative;
-  height: 500px;
+  min-height: 400px;
 }
 .pannel-form {
   position: absolute;
   bottom: 16px;
-  width: calc(100% - 30px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0 5px;
+  left: 0;
+  padding: 0 10px;
+  box-sizing: border-box;
+  width: 100%;
 }
 .chat-messages {
   max-height: 300px;

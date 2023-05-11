@@ -71,9 +71,9 @@ const Login = () => {
             fontWeight: 900,
           }}
         >
-          Login {api}
+          Login
         </div>
-        <Row className="pt-2 my-auto w-50 mx-auto">
+        <Row style={{ maxWidth: "600px" }} className="pt-2 my-auto  mx-auto">
           <Form onSubmit={submit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>

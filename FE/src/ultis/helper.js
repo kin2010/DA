@@ -112,7 +112,7 @@ export function getIceServer() {
 }
 export const setLocalStream = (stream, mirrorMode = true, ref) => {
   // ref.current.srcObject = stream;
-  const localVidElem = document.getElementById("local");
+  const localVidElem = document.getElementById("local-video");
 
   localVidElem.srcObject = stream;
   mirrorMode
@@ -189,7 +189,7 @@ export function toggleModal(id, show) {
 export function closeVideo(elemId) {
   if (document.getElementById(elemId)) {
     document.getElementById(elemId).remove();
-    //  adjustVideoElemSize();
+    adjustVideoElemSize();
   }
 }
 export function maximiseStream(e) {
@@ -203,6 +203,7 @@ export function maximiseStream(e) {
 }
 
 export function singleStreamToggleMute(e) {
+  console.log(e.target.classList);
   if (e.target.classList.contains("fa-microphone")) {
     e.target.parentElement.previousElementSibling.muted = true;
     e.target.classList.add("fa-microphone-slash");
@@ -211,6 +212,20 @@ export function singleStreamToggleMute(e) {
     e.target.parentElement.previousElementSibling.muted = false;
     e.target.classList.add("fa-microphone");
     e.target.classList.remove("fa-microphone-slash");
+  }
+}
+
+export function singleStreamToggleCamera(e) {
+  console.log(e.target.classList);
+  if (e.target.classList.contains("fa-video")) {
+    e.target.parentElement.previousElementSibling.style.display =
+      "inline-block";
+    e.target.classList.add("fa-video-slash");
+    e.target.classList.remove("fa-video");
+  } else {
+    e.target.parentElement.previousElementSibling.style.display = "none";
+    e.target.classList.add("fa-video");
+    e.target.classList.remove("fa-video-slash");
   }
 }
 
@@ -252,28 +267,59 @@ export function createDemoRemotes(str, total = 4) {
   }
 }
 export function adjustVideoElemSize() {
-  let elem = document.getElementsByClassName("card");
-  let totalRemoteVideosDesktop = elem.length;
-  let newWidth =
-    totalRemoteVideosDesktop <= 2
-      ? "calc((50% - 5px)"
-      : totalRemoteVideosDesktop === 3
-      ? "calc(33.33% - 20/3px)"
-      : totalRemoteVideosDesktop <= 8
-      ? "calc(25% - 30/4px)"
-      : totalRemoteVideosDesktop <= 15
-      ? "calc(20% - 40/5px)"
-      : totalRemoteVideosDesktop <= 18
-      ? "calc(16% - 10px)"
-      : totalRemoteVideosDesktop <= 23
-      ? "15%"
-      : totalRemoteVideosDesktop <= 32
-      ? "12% - 70/8px"
-      : "calc(10% - 9px)";
-
-  for (let i = 0; i < totalRemoteVideosDesktop; i++) {
-    elem[i].style.width = newWidth;
+  let elem = document.getElementsByClassName("grid-item");
+  const total = elem.length;
+  const deviceWidth = window.innerWidth;
+  let e = 1;
+  switch (true) {
+    case 1 <= total <= 4:
+      e = 2;
+      break;
+    case 5 <= total <= 9:
+      e = 3;
+      break;
+    case 9 <= total:
+      e = 4;
+      break;
+    default:
+      e = 1;
+      break;
   }
+  if (deviceWidth <= 700) {
+    switch (true) {
+      case 1:
+        e = 1;
+        break;
+      default:
+        e = 1;
+        break;
+    }
+  }
+  console.log("adjut", e, total);
+  const container = document.getElementById("videos");
+  container.style.gridTemplateColumns = ` repeat(${e}, 1fr)`;
+  //1
+  //4 25
+  // let newWidth =
+  //   totalRemoteVideosDesktop <= 2
+  //     ? "calc((50% - 5px)"
+  //     : totalRemoteVideosDesktop === 3
+  //     ? "calc(33.33% - 20/3px)"
+  //     : totalRemoteVideosDesktop <= 8
+  //     ? "calc(25% - 30/4px)"
+  //     : totalRemoteVideosDesktop <= 15
+  //     ? "calc(20% - 40/5px)"
+  //     : totalRemoteVideosDesktop <= 18
+  //     ? "calc(16% - 10px)"
+  //     : totalRemoteVideosDesktop <= 23
+  //     ? "15%"
+  //     : totalRemoteVideosDesktop <= 32
+  //     ? "12% - 70/8px"
+  //     : "calc(10% - 9px)";
+
+  // for (let i = 0; i < totalRemoteVideosDesktop; i++) {
+  //   elem[i].style.width = newWidth;
+  // }
 }
 
 export function changeSize(size = 2) {

@@ -13,7 +13,7 @@ const StreamVideo = forwardRef((props, ref) => {
     >
       <video
         ref={ref}
-        id={id || "local"}
+        id={id || "local-video"}
         volume="0"
         autoPlay
         muted

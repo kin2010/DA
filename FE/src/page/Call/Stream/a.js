@@ -231,7 +231,7 @@ const Streamsssss = () => {
 
         getUserFullMedia()
           .then(async (stream) => {
-            if (!document.getElementById("local")?.srcObject) {
+            if (!document.getElementById("local-video")?.srcObject) {
               setLocalStream(stream);
             }
 
@@ -374,7 +374,7 @@ const Streamsssss = () => {
       socket.emit("chat", data);
 
       //add localchat
-      addChat(data, "local");
+      addChat(data, "local-video");
     }
     const chatBtn = (e) => {
       console.log("here: ", document.getElementById("chat-input").value);
@@ -572,10 +572,10 @@ const Streamsssss = () => {
     });
 
     //When the video frame is clicked. This will enable picture-in-picture
-    document.getElementById("local").addEventListener("click", () => {
+    document.getElementById("local-video").addEventListener("click", () => {
       if (!document.pictureInPictureElement) {
         document
-          .getElementById("local")
+          .getElementById("local-video")
           .requestPictureInPicture()
           .catch((error) => {
             // Video failed to enter Picture-in-Picture mode.
@@ -595,6 +595,7 @@ const Streamsssss = () => {
         singleStreamToggleMute(e);
       }
     });
+
     const handleChat = (data) => {
       addChat(data, "remote");
     };
@@ -736,7 +737,7 @@ const Streamsssss = () => {
         <div className="vd">
           <video
             className="local-video mirror-mode present "
-            id="local"
+            id="local-video"
             volume="0"
             autoPlay
             muted
