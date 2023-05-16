@@ -8,6 +8,9 @@
   width: 100%;
   display: inline-block;
 }
+.member-pannel {
+  background: white;
+}
 .member-pannel + .member-pannel {
   margin-top: 10px;
 }

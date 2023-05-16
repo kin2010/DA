@@ -55,11 +55,11 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const Editor = ({ handleChange, name }) => {
   const [data, setData] = useState("");
-  useEffect(() => {
-    if (!!handleChange) {
-      handleChange(name, data);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (!!handleChange) {
+
+  //   }
+  // }, [data]);
   return (
     <div className="App">
       {/* <h2>Using CKEditor 5 build in React</h2> */}
@@ -73,6 +73,9 @@ const Editor = ({ handleChange, name }) => {
         onChange={(event, editor) => {
           const data = editor.getData();
           // console.log({ event, editor, data });
+          if (!!handleChange) {
+            handleChange(name, data);
+          }
           setData(data);
         }}
         onBlur={(event, editor) => {

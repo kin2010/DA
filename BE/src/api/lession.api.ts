@@ -287,6 +287,7 @@ export default class LessionApi {
   ) => {
     try {
       const { idCourse } = req?.body;
+      console.log(2, idCourse);
       const cc = await Course.findById(idCourse);
       if (!cc) {
         throw new APIError({

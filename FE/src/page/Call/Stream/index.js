@@ -7,6 +7,7 @@ import {
   adjustVideoElemSize,
   closeVideo,
   createDemoRemotes,
+  focusVideo,
   getIceServer,
   getUserFullMedia,
   maximiseStream,
@@ -663,6 +664,8 @@ const Stream = (props) => {
         e.target.classList.contains("mute-remote-camera")
       ) {
         singleStreamToggleCamera(e);
+      } else if (e.target && e.target.classList.contains("focus-video")) {
+        focusVideo(e);
       }
     };
 
@@ -764,6 +767,14 @@ const Stream = (props) => {
     setIsMemberShown(!isMemberShow);
   };
 
+  React.useEffect(() => {
+    document.body.style.paddingTop = "72px";
+    document.body.style.background = "#121212";
+    return () => {
+      document.body.style.paddingTop = "0px";
+      document.body.style.background = "white";
+    };
+  }, []);
   return (
     <div>
       <div className="custom-modal" id="recording-options-modal">
@@ -791,7 +802,7 @@ const Stream = (props) => {
         </div>
       </div>
       <nav
-        style={{ backgroundColor: PRIMARY }}
+        style={{ backgroundColor: PRIMARY, paddingTop: "72px" }}
         className="px-3 py-3 navbar fixed-top rounded-0 d-print-none navv"
       >
         {!!user && (
@@ -858,77 +869,92 @@ const Stream = (props) => {
           </a>
         </button>
       </nav>
-      <Row className="mt-3 p-5">
-        <Col sm={12} lg={showchat || isMemberShow ? 9 : 12}>
-          <div className="grid-container" id="videos">
-            <div className="video grid-item">
-              <video
-                className="local-video"
-                id="local-video"
-                autoPlay
-                poster="../images/thum.png"
-              ></video>
-              <FooterVideo></FooterVideo>
-            </div>
-          </div>
-        </Col>
-        <Col
-          id="tools"
+      <div
+        style={{
+          background: "#121212",
+        }}
+        className="pt-3"
+      >
+        <Row
+          className="p-2"
           style={{
-            display: !showchat && !isMemberShow ? "none" : "block",
+            maxWidth: "1000px",
+            margin: "0 auto",
           }}
-          lg={showchat || isMemberShow ? 3 : 0}
         >
-          {isMemberShow && <Member member={roomMember} />}
-          <div
-            className="member-pannel pannel"
-            style={{
-              opacity: showchat ? 1 : 0,
-            }}
-          >
-            <h4>Trò chuyện :</h4>
-            <div id="chat-pane">
-              <div className="chat-messages" id="messages">
-                {message?.map((item) => (
-                  <div
-                    key={item?._id}
-                    className={`msg ${
-                      user?._id === item?.user?._id ? "msg-local" : "msg-remote"
-                    }`}
-                  >
-                    <Comment
-                      actions={item.actions}
-                      author={capitalizeFullName(item?.user?.fullName)}
-                      avatar={
-                        item?.user?.avatar ? (
-                          item?.user?.avatar
-                        ) : (
-                          <DefaultAvatar name={item?.user?.fullName} />
-                        )
-                      }
-                      content={item?.msg}
-                      datetime={format(new Date(item?.time), "h:mm")}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="pannel-form">
-                <textarea
-                  onChange={(e) => {
-                    console.log("chamnge", e.target?.value);
-                  }}
-                  id="chat-input"
-                  defaultValue={""}
-                  maxLength={100}
-                ></textarea>
-                <Button id="meeting_chat_btn" variant="contained">
-                  Gởi
-                </Button>
+          <Col sm={12} lg={showchat || isMemberShow ? 9 : 12}>
+            <div className="grid-container" id="videos">
+              <div className="video grid-item  ">
+                <video
+                  className="local-video"
+                  id="local-video"
+                  autoPlay
+                  poster="../images/thum.png"
+                ></video>
+                <FooterVideo></FooterVideo>
               </div>
             </div>
-          </div>
-        </Col>
-      </Row>
+          </Col>
+          <Col
+            id="tools"
+            style={{
+              display: !showchat && !isMemberShow ? "none" : "block",
+            }}
+            lg={showchat || isMemberShow ? 3 : 0}
+          >
+            {isMemberShow && <Member member={roomMember} />}
+            <div
+              className="member-pannel pannel"
+              style={{
+                opacity: showchat ? 1 : 0,
+              }}
+            >
+              <h4>Trò chuyện :</h4>
+              <div id="chat-pane">
+                <div className="chat-messages" id="messages">
+                  {message?.map((item) => (
+                    <div
+                      key={item?._id}
+                      className={`msg ${
+                        user?._id === item?.user?._id
+                          ? "msg-local"
+                          : "msg-remote"
+                      }`}
+                    >
+                      <Comment
+                        actions={item.actions}
+                        author={capitalizeFullName(item?.user?.fullName)}
+                        avatar={
+                          item?.user?.avatar ? (
+                            item?.user?.avatar
+                          ) : (
+                            <DefaultAvatar name={item?.user?.fullName} />
+                          )
+                        }
+                        content={item?.msg}
+                        datetime={format(new Date(item?.time), "h:mm")}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="pannel-form">
+                  <textarea
+                    onChange={(e) => {
+                      console.log("chamnge", e.target?.value);
+                    }}
+                    id="chat-input"
+                    defaultValue={""}
+                    maxLength={100}
+                  ></textarea>
+                  <Button id="meeting_chat_btn" variant="contained">
+                    Gởi
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 };

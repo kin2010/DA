@@ -24,7 +24,6 @@ export const addChapter = async (body) => {
   return data;
 };
 export const getAllChapters = async (body) => {
-  console.log(body, 2414);
   const data = await serviceFetch({
     url: apiURL + "/api/lession/getchapter",
     method: "POST",

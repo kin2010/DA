@@ -17,6 +17,11 @@ const FooterVideo = () => {
         style={{ color: "#fff" }}
         className="fa-solid fa-expand expand-remote-video"
       ></i>
+      <i
+        title="camera_on_local-video"
+        style={{ color: "#fff" }}
+        className="fa-regular fa-square-arrow-up-right focus-video"
+      ></i>
     </div>
   );
 };

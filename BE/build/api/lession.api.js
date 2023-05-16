@@ -354,6 +354,7 @@ var LessionApi = /** @class */ (function () {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
                     idCourse = (req === null || req === void 0 ? void 0 : req.body).idCourse;
+                    console.log(2, idCourse);
                     return [4 /*yield*/, models_1.Course.findById(idCourse)];
                 case 1:
                     cc = _b.sent();

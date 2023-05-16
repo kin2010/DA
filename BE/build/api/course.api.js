@@ -102,12 +102,13 @@ var CourseApi = /** @class */ (function () {
         });
     }); };
     CourseApi.getOne = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var coures, cc, error_2;
+        var id, coures, cc, error_2;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, models_1.Course.findById(req.params.id)];
+                    id = req.body.id;
+                    return [4 /*yield*/, models_1.Course.findById(id)];
                 case 1:
                     coures = _b.sent();
                     if (!coures) {

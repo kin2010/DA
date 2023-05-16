@@ -36,7 +36,7 @@ const Meeting = () => {
 
   return (
     <>
-      <Header />
+      {!callShown && <Header />}
       {!callShown ? (
         <div
           style={{

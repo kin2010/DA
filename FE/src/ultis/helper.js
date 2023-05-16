@@ -229,6 +229,37 @@ export function singleStreamToggleCamera(e) {
   }
 }
 
+export function focusVideo(e) {
+  try {
+    console.log("aaaa");
+    const lists = document.getElementsByClassName("grid-item");
+    let newHtml = "";
+    for (let i = 0; i < lists.length; i++) {
+      lists[i].classList.remove("item-focus");
+      if (
+        lists[i].outerHTML !== e.target.parentElement.parentElement.outerHTML
+      ) {
+        newHtml += lists[i].outerHTML;
+      }
+      console.log(e.target.parentElement.parentElement.outerHTML);
+    }
+
+    e.target.parentElement.parentElement.classList.add("item-focus");
+    e.target.parentElement.parentElement.parentElement.classList.add(
+      "container-flex"
+    );
+    if (lists?.length > 1) {
+      e.target.parentElement.parentElement.parentElement.innerHTML =
+        e.target.parentElement.parentElement.outerHTML +
+        "<div class='other'>" +
+        newHtml +
+        "</div>";
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function createDemoRemotes(str, total = 4) {
   let i = 0;
 
@@ -272,6 +303,9 @@ export function adjustVideoElemSize() {
   const deviceWidth = window.innerWidth;
   let e = 1;
   switch (true) {
+    case total <= 1:
+      e = 1;
+      break;
     case 1 <= total <= 4:
       e = 2;
       break;

@@ -78,7 +78,8 @@ export default class CourseApi {
     next: NextFunction
   ) => {
     try {
-      const coures = await Course.findById(req.params.id);
+      const { id } = req.body;
+      const coures = await Course.findById(id);
       if (!coures) {
         throw new APIError({
           message: "NOT FOUND !",

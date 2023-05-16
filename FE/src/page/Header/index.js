@@ -13,9 +13,17 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const { user } = React.useContext(AuthContextProvider);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    document.body.style.paddingTop = "64px";
+    return () => {
+      document.body.style.paddingTop = "0px";
+    };
+  }, []);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
@@ -40,11 +48,14 @@ const Header = () => {
                 : ""}
             </Avatar>
           ) : (
-            <Button color="inherit" onClick={()=>{
-              navigate(
-                "/login"
-              )
-            }}>Login</Button>
+            <Button
+              color="inherit"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Login
+            </Button>
           )}
         </Toolbar>
       </AppBar>

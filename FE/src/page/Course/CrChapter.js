@@ -14,19 +14,14 @@ import {
 } from "../../hook/LessionHook";
 import { AppContextProvider } from "../../Context/AppContext";
 import { useParams } from "react-router-dom";
-const CrChapter = ({
-  refetch,
-  updateChapterId,
-  course,
-  setChangeCurrent,
-  current,
-}) => {
+const CrChapter = ({ refetch, updateChapterId }) => {
   const [form, setForm] = useState({ name: "", mota: "" });
   const [validated, setValidated] = useState(false);
   const { openNotification } = React.useContext(AppContextProvider);
   const { id } = useParams();
 
   useEffect(() => {
+    console.log("create");
     if (!!updateChapterId) {
       setForm({
         name: "",
@@ -54,10 +49,10 @@ const CrChapter = ({
     });
   };
   const handleChangeEditor = (name, result) => {
-    const ne = form;
-    ne[name] = result;
+    const cpForm = form;
+    cpForm[name] = result;
     setForm({
-      ...ne,
+      ...cpForm,
     });
   };
   const lessionService = useCourseService();
@@ -70,25 +65,24 @@ const CrChapter = ({
     } else {
       try {
         if (!updateChapterId) {
+          //create
           const params = {
             idCourse: id,
             ...form,
           };
           const res = await addChapter({ ...params });
           openNotification(res);
-          if (!!refetch) {
-            refetch();
-          }
         } else {
+          //update
           const params = {
             idChapter: updateChapterId,
             ...form,
           };
           const res = await updateChapter({ ...params });
           openNotification(res);
-          if (!!refetch) {
-            refetch();
-          }
+        }
+        if (!!refetch) {
+          refetch();
         }
       } catch (error) {
         console.log(error);
@@ -109,7 +103,7 @@ const CrChapter = ({
         // }}
       >
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Chương mục :</Form.Label>
           <Form.Control
             required
             type="input"
@@ -118,7 +112,7 @@ const CrChapter = ({
             onChange={change}
             className="mb-2"
           />
-          <Form.Text className="text-muted"></Form.Text>
+          <Form.Text className="text-muted">Nhập tên chương mục :</Form.Text>
           <Editor name="mota" handleChange={handleChangeEditor}></Editor>
           <Button
             // onClick={save}

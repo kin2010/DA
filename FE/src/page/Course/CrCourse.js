@@ -27,9 +27,13 @@ import Tab4 from "../Tab4";
 import VirtualList from "rc-virtual-list";
 import { Avatar, List } from "antd";
 import CloseIcon from "@mui/icons-material/Close";
-import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Navigate,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import Editor from ".";
-import Editt from "../../component/Edit";
 export default function CrCourse() {
   const [value, setValue] = React.useState("1");
   const queryClient = useQueryClient();
@@ -39,9 +43,9 @@ export default function CrCourse() {
   const [course, setCourse] = useState({});
   const [ids, setIds] = useState([]);
   const [dataTeacher, setDataTeacher] = useState([]);
-  let [searchParams, setSearchParams] = useSearchParams();
   const router = useNavigate();
   const navigate = useNavigate();
+  const { id } = useParams();
   const appendData = async () => {
     const res = await serviceFetch({
       url: apiURL + "/api/course/getteacher",
@@ -129,11 +133,8 @@ export default function CrCourse() {
         const res = await courseService.addCourse(data);
         openNotification(res);
         if (res?.status === 200) {
-          // <Navigate to={"/" + res?.course?._id} replace={true} />;
           setCourse(res?.course);
           navigate("/course/create/" + res?.course?._id);
-          // setSearchParams({ id: res?.course?._id });
-
           if (!!handleChange) {
             handleChange(event, "2");
           }
@@ -163,6 +164,7 @@ export default function CrCourse() {
         chapter: [...arrChapter],
       });
     }, [arrChapter]);
+
     const changee = (e) => {
       setForm({
         ...form,
@@ -220,11 +222,6 @@ export default function CrCourse() {
             <Col className="w-25">
               <div>Teacher</div>
               {!!ids?.length && (
-                // ids.map((li) => (
-                //   <li key={li}>
-                //     {dataTeacher.find((a) => a._id === li)?.fullName}
-                //   </li>
-                // ))
                 <List>
                   <VirtualList
                     unselectable="off"
@@ -240,7 +237,6 @@ export default function CrCourse() {
                             title={
                               <a href="https://ant.design">{item?.fullName}</a>
                             }
-                            // description={item?.email}
                           />
                           <CloseIcon
                             onClick={() => clickne(item?._id)}
@@ -251,7 +247,6 @@ export default function CrCourse() {
                   </VirtualList>
                 </List>
               )}
-
               <div
                 style={{
                   fontSize: "12px",
@@ -260,12 +255,7 @@ export default function CrCourse() {
                 onClick={() => showModal()}
                 className="mt-4 mb-2 d-flex align-items-center"
               >
-                <AddIcon
-                  // style={{
-                  //   fontSize: "32px",
-                  // }}
-                  className="me-2"
-                />
+                <AddIcon className="me-2" />
                 ADD NEW TEACHER
               </div>
               <div
@@ -305,6 +295,17 @@ export default function CrCourse() {
       </>
     );
   };
+
+  const init = async () => {
+    const res = await serviceFetch({
+      method: "GET",
+      url: "/api/course/" + id,
+    });
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
   return (
     <>
       <Header></Header>
