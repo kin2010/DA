@@ -9,7 +9,6 @@ const PublicRoute = ({ component: Component, ...rest }) => {
 			{...rest}
 			render={(props) => {
 				if (!getToken() && !getRoleID()) {
-					console.log("log");
 					return <Redirect to="/login" />;
 					// return <Component {...rest} {...props} />;
 				} else {

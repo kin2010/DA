@@ -1,7 +1,6 @@
 import React from "react";
 import { Tabs } from "antd";
 const onChange = (key) => {
-  console.log(key);
 };
 const Tabb = () => (
   <Tabs

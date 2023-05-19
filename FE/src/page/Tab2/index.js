@@ -13,19 +13,22 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CrChapter from "../Course/CrChapter";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAllChapters } from "../../hook/LessionHook";
 const Tab2 = ({ course }) => {
   const [data, setData] = useState([]);
   const [chapter, setChapter] = useState([]);
   const [current, setCurrent] = useState(0);
   const [showChapter, setShowChapter] = useState(false);
-  const [currentId, setCurrentId] = useState();
   const [updateLessionId, setUpdateLessionId] = useState();
-  const [updateChapterId, setUpdateChapterId] = useState();
+  const [updateChapterId, setUpdateChapterId] = useState("");
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!id) {
+      navigate("/course/create");
+    }
     getChapters();
   }, []);
 
@@ -37,24 +40,7 @@ const Tab2 = ({ course }) => {
     setChapter(res?.chapters || []);
     console.log("_________", id, res);
   };
-  /**
-   *data:
-          type:chapter||lession
-          value: name 
-   */
-  useEffect(() => {
-    console.log("data", data);
-  }, [data]);
 
-  const addNew = (id) => {
-    setShowChapter(false);
-    setCurrentId(id);
-    setUpdateLessionId(null);
-  };
-  const changeKey = (item, key) => {
-    setShowChapter(item?.key === "chapter");
-    setCurrent(key);
-  };
   const setChangeCurrent = (key, less) => {
     //update name
     // sett(key, less);
@@ -72,34 +58,28 @@ const Tab2 = ({ course }) => {
   };
 
   const addNewChapter = () => {
-    setShowChapter(true);
     console.log("add");
     setUpdateChapterId("");
   };
   const updateLession = (id) => {
-    setShowChapter(false);
     setUpdateLessionId(id);
   };
   const updateChap = (id) => {
-    setShowChapter(true);
+    console.log("setUpdateChap", id);
     setUpdateChapterId(id);
   };
+
+  useEffect(() => {
+    console.log("change", updateChapterId);
+  }, [updateChapterId]);
+
+  const handleClickChapter = () => {};
+
   return (
     <div>
+      <h4 className="mb-5">Chương mục của khóa học: </h4>
       <Row className="w-100 ">
         <Col className="w-25" style={{ flex: "none" }}>
-          {/* <List
-            header={<div>Lession</div>}
-            // footer={<div>Footer</div>}
-            bordered
-            dataSource={!!data.length ? data : ["..."]}
-            renderItem={(item, key) => (
-              <List.Item onClick={() => changeKey(item, key)}>
-                <Typography.Text mark>[{key + 1}] </Typography.Text>{" "}
-                {item.value}
-              </List.Item>
-            )}
-          /> */}
           {!!chapter?.length &&
             chapter.map((ch) => (
               <Fragment key={ch?._id}>
@@ -115,9 +95,10 @@ const Tab2 = ({ course }) => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography
+                      onClick={handleClickChapter}
                       dangerouslySetInnerHTML={{ __html: ch?.mota }}
                     ></Typography>
-                    {!!ch?.lessions?.length && (
+                    {/* {!!ch?.lessions?.length && (
                       <List
                         bordered
                         dataSource={
@@ -130,11 +111,7 @@ const Tab2 = ({ course }) => {
                           </List.Item>
                         )}
                       />
-                    )}
-                    {/* <Button onClick={() => addNew(ch?._id)}>
-                      <AddIcon className="me-2" />
-                      ADD NEW LESSION
-                    </Button> */}
+                    )} */}
                   </AccordionDetails>
                 </Accordion>
               </Fragment>
@@ -148,24 +125,8 @@ const Tab2 = ({ course }) => {
           <CrChapter
             course={course}
             refetch={getChapters}
-            idChapter={currentId}
             updateChapterId={updateChapterId}
           ></CrChapter>
-          {/* {showChapter ? (
-            <CrChapter
-              course={course}
-              refetch={getChapters}
-              idChapter={currentId}
-              updateChapterId={updateChapterId}
-            ></CrChapter>
-          ) : (
-            <CreateLession
-              course={course}
-              refetch={getChapters}
-              idChapter={currentId}
-              updateLessionId={updateLessionId}
-            ></CreateLession>
-          )} */}
         </Col>
       </Row>
     </div>

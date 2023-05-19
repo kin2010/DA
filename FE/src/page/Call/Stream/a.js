@@ -221,7 +221,6 @@ const Streamsssss = () => {
         });
     }
     const SDP = async (data) => {
-      console.log(6, data, 4, arr, data.sender);
       if (data.description.type === "offer") {
         if (!!data.description) {
           await arr[data.sender].setRemoteDescription(
@@ -377,7 +376,6 @@ const Streamsssss = () => {
       addChat(data, "local-video");
     }
     const chatBtn = (e) => {
-      console.log("here: ", document.getElementById("chat-input").value);
       if (document.getElementById("chat-input").value.trim()) {
         sendMsg(document.getElementById("chat-input").value);
 

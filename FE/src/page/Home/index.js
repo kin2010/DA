@@ -8,7 +8,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import Course from "../Course/Course";
+import Course from "../Course";
 import Resultt from "../../component/Result";
 import { Col } from "antd";
 import Lotrinh from "../../component/Lotrinh";

@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
-import Editor from ".";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import { Button } from "@mui/material";
@@ -14,31 +13,17 @@ import {
 } from "../../hook/LessionHook";
 import { AppContextProvider } from "../../Context/AppContext";
 import { useParams } from "react-router-dom";
+import EditorCommon from "../../component/EdittorCommon/EdittorCommon";
 const CrChapter = ({ refetch, updateChapterId }) => {
   const [form, setForm] = useState({ name: "", mota: "" });
   const [validated, setValidated] = useState(false);
   const { openNotification } = React.useContext(AppContextProvider);
   const { id } = useParams();
 
-  useEffect(() => {
-    console.log("create");
-    if (!!updateChapterId) {
-      setForm({
-        name: "",
-        mota: "",
-      });
-      fetchChapter();
-    } else {
-      setForm({
-        name: "",
-        mota: "",
-      });
-    }
-  }, [updateChapterId]);
-
   const fetchChapter = async () => {
-    const params = { id: updateChapterId, ...form };
+    const params = { id: updateChapterId };
     const res = await getChapterById(params);
+    console.log("res", res, 44, params);
     setForm({ ...res });
   };
 
@@ -90,18 +75,26 @@ const CrChapter = ({ refetch, updateChapterId }) => {
     }
     setValidated(true);
   };
+
+  useEffect(() => {
+    console.log("create", updateChapterId);
+    if (!!updateChapterId) {
+      setForm({
+        name: "",
+        mota: "",
+      });
+      fetchChapter();
+    } else {
+      setForm({
+        name: "",
+        mota: "",
+      });
+    }
+  }, [updateChapterId]);
+
   return (
     <>
-      <Form
-        onSubmit={(e) => save(e)}
-        noValidate
-        validated={validated}
-        // style={{
-        //   backgroundColor: "#f1f1f1",
-        //   padding: "20px 20px",
-        //   margin: "20px 0 0 0",
-        // }}
-      >
+      <Form onSubmit={(e) => save(e)} noValidate validated={validated}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Chương mục :</Form.Label>
           <Form.Control
@@ -111,9 +104,14 @@ const CrChapter = ({ refetch, updateChapterId }) => {
             placeholder="Tên chương"
             onChange={change}
             className="mb-2"
+            value={form.name}
           />
           <Form.Text className="text-muted">Nhập tên chương mục :</Form.Text>
-          <Editor name="mota" handleChange={handleChangeEditor}></Editor>
+          <EditorCommon
+            name="mota"
+            handleChange={handleChangeEditor}
+            value={form.mota}
+          ></EditorCommon>
           <Button
             // onClick={save}
             className="mt-4  me-5"

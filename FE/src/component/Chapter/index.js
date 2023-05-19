@@ -14,7 +14,6 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import CreateLession from "../../page/Course/CreateLession";
 import { Divider } from "antd";
 export default function Chapter({ count, name, lession, handleChapter }) {
-  console.log(count);
   const [show, setShow] = useState(false);
   const [index] = useState(count);
   const [chapter, setChapter] = React.useState({

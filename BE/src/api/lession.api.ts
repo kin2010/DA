@@ -332,18 +332,20 @@ export default class LessionApi {
           chapters: chapter,
           status: 200,
         })
-        .status(httpStatus.OK);
+        .status(httpStatus.OK)
+        .end();
     } catch (error) {
       next(error);
     }
   };
-  static getCha = async (
-    req: Request<Query, Params>,
+  static getChapter = async (
+    req: Request<IUpdate, Query, Params>,
     res: Response,
     next: NextFunction
   ) => {
     try {
       const { id } = req?.body;
+      console.log("chapter", id);
       const chapter = await Chapter.findById(id);
       if (!chapter) {
         throw new APIError({
@@ -351,12 +353,19 @@ export default class LessionApi {
           status: httpStatus.NOT_FOUND,
         });
       }
-      return chapter.populate([
+      const chapterRes = await chapter.populate([
         {
           path: "lessions",
           select: "teacher mota",
         },
       ]);
+      res
+        .json({
+          data: chapterRes,
+          status: 200,
+        })
+        .status(httpStatus.OK)
+        .end();
     } catch (error) {
       next(error);
     }

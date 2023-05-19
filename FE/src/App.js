@@ -43,7 +43,7 @@ function App() {
               <Route path="/group" element={<Group />}>
                 <Route exact path=":id" element={<GroupDetailt />}></Route>
               </Route>
-              <Route path="/course" element={<Course />}></Route>
+              {/* <Route path="/course" element={<Course />}></Route> */}
               <Route path="/course/create" element={<CrCourse />}>
                 <Route path=":id" element={<CrCourse />}></Route>
               </Route>

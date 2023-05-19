@@ -58,7 +58,6 @@ const items = [
 const Menuu = () => {
   const navigate = useNavigate();
   const onClick = (e) => {
-    console.log("click ", e);
     navigate("/call");
   };
   return (

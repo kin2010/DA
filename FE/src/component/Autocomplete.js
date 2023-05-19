@@ -18,13 +18,11 @@ export default function SearchAuto(props) {
             item?.fullName?.toUpperCase().indexOf(vl?.toUpperCase()) !== -1
           );
         });
-        console.log("first,n", newlist);
         setValue(newlist);
       } else {
         setValue(originValue);
       }
     } catch (error) {
-      console.log(error);
     }
   };
 

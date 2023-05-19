@@ -78,7 +78,8 @@ export default class CourseApi {
     next: NextFunction
   ) => {
     try {
-      const { id } = req.body;
+      const { id } = req.params;
+      console.log("id: " + id);
       const coures = await Course.findById(id);
       if (!coures) {
         throw new APIError({
@@ -113,7 +114,7 @@ export default class CourseApi {
       ]);
       res.json({ course: cc, status: 200 }).status(httpStatus.OK);
     } catch (error) {
-      next();
+      next(error);
     }
   };
   static update = async (

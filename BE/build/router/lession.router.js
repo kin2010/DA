@@ -12,5 +12,5 @@ router.route("/:id").get(api_1.LessionService.getById);
 router.route("/chapter").post(api_1.LessionService.addChapter);
 router.route("/chapter:id").put(api_1.LessionService.addChapter);
 router.route("/getchapter").post(api_1.LessionService.getChapters);
-router.route("/chapterid").get(api_1.LessionService.getCha);
+router.route("/chapterid").get(api_1.LessionService.getChapter);
 exports.default = router;

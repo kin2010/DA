@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Editor from ".";
+import EditorCommon from "../../component/EdittorCommon/EdittorCommon";
 import { Box, Chip, Stack } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import CreateLession from "./CreateLession";
@@ -54,7 +54,7 @@ const CreateCourse = () => {
                 {
                   label: `Bài giảng trong khóa học`,
                   key: "x2",
-                  children: <Editor></Editor>,
+                  children: <EditorCommon></EditorCommon>,
                 },
                 {
                   label: `Thành phần tham gia`,
@@ -68,49 +68,11 @@ const CreateCourse = () => {
                 },
               ]}
             />
-            {/* <Box className="  d-flex align-items-center justify-content-between  mt-5">
-              <div>
-                <Form.Label className="labell me-5 ">Mục lục :</Form.Label>
-                <br />
-                <Form.Text className="text-muted">Xây dựng đề cương</Form.Text>
-              </div>
-              <AddBoxIcon
-                onClick={addChapter}
-                style={{ fontSize: "55px" }}
-                color="primary"
-              />
-            </Box>{" "}
-            {!!chapter.length &&
-              chapter.map((chap, index) => (
-                <Chapter
-                  count={index}
-                  handleChapter={handleChapter}
-                  key={"chap" + index}
-                ></Chapter>
-              ))} */}
+            
           </Col>
         </Row>
 
-        {/* <div className="chapters">
-          <Box className="d-flex align-items-center justify-content-between  mt-5">
-            <Form.Label className="labell me-5 ">Bài giảng :</Form.Label>
-            <AddBoxIcon
-              onClick={addLession}
-              style={{ fontSize: "55px" }}
-              color="primary"
-            />
-          </Box>
-          {!!arrlession.length &&
-            arrlession.map((le, index) => (
-              <div key={le.index}>
-                <CreateLession
-                  setLe={replaceLession}
-                  arr={arrlession}
-                  data={le}
-                ></CreateLession>
-              </div>
-            ))}
-        </div> */}
+       
       </Container>
     </>
   );
@@ -165,21 +127,7 @@ export const CreateCou = () => {
     setValidated(true);
   };
 
-  const handleChapter = (chapter) => {
-    const c = {
-      ...chapter,
-      lession: chapter?.lession?.map((le) => le._id) || [],
-    };
-    console.log("cccc", c);
-    const arr = arrChapter;
-    const exist = arr.findIndex((ar) => ar.index === chapter.index);
-    if (exist > -1) {
-      arr[exist] = c;
-    } else {
-      arr.push(c);
-    }
-    setArrChapter([...arr]);
-  };
+ 
   React.useEffect(() => {
     console.log(11, arrChapter, [...arrChapter]);
     setForm({
@@ -212,42 +160,8 @@ export const CreateCou = () => {
             <Form.Label className="labell">Mô tả khóa học</Form.Label>
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Giới thiệu :</Form.Label>
-              <Editor></Editor>
+              <EditorCommon></EditorCommon>
             </Form.Group>
-            {/* <Form.Group
-      className="mb-3"
-      controlId="formBasicPassword"
-    >
-      <Form.Label>Yêu cầu của khóa học :</Form.Label>
-      <Editor
-        name="yeucau"
-        handleChange={handleChangeEditor}
-      ></Editor>
-    </Form.Group>
-    <Form.Group
-      className="mb-3"
-      controlId="formBasicPassword"
-    >
-      <Form.Label>
-        Kết quả mong muốn của khóa học :
-      </Form.Label>
-      <Editor
-        name="ketqua"
-        handleChange={handleChangeEditor}
-      ></Editor>
-    </Form.Group>
-    <Form.Group
-      className="mb-3"
-      controlId="formBasicPassword"
-    >
-      <Form.Label>
-        Đối tượng có thể tham gia :
-      </Form.Label>
-      <Editor
-        name="doituong"
-        handleChange={handleChangeEditor}
-      ></Editor>
-    </Form.Group> */}
             <Form.Label>Chọn ảnh :</Form.Label>
             <Uploadd style={{ width: "299px" }} change={changeFile}></Uploadd>
             <Button
@@ -270,9 +184,6 @@ export const CreateCou = () => {
               className="mt-4 mb-2 d-flex algin-items-center"
             >
               <AddIcon
-                // style={{
-                //   fontSize: "32px",
-                // }}
                 className="me-2"
               />
               ADD NEW TEACHER

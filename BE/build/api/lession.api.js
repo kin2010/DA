@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -403,7 +403,8 @@ var LessionApi = /** @class */ (function () {
                         chapters: chapter,
                         status: 200,
                     })
-                        .status(http_status_1.default.OK);
+                        .status(http_status_1.default.OK)
+                        .end();
                     return [3 /*break*/, 4];
                 case 3:
                     error_6 = _b.sent();
@@ -413,13 +414,14 @@ var LessionApi = /** @class */ (function () {
             }
         });
     }); };
-    LessionApi.getCha = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, chapter, error_7;
+    LessionApi.getChapter = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var id, chapter, chapterRes, error_7;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 3, , 4]);
                     id = (req === null || req === void 0 ? void 0 : req.body).id;
+                    console.log("chapter", id);
                     return [4 /*yield*/, chapter_1.default.findById(id)];
                 case 1:
                     chapter = _b.sent();
@@ -429,17 +431,27 @@ var LessionApi = /** @class */ (function () {
                             status: http_status_1.default.NOT_FOUND,
                         });
                     }
-                    return [2 /*return*/, chapter.populate([
+                    return [4 /*yield*/, chapter.populate([
                             {
                                 path: "lessions",
                                 select: "teacher mota",
                             },
                         ])];
                 case 2:
+                    chapterRes = _b.sent();
+                    res
+                        .json({
+                        data: chapterRes,
+                        status: 200,
+                    })
+                        .status(http_status_1.default.OK)
+                        .end();
+                    return [3 /*break*/, 4];
+                case 3:
                     error_7 = _b.sent();
                     next(error_7);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); };
