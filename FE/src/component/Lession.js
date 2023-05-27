@@ -3,15 +3,32 @@ import React from "react";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import "./index.css";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import Person2Icon from "@mui/icons-material/Person2";
-
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import DeleteIcon from "@mui/icons-material/Delete";
 {
   /* <Avatar src="https://joeschmoe.io/api/v1/random" /> */
 }
 
-const Des = ({ view, time, member }) => {
+const Des = ({
+  view,
+  time,
+  member,
+  isEdit,
+  setUpdateLessionId,
+  lession,
+  setIsShowLession,
+}) => {
+  const { _id } = lession;
+  const handleEdit = () => {
+    setIsShowLession(true);
+    setUpdateLessionId(_id);
+  };
+  const handleRemove = (id) => {
+    //
+  };
   return (
     <>
       <Box
@@ -31,7 +48,10 @@ const Des = ({ view, time, member }) => {
           }}
         >
           <PlayCircleOutlineIcon color="primary" />
-          <Typography fontSize={14}> {time || "__"} phút</Typography>
+          <Typography style={{ flexShrink: 0 }} fontSize={14}>
+            {" "}
+            {time || "__"} phút
+          </Typography>
         </Box>
         <Box
           sx={{
@@ -41,7 +61,9 @@ const Des = ({ view, time, member }) => {
           }}
         >
           <Person2Icon color="primary" />
-          <Typography fontSize={14}>{member || "__"} học viên</Typography>
+          <Typography style={{ flexShrink: 0 }} fontSize={14}>
+            {member || "__"} học viên
+          </Typography>
         </Box>
         <Box
           sx={{
@@ -51,13 +73,29 @@ const Des = ({ view, time, member }) => {
           }}
         >
           <RemoveRedEyeIcon color="primary" />
-          <Typography fontSize={14}>{view || "__"}</Typography>
+          <Typography style={{ flexShrink: 0 }} fontSize={14}>
+            {view || "__"}
+          </Typography>
         </Box>
+        {isEdit && (
+          <Box
+            sx={{
+              display: "flex",
+              gap: "0 10px",
+              alignItems: "center",
+            }}
+          >
+            <EditNoteIcon onClick={handleEdit} color="success" />
+            <DeleteIcon onClick={handleRemove} color="error" />
+          </Box>
+        )}
       </Box>
     </>
   );
 };
-const Lession = ({ name, time, view, member }) => {
+const Lession = (props) => {
+  const { lession, isEdit, setUpdateLessionId, setIsShowLession } = props;
+  const { name, time, view, member, _id } = lession;
   const data = [
     {
       title: name,
@@ -72,8 +110,18 @@ const Lession = ({ name, time, view, member }) => {
         <List.Item>
           <List.Item.Meta
             avatar={<BorderColorIcon color="success" />}
-            title={<a href="https://ant.design">{item.title}</a>}
-            description={<Des time={time} view={view} member={member} />}
+            title={<Link href={`/lession/${_id}`}>{item.title}</Link>}
+            description={
+              <Des
+                time={time}
+                view={view}
+                member={member}
+                isEdit={isEdit}
+                lession={lession}
+                setUpdateLessionId={setUpdateLessionId}
+                setIsShowLession={setIsShowLession}
+              />
+            }
           />
         </List.Item>
       )}

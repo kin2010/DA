@@ -74,3 +74,9 @@ body {
 .m-0 {
   margin: 0;
 }
+.confirm_modal li{
+  align-items: center;
+}
+.ant-notification-notice{
+  z-index:9999999999!important;
+}

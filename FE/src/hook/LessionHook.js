@@ -26,8 +26,8 @@ export const addChapter = async (body) => {
 export const getAllChapters = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/lession/getchapter",
-    method: "POST",
-    data: {
+    method: "GET",
+    params: {
       ...body,
     },
   });
@@ -45,12 +45,10 @@ export const updateChapter = async (body) => {
   return data;
 };
 export const getChapterById = async (body) => {
+  const { id } = body;
   const data = await serviceFetch({
-    url: apiURL + "/api/lession/chapterid",
+    url: apiURL + "/api/lession/chapterid/" + id,
     method: "GET",
-    data: {
-      ...body,
-    },
   });
   return data;
 };
@@ -88,7 +86,6 @@ export const getLessionById = async (body) => {
 };
 
 export const updateCourse = async (body) => {
-  console.log(222, body);
   const data = await serviceFetch({
     url: apiURL + "/api/course/" + body?.id,
     method: "PUT",
@@ -124,7 +121,7 @@ export const useCourseService = () => {
   const queryClient = useQueryClient();
   const addCourseMutation = useMutation(addCourse, {
     onSuccess: (data) => {
-      if (data.status === 200) {
+      if (data?.status === 200) {
         queryClient.setQueryData(["course", data?.course?._id], data);
       } else {
         const dt = {
@@ -154,4 +151,15 @@ export const useCourseService = () => {
       return updatedCourseMutation.mutateAsync({ ...body });
     },
   };
+};
+
+export const getByRole = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/course/getbyrole",
+    method: "GET",
+    data: {
+      ...body,
+    },
+  });
+  return data;
 };

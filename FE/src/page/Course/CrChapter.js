@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import { Button } from "@mui/material";
 import {
   addChapter,
   getChapterById,
@@ -23,8 +22,7 @@ const CrChapter = ({ refetch, updateChapterId }) => {
   const fetchChapter = async () => {
     const params = { id: updateChapterId };
     const res = await getChapterById(params);
-    console.log("res", res, 44, params);
-    setForm({ ...res });
+    setForm({ ...(res?.data || {}) });
   };
 
   const change = (e) => {
@@ -69,15 +67,12 @@ const CrChapter = ({ refetch, updateChapterId }) => {
         if (!!refetch) {
           refetch();
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     }
     setValidated(true);
   };
 
   useEffect(() => {
-    console.log("create", updateChapterId);
     if (!!updateChapterId) {
       setForm({
         name: "",
@@ -105,6 +100,7 @@ const CrChapter = ({ refetch, updateChapterId }) => {
             onChange={change}
             className="mb-2"
             value={form.name}
+            defaultValue={""}
           />
           <Form.Text className="text-muted">Nhập tên chương mục :</Form.Text>
           <EditorCommon

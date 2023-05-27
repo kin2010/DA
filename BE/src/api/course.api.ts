@@ -4,8 +4,8 @@ import { Query, Params, Request } from "../configs/types";
 import { Chapter, Course, User } from "../models";
 import APIError from "../utils/APIError";
 export type IRequestCreateCourse = {
-  teacher: string;
-  user: any;
+  teachers: string;
+  users: any;
   name: string;
   chapter: [
     {
@@ -33,6 +33,10 @@ export type TGet = {
 export type IUpdate = {
   body: IRequestCreateCourse;
   id: string;
+};
+export type IGetByRole = {
+  role?: string;
+  courseId?: string;
 };
 export default class CourseApi {
   static create = async (
@@ -131,7 +135,7 @@ export default class CourseApi {
           status: httpStatus.NOT_FOUND,
         });
       }
-
+      console.log(body);
       const coures = await (
         await Course.findByIdAndUpdate(id, body, {
           new: true,
@@ -169,19 +173,47 @@ export default class CourseApi {
         })
         .status(httpStatus.OK);
     } catch (error) {
-      next();
+      next(error);
     }
   };
-  static getTeacher = async (
-    req: Request<Query, Params>,
+  static getByRole = async (
+    req: Request<IGetByRole, Query, Params>,
     res: Response,
     next: NextFunction
   ) => {
     try {
-      const user = await User.find({ roleName: "teacher" });
+      const { role, courseId } = req.query;
+      const coures = await Course.findById(courseId);
+      let courseUsers: any[] = [];
+      if (!!coures) {
+        courseUsers = coures?.users;
+      }
+      const users = await User.aggregate([
+        {
+          $lookup: {
+            from: "roles",
+            localField: "role",
+            foreignField: "_id",
+            as: "role",
+          },
+        },
+        {
+          $unwind: "$role",
+        },
+      ]);
+
+      const dt = users
+        ?.filter((user) => {
+          console.log(user?.role?.roleName);
+          return user?.role?.roleName === role;
+        })
+        ?.map((user) => {
+          return { ...user, enrolled: !!courseUsers?.includes(user?._id) };
+        });
+
       res
         .json({
-          teacher: user,
+          users: dt,
           status: 200,
         })
         .status(httpStatus.OK);

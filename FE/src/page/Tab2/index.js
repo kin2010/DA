@@ -18,8 +18,6 @@ import { getAllChapters } from "../../hook/LessionHook";
 const Tab2 = ({ course }) => {
   const [data, setData] = useState([]);
   const [chapter, setChapter] = useState([]);
-  const [current, setCurrent] = useState(0);
-  const [showChapter, setShowChapter] = useState(false);
   const [updateLessionId, setUpdateLessionId] = useState();
   const [updateChapterId, setUpdateChapterId] = useState("");
   const { id } = useParams();

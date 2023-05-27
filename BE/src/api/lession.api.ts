@@ -286,8 +286,7 @@ export default class LessionApi {
     next: NextFunction
   ) => {
     try {
-      const { idCourse } = req?.body;
-      console.log(2, idCourse);
+      const { idCourse } = req?.query;
       const cc = await Course.findById(idCourse);
       if (!cc) {
         throw new APIError({
@@ -344,8 +343,7 @@ export default class LessionApi {
     next: NextFunction
   ) => {
     try {
-      const { id } = req?.body;
-      console.log("chapter", id);
+      const { id } = req?.params;
       const chapter = await Chapter.findById(id);
       if (!chapter) {
         throw new APIError({
@@ -356,7 +354,33 @@ export default class LessionApi {
       const chapterRes = await chapter.populate([
         {
           path: "lessions",
-          select: "teacher mota",
+          select: "name mota teacher users ralseHand plusMark",
+          populate: [
+            {
+              path: "teacher",
+              select: "fullName",
+            },
+            {
+              path: "users",
+              select: "avatar email fullName address phone online",
+            },
+            {
+              path: "ralseHand",
+              select: "time user",
+              populate: {
+                path: "user",
+                select: "avatar email fullName address phone online",
+              },
+            },
+            {
+              path: "plusMark",
+              select: "time user",
+              populate: {
+                path: "user",
+                select: "avatar email fullName address phone online",
+              },
+            },
+          ],
         },
       ]);
       res

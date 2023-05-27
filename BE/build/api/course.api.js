@@ -171,6 +171,7 @@ var CourseApi = /** @class */ (function () {
                             status: http_status_1.default.NOT_FOUND,
                         });
                     }
+                    console.log(body);
                     return [4 /*yield*/, models_1.Course.findByIdAndUpdate(id, body, {
                             new: true,
                         })];
@@ -211,33 +212,61 @@ var CourseApi = /** @class */ (function () {
                     return [3 /*break*/, 5];
                 case 4:
                     error_3 = _d.sent();
-                    next();
+                    next(error_3);
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }
         });
     }); };
-    CourseApi.getTeacher = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var user, error_4;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
+    CourseApi.getByRole = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, role_1, courseId, coures, courseUsers_1, users, dt, error_4;
+        var _c;
+        return __generator(_a, function (_d) {
+            switch (_d.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, models_1.User.find({ roleName: "teacher" })];
+                    _d.trys.push([0, 3, , 4]);
+                    _b = req.query, role_1 = _b.role, courseId = _b.courseId;
+                    return [4 /*yield*/, models_1.Course.findById(courseId)];
                 case 1:
-                    user = _b.sent();
+                    coures = _d.sent();
+                    courseUsers_1 = [];
+                    if (!!coures) {
+                        courseUsers_1 = coures === null || coures === void 0 ? void 0 : coures.users;
+                    }
+                    return [4 /*yield*/, models_1.User.aggregate([
+                            {
+                                $lookup: {
+                                    from: "roles",
+                                    localField: "role",
+                                    foreignField: "_id",
+                                    as: "role",
+                                },
+                            },
+                            {
+                                $unwind: "$role",
+                            },
+                        ])];
+                case 2:
+                    users = _d.sent();
+                    dt = (_c = users === null || users === void 0 ? void 0 : users.filter(function (user) {
+                        var _b, _c;
+                        console.log((_b = user === null || user === void 0 ? void 0 : user.role) === null || _b === void 0 ? void 0 : _b.roleName);
+                        return ((_c = user === null || user === void 0 ? void 0 : user.role) === null || _c === void 0 ? void 0 : _c.roleName) === role_1;
+                    })) === null || _c === void 0 ? void 0 : _c.map(function (user) {
+                        return __assign(__assign({}, user), { enrolled: !!(courseUsers_1 === null || courseUsers_1 === void 0 ? void 0 : courseUsers_1.includes(user === null || user === void 0 ? void 0 : user._id)) });
+                    });
                     res
                         .json({
-                        teacher: user,
+                        users: dt,
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_4 = _b.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_4 = _d.sent();
                     next(error_4);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); };

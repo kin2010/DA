@@ -353,8 +353,7 @@ var LessionApi = /** @class */ (function () {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
-                    idCourse = (req === null || req === void 0 ? void 0 : req.body).idCourse;
-                    console.log(2, idCourse);
+                    idCourse = (req === null || req === void 0 ? void 0 : req.query).idCourse;
                     return [4 /*yield*/, models_1.Course.findById(idCourse)];
                 case 1:
                     cc = _b.sent();
@@ -420,8 +419,7 @@ var LessionApi = /** @class */ (function () {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
-                    id = (req === null || req === void 0 ? void 0 : req.body).id;
-                    console.log("chapter", id);
+                    id = (req === null || req === void 0 ? void 0 : req.params).id;
                     return [4 /*yield*/, chapter_1.default.findById(id)];
                 case 1:
                     chapter = _b.sent();
@@ -434,7 +432,33 @@ var LessionApi = /** @class */ (function () {
                     return [4 /*yield*/, chapter.populate([
                             {
                                 path: "lessions",
-                                select: "teacher mota",
+                                select: "name mota teacher users ralseHand plusMark",
+                                populate: [
+                                    {
+                                        path: "teacher",
+                                        select: "fullName",
+                                    },
+                                    {
+                                        path: "users",
+                                        select: "avatar email fullName address phone online",
+                                    },
+                                    {
+                                        path: "ralseHand",
+                                        select: "time user",
+                                        populate: {
+                                            path: "user",
+                                            select: "avatar email fullName address phone online",
+                                        },
+                                    },
+                                    {
+                                        path: "plusMark",
+                                        select: "time user",
+                                        populate: {
+                                            path: "user",
+                                            select: "avatar email fullName address phone online",
+                                        },
+                                    },
+                                ],
                             },
                         ])];
                 case 2:

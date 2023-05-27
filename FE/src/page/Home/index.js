@@ -90,7 +90,7 @@ const Home = () => {
                           label="Đánh giá khóa học"
                           color="primary"
                         />
-                      </Stack>{" "}
+                      </Stack>
                       <Divider
                         className="mt-5"
                         textAlign="left"

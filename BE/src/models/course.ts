@@ -2,7 +2,7 @@ import { Document, Schema, model } from "mongoose";
 export interface ICourse extends Document {
   _id: string;
   teacher: string[];
-  user: any;
+  users: any;
   name: string;
   chapter: string[];
   start: Date;

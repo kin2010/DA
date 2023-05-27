@@ -13,6 +13,7 @@ import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import CreateLession from "../../page/Course/CreateLession";
 import { Divider } from "antd";
+import Lession from "../Lession";
 export default function Chapter({ count, name, lession, handleChapter }) {
   const [show, setShow] = useState(false);
   const [index] = useState(count);

@@ -140,7 +140,7 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
         open={open}
         setOpen={setOpen}
       ></TeacherModal>
-
+      <h4 className="mb-5">Tạo khóa học: </h4>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row>
           <Col

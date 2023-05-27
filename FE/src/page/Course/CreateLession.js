@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { DatePicker, Space } from "antd";
@@ -19,10 +19,17 @@ import {
 } from "../../hook/LessionHook";
 import { AppContextProvider } from "../../Context/AppContext";
 import Lession from "../../component/Lession";
-function CreateLession({ course, idChapter, refetch, updateLessionId }) {
+import ModalCommon from "../../component/Modal";
+function CreateLession({
+  course,
+  idChapter,
+  refetch,
+  updateLessionId,
+  setIsShowLession,
+  isShowLession,
+}) {
   const [validated, setValidated] = useState(false);
   const lessionService = useLessionService();
-  const courseService = useCourseService();
   const { openNotification } = useContext(AppContextProvider);
   const [lession, setLession] = useState({});
   const [form, setForm] = useState({
@@ -41,7 +48,7 @@ function CreateLession({ course, idChapter, refetch, updateLessionId }) {
       [e.target.name]: e.target.value,
     });
   };
-
+  const ref = useRef();
   const reset = () => {
     setForm({
       name: "",
@@ -84,9 +91,7 @@ function CreateLession({ course, idChapter, refetch, updateLessionId }) {
       file: file.fileList,
     });
   };
-  useEffect(() => {
-    // console.log(22, form);
-  }, [form]);
+
   const onOk = (value, dateString) => {
     // console.log(value.format("MMMM Do YYYY"));
     // setForm({
@@ -96,11 +101,11 @@ function CreateLession({ course, idChapter, refetch, updateLessionId }) {
     // });
   };
   const save = async (e) => {
+    console.log("first");
     e.preventDefault();
     e.stopPropagation();
     const ff = e.currentTarget;
-
-    if (ff.checkValidity() === false) {
+    if (ff?.checkValidity() === false) {
     } else {
       try {
         if (!updateLessionId) {
@@ -112,6 +117,7 @@ function CreateLession({ course, idChapter, refetch, updateLessionId }) {
           }
           if (res?.status === 200) {
             openNotification(res);
+            setIsShowLession(false);
           }
         } else {
           const params = { ...form, id: updateLessionId };
@@ -121,6 +127,7 @@ function CreateLession({ course, idChapter, refetch, updateLessionId }) {
               refetch();
             }
             openNotification(res);
+            setIsShowLession(false);
           }
         }
       } catch (error) {
@@ -129,116 +136,103 @@ function CreateLession({ course, idChapter, refetch, updateLessionId }) {
     }
     setValidated(true);
   };
-  const dete = () => {
-    //
-    // const index = lession.findIndex((a) => a === le);
-    // let neww;
-    // if (index) {
-    //   lession = lession.splice(index, 1);
-    //   neww = [...lession];
-    // }
-    // setLe(neww);
-  };
+  const dete = () => {};
   return (
     <>
-      {show ? (
-        <Form
-          onSubmit={(e) => save(e)}
-          noValidate
-          validated={validated}
-          style={{
-            backgroundColor: "#f1f1f1",
-            padding: "20px 20px",
-            margin: "20px 0 0 0",
-          }}
-        >
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Tên bài giảng: </Form.Label>
-            <Form.Control
-              onChange={hanldeChange}
-              name="name"
-              type="text"
-              required
-              value={form.name}
-              placeholder="Enter email"
-            />
-            <Form.Text className="text-muted">Nhập tên bài giảng</Form.Text>
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Mô tả</Form.Label>
-            <Form.Control
-              onChange={hanldeChange}
-              name="desc"
-              type="text"
-              placeholder="Mô tả"
-              value={form.desc}
-            />
-          </Form.Group>
-          <Row>
-            <Col>
-              <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Bắt đầu :</Form.Label>
-                <br />
-
-                <DatePicker
-                  className="date_picker"
-                  format="YYYY-MM-DD HH:mm"
-                  showTime
-                  onChange={onChange}
-                  onOk={onOk}
-                  // value={dateFormat(
-                  //   form.start !== "" ? new Date(form.start) : new Date()
-                  // )}
-                />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Thời gian</Form.Label>
+      <ModalCommon
+        open={isShowLession}
+        setOpen={setIsShowLession}
+        title="Tạo bài giảng"
+        footer={<></>}
+      >
+        {show ? (
+          <>
+            <Form
+              onSubmit={(e) => save(e)}
+              noValidate
+              validated={validated}
+              style={{
+                backgroundColor: "#f1f1f1",
+                padding: "20px 20px",
+                margin: "0px 0 0 0",
+              }}
+            >
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Tên bài giảng: </Form.Label>
                 <Form.Control
                   onChange={hanldeChange}
-                  name="time"
-                  type="number"
-                  placeholder="Thời gian:"
-                  // defaultValue={10}
-                  min={10}
-                  value={form.time}
+                  name="name"
+                  type="text"
+                  required
+                  value={form.name}
+                  placeholder="Enter email"
                 />
-                <Form.Text className="text-muted">Thời gian ( phút )</Form.Text>
+                <Form.Text className="text-muted">Nhập tên bài giảng</Form.Text>
               </Form.Group>
-            </Col>
-          </Row>
-          <Form.Label>Bài tập đính kèm :</Form.Label>
-          <Uploadd change={changeFile}></Uploadd>
-
-          <Button
-            // onClick={save}
-            className="mt-4  me-5"
-            variant="primary"
-            type="submit"
-          >
-            <DataSaverOnIcon color="white" className="me-3" />
-            Lưu
-          </Button>
-          <Button
-            onClick={() => dete()}
-            className="mt-4 "
-            variant="danger"
-            type="button"
-          >
-            <DeleteSweepIcon color="white" className="me-3" />
-            Xóa
-          </Button>
-        </Form>
-      ) : (
-        <Lession
-          view={lession?.view}
-          time={lession?.time}
-          name={lession?.name}
-          member={lession?.member}
-        ></Lession>
-      )}
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Mô tả</Form.Label>
+                <Form.Control
+                  onChange={hanldeChange}
+                  name="desc"
+                  type="text"
+                  placeholder="Mô tả"
+                  value={form.desc}
+                />
+              </Form.Group>
+              <Row>
+                <Col>
+                  <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Bắt đầu :</Form.Label>
+                    <br />
+                    <DatePicker
+                      className="date_picker"
+                      format="YYYY-MM-DD HH:mm"
+                      showTime
+                      onChange={onChange}
+                      onOk={onOk}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Thời gian</Form.Label>
+                    <Form.Control
+                      onChange={hanldeChange}
+                      name="time"
+                      type="number"
+                      placeholder="Thời gian:"
+                      min={10}
+                      value={form.time}
+                    />
+                    <Form.Text className="text-muted">
+                      Thời gian ( phút )
+                    </Form.Text>
+                  </Form.Group>
+                </Col>
+              </Row>
+              <Form.Label>Bài tập đính kèm :</Form.Label>
+              <Uploadd change={changeFile}></Uploadd>
+              <div className="modal_footer">
+                <Button className=" me-5" variant="primary" type="submit">
+                  <DataSaverOnIcon color="white" className="me-3" />
+                  Lưu
+                </Button>
+                <Button onClick={() => dete()} variant="danger" type="button">
+                  <DeleteSweepIcon color="white" className="me-3" />
+                  Xóa
+                </Button>
+              </div>
+            </Form>
+          </>
+        ) : (
+          <Lession
+            view={lession?.view}
+            time={lession?.time}
+            name={lession?.name}
+            member={lession?.member}
+          ></Lession>
+        )}
+      </ModalCommon>
     </>
   );
 }
