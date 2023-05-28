@@ -83,7 +83,6 @@ export default class CourseApi {
   ) => {
     try {
       const { id } = req.params;
-      console.log("id: " + id);
       const coures = await Course.findById(id);
       if (!coures) {
         throw new APIError({
@@ -135,7 +134,6 @@ export default class CourseApi {
           status: httpStatus.NOT_FOUND,
         });
       }
-      console.log(body);
       const coures = await (
         await Course.findByIdAndUpdate(id, body, {
           new: true,
@@ -204,8 +202,7 @@ export default class CourseApi {
 
       const dt = users
         ?.filter((user) => {
-          console.log(user?.role?.roleName);
-          return user?.role?.roleName === role;
+          return !!role ? user?.role?.roleName === role : true;
         })
         ?.map((user) => {
           return { ...user, enrolled: !!courseUsers?.includes(user?._id) };

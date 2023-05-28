@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+        while (_) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -108,7 +108,6 @@ var CourseApi = /** @class */ (function () {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
                     id = req.params.id;
-                    console.log("id: " + id);
                     return [4 /*yield*/, models_1.Course.findById(id)];
                 case 1:
                     coures = _b.sent();
@@ -171,7 +170,6 @@ var CourseApi = /** @class */ (function () {
                             status: http_status_1.default.NOT_FOUND,
                         });
                     }
-                    console.log(body);
                     return [4 /*yield*/, models_1.Course.findByIdAndUpdate(id, body, {
                             new: true,
                         })];
@@ -249,9 +247,8 @@ var CourseApi = /** @class */ (function () {
                 case 2:
                     users = _d.sent();
                     dt = (_c = users === null || users === void 0 ? void 0 : users.filter(function (user) {
-                        var _b, _c;
-                        console.log((_b = user === null || user === void 0 ? void 0 : user.role) === null || _b === void 0 ? void 0 : _b.roleName);
-                        return ((_c = user === null || user === void 0 ? void 0 : user.role) === null || _c === void 0 ? void 0 : _c.roleName) === role_1;
+                        var _b;
+                        return !!role_1 ? ((_b = user === null || user === void 0 ? void 0 : user.role) === null || _b === void 0 ? void 0 : _b.roleName) === role_1 : true;
                     })) === null || _c === void 0 ? void 0 : _c.map(function (user) {
                         return __assign(__assign({}, user), { enrolled: !!(courseUsers_1 === null || courseUsers_1 === void 0 ? void 0 : courseUsers_1.includes(user === null || user === void 0 ? void 0 : user._id)) });
                     });

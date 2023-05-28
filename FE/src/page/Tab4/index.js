@@ -52,10 +52,8 @@ export default function Tab4({ ids }) {
     };
     const res = await getByRole();
     const res2 = await getByRole(params2);
-
     setStudent(res2?.users || []);
     const data = [];
-    console.log(res);
     res?.users?.map((user) => {
       data.push({
         key: user?._id,
@@ -67,6 +65,15 @@ export default function Tab4({ ids }) {
       });
     });
     setResUser(res?.users || []);
+    const enrollIds = res?.users?.filter((user) => {
+      return !!user?.enrolled;
+    });
+    console.log(
+      122,
+      enrollIds,
+      res?.users?.map((z) => z?.enrolled)
+    );
+    setSelectedIds(enrollIds || []);
     setAlluser(data || []);
   };
 
@@ -74,7 +81,9 @@ export default function Tab4({ ids }) {
     getAllTeachers();
   }, []);
 
-  useEffect(() => {}, [allUser]);
+  useEffect(() => {
+    //
+  }, [allUser]);
 
   const addUser = async () => {
     // const params = {
