@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: "Roboto", sans-serif !important;
 }
 
 code {
@@ -74,9 +75,9 @@ body {
 .m-0 {
   margin: 0;
 }
-.confirm_modal li{
+.confirm_modal li {
   align-items: center;
 }
-.ant-notification-notice{
-  z-index:9999999999!important;
+.ant-notification-notice {
+  z-index: 9999999999 !important;
 }

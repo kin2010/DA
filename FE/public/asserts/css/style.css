@@ -1972,7 +1972,7 @@ button.back-to-top {
 	display: inline-block;
 	font-size: 13px;
 	text-transform: capitalize;
-	font-family: ;
+	font-family:'Courier New', Courier, monospace ;
 	margin-right: 5px;
 }
 .media-post li a{
@@ -2947,25 +2947,25 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#391800', end
 	font-weight: 400;
 	font-size: 15px;
 }
-.edit-profile h3{
-	font-size: 18px;
-	font-weight: 400;
+.course-cr h3{
+	font-size: 20px;
+	font-weight: 500;
 	margin: 0;
 }
-.edit-profile .help{
+.course-cr .help{
 	font-size:12px;
 	line-height:18px;
 
 	display: block;
 }
-.edit-profile .col-form-label{
+.course-cr .col-form-label{
 	font-size:14px;
 	font-weight: 400;
 }
-.edit-profile{
+.course-cr{
 	padding:30px;
 }
-.edit-profile .form-group {
+.course-cr .form-group {
 	margin-bottom: 15px;
 }
 /* My Account */
@@ -3342,7 +3342,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#391800', end
 	.profile-head{
 		padding: 10px 15px 10px 15px;
 	}
-	.edit-profile{
+	.course-cr{
 		padding:15px;
 	}
 	.courses-filter {

@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import { Query, Params, Request } from "../configs/types";
 import { Chapter, Course, User } from "../models";
 import APIError from "../utils/APIError";
+import { pageParams } from ".";
 export type IRequestCreateCourse = {
   teachers: string;
   users: any;
@@ -83,6 +84,7 @@ export default class CourseApi {
   ) => {
     try {
       const { id } = req.params;
+      console.log(id);
       const coures = await Course.findById(id);
       if (!coures) {
         throw new APIError({
@@ -181,7 +183,14 @@ export default class CourseApi {
   ) => {
     try {
       const { role, courseId } = req.query;
-      const coures = await Course.findById(courseId);
+      let coures: any = [];
+      // if (!courseId) {
+      //   coures = await User.find({
+      //     "role.roleName": role,
+      //   });
+      // } else {
+      // }
+      coures = await Course.findById(courseId);
       let courseUsers: any[] = [];
       if (!!coures) {
         courseUsers = coures?.users;
@@ -212,6 +221,54 @@ export default class CourseApi {
         .json({
           users: dt,
           status: 200,
+        })
+        .status(httpStatus.OK);
+    } catch (error) {
+      next(error);
+    }
+  };
+  static allCourse = async (
+    req: Request<pageParams, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { limit, skip } = req.query;
+      // console.log(req.query);
+      const count = await Course.find({});
+      const courses = await Course.find({})
+        .limit(parseInt(limit as string))
+        .skip(parseInt(skip as string))
+        .sort({ createdAt: -1 })
+        .populate([
+          {
+            path: "teacher",
+            select: "fullName",
+          },
+          {
+            path: "users",
+            select: "avatar email fullName address phone online",
+          },
+          {
+            path: "chapter",
+            select: "lessions baitaps",
+            populate: [
+              {
+                path: "lessions",
+                select: "view time users",
+              },
+              {
+                path: "baitaps",
+                select: "link status outdate time",
+              },
+            ],
+          },
+        ]);
+      res
+        .json({
+          courses: courses,
+          status: 200,
+          count: count?.length,
         })
         .status(httpStatus.OK);
     } catch (error) {

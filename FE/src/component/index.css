@@ -15,7 +15,14 @@
 .content {
   background-color: rgb(253, 253, 253);
 }
-.MuiBox-root .css-1oflic9{width: auto;}
+.MuiBox-root .css-1oflic9 {
+  width: auto;
+}
 .ant-list-item-meta-title > a {
-  color:#1976d2
+  color: #1976d2;
+}
+.feedback {
+  color: red;
+  margin-top: 6px;
+  font-size: 9px;
 }

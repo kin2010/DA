@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -108,6 +108,7 @@ var CourseApi = /** @class */ (function () {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
                     id = req.params.id;
+                    console.log(id);
                     return [4 /*yield*/, models_1.Course.findById(id)];
                 case 1:
                     coures = _b.sent();
@@ -224,8 +225,15 @@ var CourseApi = /** @class */ (function () {
                 case 0:
                     _d.trys.push([0, 3, , 4]);
                     _b = req.query, role_1 = _b.role, courseId = _b.courseId;
+                    coures = [];
                     return [4 /*yield*/, models_1.Course.findById(courseId)];
                 case 1:
+                    // if (!courseId) {
+                    //   coures = await User.find({
+                    //     "role.roleName": role,
+                    //   });
+                    // } else {
+                    // }
                     coures = _d.sent();
                     courseUsers_1 = [];
                     if (!!coures) {
@@ -262,6 +270,62 @@ var CourseApi = /** @class */ (function () {
                 case 3:
                     error_4 = _d.sent();
                     next(error_4);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); };
+    CourseApi.allCourse = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, limit, skip, count, courses, error_5;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 3, , 4]);
+                    _b = req.query, limit = _b.limit, skip = _b.skip;
+                    return [4 /*yield*/, models_1.Course.find({})];
+                case 1:
+                    count = _c.sent();
+                    return [4 /*yield*/, models_1.Course.find({})
+                            .limit(parseInt(limit))
+                            .skip(parseInt(skip))
+                            .sort({ createdAt: -1 })
+                            .populate([
+                            {
+                                path: "teacher",
+                                select: "fullName",
+                            },
+                            {
+                                path: "users",
+                                select: "avatar email fullName address phone online",
+                            },
+                            {
+                                path: "chapter",
+                                select: "lessions baitaps",
+                                populate: [
+                                    {
+                                        path: "lessions",
+                                        select: "view time users",
+                                    },
+                                    {
+                                        path: "baitaps",
+                                        select: "link status outdate time",
+                                    },
+                                ],
+                            },
+                        ])];
+                case 2:
+                    courses = _c.sent();
+                    res
+                        .json({
+                        courses: courses,
+                        status: 200,
+                        count: count === null || count === void 0 ? void 0 : count.length,
+                    })
+                        .status(http_status_1.default.OK);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_5 = _c.sent();
+                    next(error_5);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

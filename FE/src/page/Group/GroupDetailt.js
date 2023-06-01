@@ -1,9 +1,9 @@
 import { Avatar, Button, Col, List, Result, Row, Input, Form } from "antd";
 import React, { useState } from "react";
-import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
+// or 'antd/dist/antd.less'
 import { Divider, Typography } from "@mui/material";
 import "../../component/index.css";
-import { Comment } from "antd";
+// import { Comment } from "antd";
 const data = [
   {
     title: "Ant Design Title 1",
@@ -46,7 +46,7 @@ const SubCmt = () => {
   return (
     <>
       {comments.length > 0 && <CommentList comments={comments} />}
-      <Comment
+      {/* <Comment
         avatar={
           <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
         }
@@ -58,7 +58,7 @@ const SubCmt = () => {
             value={value}
           />
         }
-      />
+      /> */}
     </>
   );
 };
@@ -81,7 +81,7 @@ const CommentList = ({ comments }) => {
           comments.length > 1 ? "replies" : "reply"
         }`}
         itemLayout="horizontal"
-        renderItem={(props) => <Comment {...props} />}
+        // renderItem={(props) => <Comment {...props} />}
       />
     </>
   );
@@ -105,23 +105,24 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 );
 
 const ExampleComment = ({ children }) => {
-  return (
-    <Comment
-      actions={[<span key="comment-nested-reply-to">Reply to</span>]}
-      author={<a>Han Solo</a>}
-      avatar={
-        <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
-      }
-      content={
-        <p>
-          We supply a series of design principles, practical patterns and high
-          quality design resources (Sketch and Axure).
-        </p>
-      }
-    >
-      {children}
-    </Comment>
-  );
+  return <></>;
+  // return (
+  //   <Comment
+  //     actions={[<span key="comment-nested-reply-to">Reply to</span>]}
+  //     author={<a>Han Solo</a>}
+  //     avatar={
+  //       <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+  //     }
+  //     content={
+  //       <p>
+  //         We supply a series of design principles, practical patterns and high
+  //         quality design resources (Sketch and Axure).
+  //       </p>
+  //     }
+  //   >
+  //     {children}
+  //   </Comment>
+  // );
 };
 const Cmt = () => {
   return (

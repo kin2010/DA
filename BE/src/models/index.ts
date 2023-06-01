@@ -18,3 +18,6 @@ export type { ILession } from "./lession";
 
 export { default as Meeting } from "./meeting";
 export type { IMeeting } from "./meeting";
+
+export { default as Category } from "./category";
+export type { ICategory } from "./category";

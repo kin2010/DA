@@ -52,17 +52,21 @@
 import React, { Component, useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useFormikContext } from "formik";
 
 const EditorCommon = ({ handleChange, name, value }) => {
   const [data, setData] = useState("");
+  const { setFieldValue } = useFormikContext();
 
   useEffect(() => {
-    console.log("set data", value);
     if (!!value) {
       setData(value);
     }
   }, [value]);
 
+  useEffect(() => {
+    setFieldValue(name, data);
+  }, [data]);
   return (
     <div className="App">
       {/* <h2>Using CKEditor 5 build in React</h2> */}
@@ -75,7 +79,7 @@ const EditorCommon = ({ handleChange, name, value }) => {
         }}
         onChange={(event, editor) => {
           const data = editor.getData();
-          // console.log({ event, editor, data });
+          console.log({ data });
           if (!!handleChange) {
             handleChange(name, data);
           }

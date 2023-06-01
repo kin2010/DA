@@ -96,6 +96,26 @@ export const updateCourse = async (body) => {
   return data;
 };
 
+export const getCourse = async ({ queryKey }) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/course/" + queryKey[1],
+    method: "GET",
+  });
+  return data;
+};
+
+export const getAllCourse = async ({ queryKey }) => {
+  // const  []=queryKey
+  const data = await serviceFetch({
+    url: apiURL + "/api/course/all",
+    method: "GET",
+    params: {
+      ...queryKey[1],
+    },
+  });
+  return data;
+};
+
 export const useLessionService = () => {
   const queryClient = useQueryClient();
   const addLessionMutation = useMutation(addLession, {
@@ -157,7 +177,7 @@ export const getByRole = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/course/getbyrole",
     method: "GET",
-    data: {
+    params: {
       ...body,
     },
   });

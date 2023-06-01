@@ -105,19 +105,19 @@ h6 a:hover,
   background: -moz-linear-gradient(
     45deg,
     #100018 0%,
-    #26006c 50%,
+    #1976d2 50%,
     #110038 100%
   ); /* FF3.6-15 */
   background: -webkit-linear-gradient(
     45deg,
     #100018 0%,
-    #26006c 50%,
+    #1976d2 50%,
     #110038 100%
   ); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(
     45deg,
     #100018 0%,
-    #26006c 50%,
+    #1976d2 50%,
     #110038 100%
   ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#100018', endColorstr='#110038',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */

@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import "./index.css";
-import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
+
 import { Button, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
@@ -15,7 +15,7 @@ import CreateLession from "../../page/Course/CreateLession";
 import { Divider } from "antd";
 import Lession from "../Lession";
 export default function Chapter({ count, name, lession, handleChapter }) {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const [index] = useState(count);
   const [chapter, setChapter] = React.useState({
     name: "",

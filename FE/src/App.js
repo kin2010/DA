@@ -18,7 +18,12 @@ import Ca from "./component/Ca/Ca";
 import StreamVideo from "./component/Video";
 import AuthContext from "./Context/AuthContext";
 import PrivateRoute from "./ultis/PrivateRoute";
-
+import CourseDetail from "./page/Course/CourseDetail";
+import Admin from "./Admin";
+import "@coreui/coreui/dist/css/coreui.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import AdminCourse from "./Admin/component/AdminCourse";
+// import "antd/dist/antd.css";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
@@ -43,16 +48,25 @@ function App() {
               <Route path="/group" element={<Group />}>
                 <Route exact path=":id" element={<GroupDetailt />}></Route>
               </Route>
-              <Route path="/course" element={<Course />}></Route>
+              <Route path="/course" element={<Course />}>
+                <Route path=":id" element={<CourseDetail />}></Route>
+              </Route>
               <Route path="/course/create" element={<CrCourse />}>
                 <Route path=":id" element={<CrCourse />}></Route>
               </Route>
               <Route path="/lession">
                 <Route path=":id" element={<LessionDetail />}></Route>
               </Route>
+              <Route path="/dashboard" element={<Admin></Admin>}>
+                <Route path="/dashboard/home" element={<Admin></Admin>}></Route>
+                <Route
+                  path="/dashboard/course"
+                  element={<AdminCourse></AdminCourse>}
+                ></Route>
+              </Route>
               <Route exact path="*" element={Error}></Route>
             </Routes>
-          </BrowserRouter>{" "}
+          </BrowserRouter>
           <ReactQueryDevtools initialIsOpen={false} />
         </AppContext>
       </AuthContext>

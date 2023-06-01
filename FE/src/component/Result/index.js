@@ -1,7 +1,7 @@
 import React from "react";
 import { SmileOutlined } from "@ant-design/icons";
 import { Button, Result } from "antd";
-import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
+// or 'antd/dist/antd.less'
 import { Typography } from "@mui/material";
 export const Title = () => {
   return (

@@ -1,0 +1,175 @@
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import IconBreadcrumbs from "../BreadCrumb";
+import { useState } from "react";
+import { Button, Typography } from "@mui/material";
+import CourseTab1 from "../../../page/Course/CourseTab1";
+import { getByRole } from "../../../hook/LessionHook";
+import { useEffect } from "react";
+import { Formik, useFormik } from "formik";
+import { courseCreateSchema } from "../../../Validation/CourseCreate";
+import CourseTab2 from "../../../page/Course/CourseTab2";
+
+const steps = ["BASIC", "CURRICULUMN", "MEDIA", "PRICE", "PUBLIC"];
+
+export default function AdminCourse() {
+  const [step, setStep] = useState(0);
+  const [completed, setCompleted] = React.useState({});
+  const [course, setCourse] = useState({});
+  const [teacher, setTeacher] = useState([]);
+  const handleStep = (step) => {
+    setStep(step, true);
+  };
+
+  const initialValues = {
+    name: "",
+  };
+  const formik = useFormik({
+    initialValues: initialValues,
+    validationSchema: courseCreateSchema,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+
+  const appendData = async () => {
+    const res = await getByRole({ role: "Teacher" });
+    setTeacher(res?.users);
+  };
+
+  useEffect(() => {
+    appendData();
+  }, []);
+
+  const isLastStep = () => {
+    return step === steps.length - 1;
+  };
+
+  const completedSteps = () => {
+    return Object.keys(completed).length;
+  };
+
+  const allStepsCompleted = () => {
+    return completedSteps() === steps.length;
+  };
+
+  const handleNext = () => {
+    const newActiveStep =
+      isLastStep() && !allStepsCompleted()
+        ? // It's the last step, but not all steps have been completed,
+          // find the first step that has been completed
+          steps.findIndex((step, i) => !(i in completed))
+        : step + 1;
+    setStep(newActiveStep);
+  };
+
+  const handleBack = () => {
+    setStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleComplete = () => {
+    const newCompleted = completed;
+    newCompleted[step] = true;
+    setCompleted(newCompleted);
+    handleNext();
+  };
+
+  const onSubmit = (value) => {
+    console.log(value);
+  };
+  return (
+    <main className="ttr-wrapper">
+      <div className="container-fluid">
+        <IconBreadcrumbs></IconBreadcrumbs>
+        <div className="row">
+          <div className="col-lg-12 m-b30">
+            <div className="widget-box">
+              <div className="wc-title">
+                <h4>Create New Course</h4>
+              </div>
+              <Box sx={{ width: "100%" }}>
+                <Stepper activeStep={step} alternativeLabel>
+                  {steps.map((label, index) => (
+                    <Step key={label}>
+                      <StepLabel onClick={() => handleStep(index)}>
+                        {label}
+                      </StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={courseCreateSchema}
+                  onSubmit={(value) => onSubmit(value)}
+                >
+                  {(props) => (
+                    <>
+                      {step === 0 && (
+                        <CourseTab1
+                          course={course}
+                          setCourse={setCourse}
+                          dataTeacher={teacher}
+                        ></CourseTab1>
+                      )}
+                      {step === 1 && (
+                        <CourseTab2
+                          course={course}
+                          setCourse={setCourse}
+                          dataTeacher={teacher}
+                        ></CourseTab2>
+                      )}
+                    </>
+                  )}
+                </Formik>
+                <div>
+                  <React.Fragment>
+                    <Box
+                      sx={{ display: "flex", flexDirection: "row", p: "30px" }}
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        disabled={step === 0}
+                        onClick={handleBack}
+                        sx={{ mr: 1 }}
+                      >
+                        PREVIOUS
+                      </Button>
+                      <Box sx={{ flex: "1 1 auto" }} />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleNext}
+                        sx={{ mr: 1 }}
+                      >
+                        NEXT
+                      </Button>
+                      {/* {step !== steps.length &&
+                        (completed[step] ? (
+                          <Typography
+                            variant="caption"
+                            sx={{ display: "inline-block" }}
+                          >
+                            Step {step + 1} already completed
+                          </Typography>
+                        ) : (
+                          <Button onClick={handleComplete}>
+                            {completedSteps() === step.length - 1
+                              ? "Finish"
+                              : "Complete Step"}
+                          </Button>
+                        ))} */}
+                    </Box>
+                  </React.Fragment>
+                </div>
+              </Box>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
