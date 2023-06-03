@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 
-import { Col, Row } from "antd";
+import { Col, Divider, Row } from "antd";
 import AddIcon from "@mui/icons-material/Add";
 import { useCourseService } from "../../hook/LessionHook";
 import { useQueryClient } from "@tanstack/react-query";
@@ -20,7 +20,10 @@ import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import EditorCommon from "../../component/EdittorCommon/EdittorCommon";
 import { Formik, Field, ErrorMessage, useFormikContext } from "formik";
 import * as Yup from "yup";
-import { courseCreateSchema } from "../../Validation/CourseCreate";
+import {
+  courseCreateSchema,
+  createLessionSchema,
+} from "../../Validation/CourseCreate";
 import FormControl from "../../component/FormControl";
 import { Button, ButtonBase, InputLabel, Select } from "@mui/material";
 import Dropdown from "../../component/Dropdown";
@@ -31,37 +34,29 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import { Modal } from "antd";
 const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
   const [validated, setValidated] = React.useState(false);
   const [arrChapter, setArrChapter] = React.useState([]);
   const [chapter, setChapter] = React.useState([]);
   const { openNotification } = React.useContext(AppContextProvider);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = React.useState({
-    name: "",
-    mota: "",
-    yeucau: "",
-    ketqua: "",
-    price: 0,
-    doituong: "",
-    teacher: [],
-    user: [],
-    chapter: [],
-  });
+
+  const handleOk = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setOpen(false);
+    }, 3000);
+  };
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
   const [ids, setIds] = useState([]);
   const navigate = useNavigate();
   const { handleSubmit } = useFormikContext();
-  useEffect(() => {
-    if (!!course) {
-      setForm({
-        name: course?.name,
-        mota: course?.description?.mota,
-        yeucau: course?.yeucau,
-        ketqua: course?.ketqua,
-        price: course?.price,
-      });
-    }
-  }, [course]);
 
   const clickne = (id) => {
     const copy = ids;
@@ -80,12 +75,7 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
   };
 
   const courseService = useCourseService();
-  const changeFile = (file) => {
-    setForm({
-      ...form,
-      file: file.fileList,
-    });
-  };
+
   const addChapter = () => {
     const add = {
       data: {},
@@ -121,22 +111,84 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
   //   setValidated(true);
   // };
 
+  const addNewSection = () => {
+    console.log("z");
+    setOpen(true);
+  };
+
+  const handeAddSectionSumbit = (value) => {
+    console.log("value", value);
+  };
   return (
-    <div className="widget-inner">
-      <form className={"edit-profile m-b30"} onSubmit={handleSubmit}>
-        <div className="row">
-          <div className="col-12">
-            <div className="ml-auto">
-              <h3>Curriculum</h3>
+    <>
+      <Formik
+        initialValues={{ name: "" }}
+        onSubmit={(value) => handeAddSectionSumbit(value)}
+        validationSchema={createLessionSchema}
+      >
+        {(props) => (
+          <Modal
+            open={open}
+            title="New Section"
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={null}
+          >
+            <form onSubmit={props.handleSubmit}>
+              <FormControl name="name" label={"Section Name*"}></FormControl>
+              <Divider></Divider>
+              <div className="mt-3 d-flex justify-content-end">
+                <Button variant="outlined" key="back" onClick={handleCancel}>
+                  Return
+                </Button>
+                <Button
+                  className="ms-2"
+                  variant="contained"
+                  key="submit"
+                  type="submit"
+                >
+                  Submit
+                </Button>
+              </div>
+            </form>
+          </Modal>
+        )}
+      </Formik>
+      <div className="widget-inner">
+        <form className={"edit-profile m-b30"} onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="col-12">
+              <div className="ml-auto">
+                <h3>Curriculum</h3>
+              </div>
             </div>
-          </div>
-          <div className="col-12 mt-3">
-            <Accordion
+            <div className="col-12 mt-3">
+              <div
+                className="d-flex align-items-center  col-12"
+                style={{
+                  width: "100%",
+                  padding: "10px ",
+                  border: "0.5px solid #12121220",
+                }}
+              >
+                <ViewListIcon className="me-4" color="primary" />
+                <Typography>Curriculum</Typography>
+                <Button
+                  variant="contained"
+                  className="ms-auto"
+                  color="primary"
+                  onClick={addNewSection}
+                >
+                  New Section
+                </Button>
+              </div>
+              {/* <Accordion
               style={{
                 width: "100%",
                 padding: "10px 0px",
                 border: "0.5px solid #12121220",
               }}
+              disableSpacing
             >
               <AccordionSummary
                 expandIcon={
@@ -146,31 +198,29 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
                 }
                 aria-controls="panel1a-content"
                 id="panel1a-header"
-              >
-                <ViewListIcon className="me-4" color="primary" />
-                <Typography>Curriculum</Typography>
-              </AccordionSummary>
-              {/* <AccordionDetails>
+              ></AccordionSummary>
+              <AccordionDetails>
                 <Typography>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
                   eget.
                 </Typography>
-              </AccordionDetails> */}
-            </Accordion>
+              </AccordionDetails>
+            </Accordion> */}
+            </div>
+            {/* <Chapter></Chapter> */}
+            <div className="form-group col-6">
+              <FormControl
+                label="What will students learn in your course?*"
+                name="target"
+              >
+                <textarea className="form-control" defaultValue={" "} />
+              </FormControl>
+            </div>
           </div>
-          {/* <Chapter></Chapter> */}
-          <div className="form-group col-6">
-            <FormControl
-              label="What will students learn in your course?*"
-              name="target"
-            >
-              <textarea className="form-control" defaultValue={" "} />
-            </FormControl>
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </>
   );
 };
 export default CourseTab2;

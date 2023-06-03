@@ -5,3 +5,7 @@ export const courseCreateSchema = Yup.object({
   target: Yup.string().required(),
   requirement: Yup.string().required(),
 });
+
+export const createLessionSchema = Yup.object({
+  name: Yup.string().min(3).required(),
+});

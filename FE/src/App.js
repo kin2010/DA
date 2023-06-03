@@ -23,7 +23,7 @@ import Admin from "./Admin";
 import "@coreui/coreui/dist/css/coreui.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AdminCourse from "./Admin/component/AdminCourse";
-// import "antd/dist/antd.css";
+import "antd/dist/antd.css";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
