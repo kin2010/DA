@@ -21,3 +21,6 @@ export type { IMeeting } from "./meeting";
 
 export { default as Category } from "./category";
 export type { ICategory } from "./category";
+
+export { default as Section } from "./section";
+export type { ISection } from "./section";

@@ -4,42 +4,28 @@ import React, { useEffect, useState } from "react";
 
 import { Col, Divider, Row } from "antd";
 import AddIcon from "@mui/icons-material/Add";
-import { useCourseService } from "../../hook/LessionHook";
-import { useQueryClient } from "@tanstack/react-query";
-import Tab2 from "../Tab2";
-import TeacherModal from "../../component/TeacherModal";
-import { serviceFetch } from "../../ultis/service";
-import { apiURL } from "../../Context/constant";
-import VirtualList from "rc-virtual-list";
-import { Avatar, List } from "antd";
+import { addSection, useCourseService } from "../../hook/LessionHook";
+
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
-import { AppContextProvider } from "../../Context/AppContext";
-import Uploadd from "../../component/Upload";
-import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
-import EditorCommon from "../../component/EdittorCommon/EdittorCommon";
 import { Formik, Field, ErrorMessage, useFormikContext } from "formik";
 import * as Yup from "yup";
-import {
-  courseCreateSchema,
-  createLessionSchema,
-} from "../../Validation/CourseCreate";
+import { createLessionSchema } from "../../Validation/CourseCreate";
 import FormControl from "../../component/FormControl";
 import { Button, ButtonBase, InputLabel, Select } from "@mui/material";
 import Dropdown from "../../component/Dropdown";
 import Chapter from "../../component/Chapter";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import { Modal } from "antd";
+import Section from "../../component/Section";
+import { openNotification } from "../../Notification";
+
 const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
   const [validated, setValidated] = React.useState(false);
   const [arrChapter, setArrChapter] = React.useState([]);
   const [chapter, setChapter] = React.useState([]);
-  const { openNotification } = React.useContext(AppContextProvider);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -116,8 +102,20 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
     setOpen(true);
   };
 
-  const handeAddSectionSumbit = (value) => {
-    console.log("value", value);
+  const handeAddSectionSumbit = async (value) => {
+    const res = await addSection({ ...value });
+    if (res?.status === 200) {
+      openNotification({
+        type: "success",
+        message: "Created successfully",
+      });
+    } else {
+      openNotification({
+        type: "error",
+        message: "Creation failed",
+      });
+    }
+    setOpen(false);
   };
   return (
     <>
@@ -138,16 +136,22 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
               <FormControl name="name" label={"Section Name*"}></FormControl>
               <Divider></Divider>
               <div className="mt-3 d-flex justify-content-end">
-                <Button variant="outlined" key="back" onClick={handleCancel}>
-                  Return
+                <Button
+                  size="small"
+                  variant="outlined"
+                  key="back"
+                  onClick={handleCancel}
+                >
+                  Close
                 </Button>
                 <Button
+                  size="small"
                   className="ms-2"
                   variant="contained"
                   key="submit"
                   type="submit"
                 >
-                  Submit
+                  Add Section
                 </Button>
               </div>
             </form>
@@ -164,11 +168,12 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
             </div>
             <div className="col-12 mt-3">
               <div
-                className="d-flex align-items-center  col-12"
+                className="d-flex align-items-center mb-5 col-12"
                 style={{
                   width: "100%",
                   padding: "10px ",
                   border: "0.5px solid #12121220",
+                  background: "white",
                 }}
               >
                 <ViewListIcon className="me-4" color="primary" />
@@ -182,41 +187,9 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
                   New Section
                 </Button>
               </div>
-              {/* <Accordion
-              style={{
-                width: "100%",
-                padding: "10px 0px",
-                border: "0.5px solid #12121220",
-              }}
-              disableSpacing
-            >
-              <AccordionSummary
-                expandIcon={
-                  <Button variant="contained" color="primary">
-                    New Section
-                  </Button>
-                }
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              ></AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-                  eget.
-                </Typography>
-              </AccordionDetails>
-            </Accordion> */}
+              <Section></Section>
             </div>
-            {/* <Chapter></Chapter> */}
-            <div className="form-group col-6">
-              <FormControl
-                label="What will students learn in your course?*"
-                name="target"
-              >
-                <textarea className="form-control" defaultValue={" "} />
-              </FormControl>
-            </div>
+            <div className="form-group col-6"></div>
           </div>
         </form>
       </div>

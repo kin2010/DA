@@ -12,6 +12,9 @@ import { useEffect } from "react";
 import { Formik, useFormik } from "formik";
 import { courseCreateSchema } from "../../../Validation/CourseCreate";
 import CourseTab2 from "../../../page/Course/CourseTab2";
+import CourseTab3 from "../../../page/Course/CourseTab3";
+import CourseTab4 from "../../../page/Course/CourseTab4";
+import CourseTab5 from "../../../page/Course/CourseTab5";
 
 const steps = ["BASIC", "CURRICULUMN", "MEDIA", "PRICE", "PUBLIC"];
 
@@ -120,6 +123,27 @@ export default function AdminCourse() {
                           setCourse={setCourse}
                           dataTeacher={teacher}
                         ></CourseTab2>
+                      )}
+                      {step === 2 && (
+                        <CourseTab3
+                          course={course}
+                          setCourse={setCourse}
+                          dataTeacher={teacher}
+                        ></CourseTab3>
+                      )}
+                      {step === 3 && (
+                        <CourseTab4
+                          course={course}
+                          setCourse={setCourse}
+                          dataTeacher={teacher}
+                        ></CourseTab4>
+                      )}
+                      {step === 4 && (
+                        <CourseTab5
+                          course={course}
+                          setCourse={setCourse}
+                          dataTeacher={teacher}
+                        ></CourseTab5>
                       )}
                     </>
                   )}

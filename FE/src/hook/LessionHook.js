@@ -116,6 +116,17 @@ export const getAllCourse = async ({ queryKey }) => {
   return data;
 };
 
+export const addSection = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/section",
+    method: "POST",
+    data: {
+      ...body,
+    },
+  });
+  return data;
+};
+
 export const useLessionService = () => {
   const queryClient = useQueryClient();
   const addLessionMutation = useMutation(addLession, {

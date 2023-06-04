@@ -48,7 +48,7 @@ svg {
   padding: 0 20px;
 } */
 .ant-tabs-tab {
-  /* border: 1px solid gray !important; */
+  width: 100%;
 }
 
 .ant-tabs-tab .ant-tabs-tab-active {
@@ -80,4 +80,17 @@ body {
 }
 .ant-notification-notice {
   z-index: 9999999999 !important;
+}
+.ant-tabs-nav-list {
+  width: 100%;
+}
+.ant-tabs-tab {
+  justify-content: center;
+}
+.ant-tabs-tab.ant-tabs-tab-active {
+  background: #1976d2;
+  color: white !important;
+}
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: white !important;
 }

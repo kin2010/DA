@@ -1,7 +1,8 @@
 import { useFormikContext } from "formik";
 import React from "react";
+import EditorCommon from "./EdittorCommon/EdittorCommon";
 
-const FormControl = ({ name, type, label, children, ...other }) => {
+const FormControl = ({ name, type, label, children, inputType, ...other }) => {
   const { values, submitForm, errors, handleChange } = useFormikContext();
 
   function addPropsToReactElement(element, propsChildren) {
@@ -17,6 +18,16 @@ const FormControl = ({ name, type, label, children, ...other }) => {
     }
     return children.map((childElement) =>
       addPropsToReactElement(childElement, propsChildren)
+    );
+  }
+
+  if (type === "editor") {
+    return (
+      <div className="mb-3">
+        <label className="col-form-label">{label}</label>
+        <EditorCommon name={name}></EditorCommon>
+        {errors[name] && <div className="feedback">{errors[name]}</div>}
+      </div>
     );
   }
 
@@ -42,7 +53,7 @@ const FormControl = ({ name, type, label, children, ...other }) => {
           onChange={handleChange}
           name="name"
           className="form-control"
-          type="text"
+          type={inputType || "text"}
           defaultValue=""
         />
       )}

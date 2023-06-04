@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Category = exports.Meeting = exports.Lession = exports.Chapter = exports.Course = exports.Baitap = exports.Role = exports.User = void 0;
+exports.Section = exports.Category = exports.Meeting = exports.Lession = exports.Chapter = exports.Course = exports.Baitap = exports.Role = exports.User = void 0;
 var user_1 = require("./user");
 Object.defineProperty(exports, "User", { enumerable: true, get: function () { return __importDefault(user_1).default; } });
 var role_1 = require("./role");
@@ -20,3 +20,5 @@ var meeting_1 = require("./meeting");
 Object.defineProperty(exports, "Meeting", { enumerable: true, get: function () { return __importDefault(meeting_1).default; } });
 var category_1 = require("./category");
 Object.defineProperty(exports, "Category", { enumerable: true, get: function () { return __importDefault(category_1).default; } });
+var section_1 = require("./section");
+Object.defineProperty(exports, "Section", { enumerable: true, get: function () { return __importDefault(section_1).default; } });
