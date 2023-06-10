@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var courseSchema = new mongoose_1.Schema({
-    teacher: [
+    teachers: [
         {
             type: "ObjectId",
             ref: "User",
@@ -14,42 +14,24 @@ var courseSchema = new mongoose_1.Schema({
             ref: "User",
         },
     ],
-    chapter: [
+    sections: [
         {
             type: "ObjectId",
-            ref: "Chapter",
+            ref: "Section",
         },
     ],
-    // chapter: [
-    //   {
-    //     name: { type: String },
-    //     lessions: [
-    //       {
-    //         type: "ObjectId",
-    //         ref: "Lession",
-    //       },
-    //     ],
-    //     baitaps: [
-    //       {
-    //         type: "ObjectId",
-    //         ref: "Baitap",
-    //       },
-    //     ],
-    //   },
-    // ],
+    category: {
+        type: "ObjectId",
+        ref: "Category",
+    },
     description: {
-        mota: {
-            type: String,
-        },
-        yeucau: {
-            type: String,
-        },
-        ketqua: {
-            type: String,
-        },
-        doituong: {
-            type: String,
-        },
+        type: String,
+    },
+    target: {
+        type: String,
+    },
+    requirement: {
+        type: String,
     },
     price: {
         type: Number,
@@ -68,7 +50,7 @@ var courseSchema = new mongoose_1.Schema({
     },
     lessions: {
         type: "ObjectId",
-        ref: "Lession",
+        ref: "Lecture",
     },
 }, { timestamps: true });
 var Course = (0, mongoose_1.model)("Course", courseSchema);

@@ -23,7 +23,7 @@ const roleSchema = new Schema(
     lessions: [
       {
         type: "ObjectId",
-        ref: "Lession",
+        ref: "Lecture",
       },
     ],
     baitaps: [

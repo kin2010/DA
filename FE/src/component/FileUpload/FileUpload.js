@@ -1,13 +1,32 @@
 import { Button } from "@mui/material";
 import { Upload } from "antd";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-
+import "../../../node_modules/video-react/dist/video-react.css"; // import css
+import { Player } from "video-react";
 const FileUpload = ({ btnName, label, thumbnail, ...props }) => {
   const [fileList, setFileList] = useState([]);
+  const cloudaryUploadRef = useRef();
+  const widgetRef = useRef();
+
+  useEffect(() => {
+    cloudaryUploadRef.current = window.cloudinary;
+    widgetRef.current = cloudaryUploadRef.current.createUploadWidget(
+      {
+        cloudName: "drvb2kjug",
+        uploadPreset: "dzvpbt10",
+      },
+      function (error, result) {
+        if (!error && result && result?.event === "success") {
+          const imageUrl = result.info.secure_url;
+          console.log(777, imageUrl);
+        }
+      }
+    );
+  }, []);
 
   return (
     <div
@@ -19,11 +38,23 @@ const FileUpload = ({ btnName, label, thumbnail, ...props }) => {
         overflowY: "auto",
       }}
     >
+      <button onClick={() => widgetRef.current.open()}>click</button>
       <Upload
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture"
         defaultFileList={[...fileList]}
         itemRender={(originNode, file, currFileList, actions) => {
+          if (file?.type?.includes("video")) {
+            const reader = new FileReader();
+            const url = URL.createObjectURL(file.originFileObj);
+            return (
+              <Player
+                className="mt-3"
+                playsInline
+                poster="/assets/poster.png"
+                src={url}
+              />
+            );
+          }
           return (
             <div className="d-flex align-items-center justify-content-center flex-column">
               <img alt="thumbnail" src={file?.thumbUrl}></img>

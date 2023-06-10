@@ -2,7 +2,7 @@ import { Container } from "@mui/material";
 import React from "react";
 import Header from "../../page/Header";
 
-const LessionDetail = () => {
+const LectureDetail = () => {
   return (
     <div>
       <Header></Header>
@@ -13,4 +13,4 @@ const LessionDetail = () => {
   );
 };
 
-export default LessionDetail;
+export default LectureDetail;

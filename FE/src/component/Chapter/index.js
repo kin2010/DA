@@ -13,7 +13,6 @@ import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import CreateLession from "../../page/Course/CreateLession";
 import { Divider } from "antd";
-import Lession from "../Lession";
 export default function Chapter({ count, name, lession, handleChapter }) {
   const [show, setShow] = useState(true);
   const [index] = useState(count);
@@ -22,7 +21,7 @@ export default function Chapter({ count, name, lession, handleChapter }) {
     lession: [],
     index: count,
   });
-  const [arrlession, setLessions] = useState([]);
+  const [arrlession, setLectures] = useState([]);
 
   const change = (e) => {
     setChapter({
@@ -30,16 +29,16 @@ export default function Chapter({ count, name, lession, handleChapter }) {
       [e.target.name]: e?.target?.value,
     });
   };
-  const addLession = () => {
+  const addLecture = () => {
     const add = {
       lession: {},
 
       index: arrlession.length + 1,
     };
     arrlession.push(add);
-    setLessions([...arrlession]);
+    setLectures([...arrlession]);
   };
-  const changeLession = (id) => {
+  const changeLecture = (id) => {
     const arr = chapter.lession;
     arr.push(id);
     setChapter({
@@ -111,16 +110,16 @@ export default function Chapter({ count, name, lession, handleChapter }) {
           </Typography>
           <Divider></Divider>
           <PostAddIcon
-            onClick={addLession}
+            onClick={addLecture}
             style={{ fontSize: "35px" }}
             color="primary"
           />
           <Divider></Divider>
           {/* <div className="lessions">
-            <Lession className="lession"></Lession>
-            <Lession className="lession"></Lession>
-            <Lession className="lession"></Lession>
-            <Lession className="lession"></Lession>
+            <Lecture className="lession"></Lecture>
+            <Lecture className="lession"></Lecture>
+            <Lecture className="lession"></Lecture>
+            <Lecture className="lession"></Lecture>
           </div> */}
           <div className="lessions">
             {!!arrlession.length &&
@@ -128,7 +127,7 @@ export default function Chapter({ count, name, lession, handleChapter }) {
                 <div key={le.index}>
                   <CreateLession
                     count={index}
-                    setLe={changeLession}
+                    setLe={changeLecture}
                     arr={arrlession}
                     data={le}
                   ></CreateLession>

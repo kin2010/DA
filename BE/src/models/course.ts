@@ -1,27 +1,25 @@
 import { Document, Schema, model } from "mongoose";
 export interface ICourse extends Document {
   _id: string;
-  teacher: string[];
+  teachers: string[];
   users: any;
   name: string;
-  chapter: string[];
+  sections: string[];
   start: Date;
   end: Date;
-  description: {
-    mota?: string;
-    yeucau?: string;
-    ketqua?: string;
-    doituong?: string;
-  };
+  description: string;
+  target: string;
+  requirement: string;
   price: Number;
   status: string;
   image: String;
   lessions: string[];
+  category: string;
 }
 
 const courseSchema = new Schema(
   {
-    teacher: [
+    teachers: [
       {
         type: "ObjectId",
         ref: "User",
@@ -33,42 +31,24 @@ const courseSchema = new Schema(
         ref: "User",
       },
     ],
-    chapter: [
+    sections: [
       {
         type: "ObjectId",
-        ref: "Chapter",
+        ref: "Section",
       },
     ],
-    // chapter: [
-    //   {
-    //     name: { type: String },
-    //     lessions: [
-    //       {
-    //         type: "ObjectId",
-    //         ref: "Lession",
-    //       },
-    //     ],
-    //     baitaps: [
-    //       {
-    //         type: "ObjectId",
-    //         ref: "Baitap",
-    //       },
-    //     ],
-    //   },
-    // ],
+    category: {
+      type: "ObjectId",
+      ref: "Category",
+    },
     description: {
-      mota: {
-        type: String,
-      },
-      yeucau: {
-        type: String,
-      },
-      ketqua: {
-        type: String,
-      },
-      doituong: {
-        type: String,
-      },
+      type: String,
+    },
+    target: {
+      type: String,
+    },
+    requirement: {
+      type: String,
     },
     price: {
       type: Number,
@@ -87,7 +67,7 @@ const courseSchema = new Schema(
     },
     lessions: {
       type: "ObjectId",
-      ref: "Lession",
+      ref: "Lecture",
     },
   },
   { timestamps: true }

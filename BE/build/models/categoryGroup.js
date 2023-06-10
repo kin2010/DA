@@ -5,9 +5,6 @@ var categorySchema = new mongoose_1.Schema({
     name: {
         type: String,
     },
-    group: {
-        type: "ObjectId",
-    },
 }, { timestamps: true });
-var Category = (0, mongoose_1.model)("Category", categorySchema);
-exports.default = Category;
+var CategoryGroup = (0, mongoose_1.model)("category_group", categorySchema);
+exports.default = CategoryGroup;

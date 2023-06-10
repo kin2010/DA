@@ -7,8 +7,8 @@ import Form from "react-bootstrap/Form";
 import EditorCommon from "../../component/EdittorCommon/EdittorCommon";
 import { Box, Chip, Stack } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import CreateLession from "./CreateLession";
-import LessionDetail from "../../component/LessionDetail";
+import CreateLecture from "./CreateLecture";
+import LectureDetail from "../../component/LectureDetail";
 import CreateChapter from "./CreateChapter";
 import Chapter from "../../component/Chapter";
 import Menuu from "../../component/Menu";
@@ -68,11 +68,8 @@ const CreateCourse = () => {
                 },
               ]}
             />
-            
           </Col>
         </Row>
-
-       
       </Container>
     </>
   );
@@ -127,7 +124,6 @@ export const CreateCou = () => {
     setValidated(true);
   };
 
- 
   React.useEffect(() => {
     console.log(11, arrChapter, [...arrChapter]);
     setForm({
@@ -183,9 +179,7 @@ export const CreateCou = () => {
               }}
               className="mt-4 mb-2 d-flex algin-items-center"
             >
-              <AddIcon
-                className="me-2"
-              />
+              <AddIcon className="me-2" />
               ADD NEW TEACHER
             </div>
             <div

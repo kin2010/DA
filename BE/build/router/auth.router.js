@@ -12,4 +12,6 @@ router.route("/register").post(api_1.AuthService.register);
 router.route("/role").post(api_2.RoleSerice.addRole);
 router.route("/get").post(api_1.AuthService.getUser);
 router.route("/category").post(api_2.RoleSerice.addCategory);
+router.route("/categorygroup").post(api_2.RoleSerice.addCategoryGroup);
+router.route("/categories").get(api_2.RoleSerice.getCategory);
 exports.default = router;

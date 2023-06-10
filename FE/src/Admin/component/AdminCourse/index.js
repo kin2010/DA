@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
@@ -7,7 +8,12 @@ import IconBreadcrumbs from "../BreadCrumb";
 import { useState } from "react";
 import { Button, Typography } from "@mui/material";
 import CourseTab1 from "../../../page/Course/CourseTab1";
-import { getByRole } from "../../../hook/LessionHook";
+import {
+  addCourse,
+  getAllCategories,
+  getByRole,
+  useCourseService,
+} from "../../../hook/LessionHook";
 import { useEffect } from "react";
 import { Formik, useFormik } from "formik";
 import { courseCreateSchema } from "../../../Validation/CourseCreate";
@@ -15,8 +21,12 @@ import CourseTab2 from "../../../page/Course/CourseTab2";
 import CourseTab3 from "../../../page/Course/CourseTab3";
 import CourseTab4 from "../../../page/Course/CourseTab4";
 import CourseTab5 from "../../../page/Course/CourseTab5";
+import { useQuery } from "@tanstack/react-query";
+import { openNotification } from "../../../Notification";
 
 const steps = ["BASIC", "CURRICULUMN", "MEDIA", "PRICE", "PUBLIC"];
+
+export const COURSE_CREATE_QUERY = ["new_course"];
 
 export default function AdminCourse() {
   const [step, setStep] = useState(0);
@@ -26,17 +36,13 @@ export default function AdminCourse() {
   const handleStep = (step) => {
     setStep(step, true);
   };
+  const { data } = useQuery(["categories"], getAllCategories);
+  const courseService = useCourseService();
+  const courseData = courseService.get();
 
   const initialValues = {
     name: "",
   };
-  const formik = useFormik({
-    initialValues: initialValues,
-    validationSchema: courseCreateSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
 
   const appendData = async () => {
     const res = await getByRole({ role: "Teacher" });
@@ -62,9 +68,7 @@ export default function AdminCourse() {
   const handleNext = () => {
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
+        ? steps.findIndex((step, i) => !(i in completed))
         : step + 1;
     setStep(newActiveStep);
   };
@@ -78,11 +82,52 @@ export default function AdminCourse() {
     newCompleted[step] = true;
     setCompleted(newCompleted);
     handleNext();
+    if (step === 0) {
+    }
   };
 
-  const onSubmit = (value) => {
-    console.log(value);
+  const onSubmit = async (value) => {
+    console.log(22, courseData);
+    if (!!courseData?.data?._id) {
+      const res = await courseService.updateCourse({
+        id: courseData?.data?._id,
+        body: value,
+      });
+      if (res?.status === 200) {
+        openNotification({
+          type: "success",
+          message: "SAVED",
+        });
+        sessionStorage.setItem("new_course", courseData?.data?._id);
+        setTimeout(() => {
+          setStep(step + 1);
+        }, 2000);
+      } else {
+        openNotification({
+          type: "error",
+          message: res?.message,
+        });
+      }
+    } else {
+      const res = await addCourse(value);
+      if (res?.status === 200) {
+        openNotification({
+          type: "success",
+          message: "SAVED",
+        });
+        sessionStorage.setItem("new_course", res?.data?._id);
+        setTimeout(() => {
+          setStep(step + 1);
+        }, 2000);
+      } else {
+        openNotification({
+          type: "error",
+          message: res?.message,
+        });
+      }
+    }
   };
+
   return (
     <main className="ttr-wrapper">
       <div className="container-fluid">
@@ -122,6 +167,7 @@ export default function AdminCourse() {
                           course={course}
                           setCourse={setCourse}
                           dataTeacher={teacher}
+                          setStep={setStep}
                         ></CourseTab2>
                       )}
                       {step === 2 && (
@@ -171,7 +217,19 @@ export default function AdminCourse() {
                       >
                         NEXT
                       </Button>
-                      {/* {step !== steps.length &&
+                    </Box>
+                  </React.Fragment>
+                </div>
+              </Box>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+{
+  /* {step !== steps.length &&
                         (completed[step] ? (
                           <Typography
                             variant="caption"
@@ -185,15 +243,5 @@ export default function AdminCourse() {
                               ? "Finish"
                               : "Complete Step"}
                           </Button>
-                        ))} */}
-                    </Box>
-                  </React.Fragment>
-                </div>
-              </Box>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
+                        ))} */
 }

@@ -6,6 +6,10 @@ export const courseCreateSchema = Yup.object({
   requirement: Yup.string().required(),
 });
 
-export const createLessionSchema = Yup.object({
+export const createLectureSchema = Yup.object({
   name: Yup.string().min(3).required(),
+  youtube_url: Yup.string().matches(
+    /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    "Must is youtube link"
+  ),
 });

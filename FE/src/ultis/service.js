@@ -53,6 +53,9 @@ export const serviceFetch = async (options, baseURL = apiURL, bearerToken) => {
   if (!!res?.data) {
     return res?.data;
   }
+  if (!!res?.data?.data) {
+    return res?.data?.data;
+  }
   // TODO use table definition to get modal
 
   return res;

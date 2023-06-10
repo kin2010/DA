@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+        while (_) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -67,7 +67,7 @@ var CourseApi = /** @class */ (function () {
                     return [4 /*yield*/, models_1.Course.create(__assign({}, req.body))];
                 case 1: return [4 /*yield*/, (_b.sent()).populate([
                         {
-                            path: "teacher",
+                            path: "teachers",
                             select: "fullName",
                         },
                         {
@@ -75,7 +75,7 @@ var CourseApi = /** @class */ (function () {
                             select: "avatar email fullName address phone online",
                         },
                         {
-                            path: "chapter",
+                            path: "sections",
                             select: "lessions baitaps",
                             populate: [
                                 {
@@ -88,14 +88,18 @@ var CourseApi = /** @class */ (function () {
                                 },
                             ],
                         },
+                        {
+                            path: "category",
+                            select: "name",
+                        },
                     ])];
                 case 2:
                     course = _b.sent();
-                    res.json({ course: course, status: 200 }).status(http_status_1.default.OK);
+                    res.json({ data: course, status: 200 }).status(http_status_1.default.OK);
                     return [3 /*break*/, 4];
                 case 3:
                     error_1 = _b.sent();
-                    next();
+                    next(error_1);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
@@ -108,7 +112,13 @@ var CourseApi = /** @class */ (function () {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
                     id = req.params.id;
-                    console.log(id);
+                    console.log("id", id, !id);
+                    if (!id) {
+                        throw new APIError_1.default({
+                            message: "NOT FOUND !",
+                            status: http_status_1.default.NOT_FOUND,
+                        });
+                    }
                     return [4 /*yield*/, models_1.Course.findById(id)];
                 case 1:
                     coures = _b.sent();
@@ -120,7 +130,7 @@ var CourseApi = /** @class */ (function () {
                     }
                     return [4 /*yield*/, coures.populate([
                             {
-                                path: "teacher",
+                                path: "teachers",
                                 select: "fullName",
                             },
                             {
@@ -128,8 +138,8 @@ var CourseApi = /** @class */ (function () {
                                 select: "avatar email fullName address phone online",
                             },
                             {
-                                path: "chapter",
-                                select: "lessions baitaps",
+                                path: "sections",
+                                select: "lessions baitaps name",
                                 populate: [
                                     {
                                         path: "lessions",
@@ -144,7 +154,7 @@ var CourseApi = /** @class */ (function () {
                         ])];
                 case 2:
                     cc = _b.sent();
-                    res.json({ course: cc, status: 200 }).status(http_status_1.default.OK);
+                    res.json({ data: cc, status: 200 }).status(http_status_1.default.OK);
                     return [3 /*break*/, 4];
                 case 3:
                     error_2 = _b.sent();
@@ -155,33 +165,47 @@ var CourseApi = /** @class */ (function () {
         });
     }); };
     CourseApi.update = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, body, id, out, coures, error_3;
-        var _c;
-        return __generator(_a, function (_d) {
-            switch (_d.label) {
+        var id, out, coures, error_3;
+        var _b;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _d.trys.push([0, 4, , 5]);
-                    _b = req.body, body = _b.body, id = _b.id;
+                    _c.trys.push([0, 4, , 5]);
+                    id = req.params.id;
                     return [4 /*yield*/, models_1.Course.findById(id)];
                 case 1:
-                    out = _d.sent();
+                    out = _c.sent();
                     if (!out) {
                         throw new APIError_1.default({
                             message: "Not found",
                             status: http_status_1.default.NOT_FOUND,
                         });
                     }
-                    return [4 /*yield*/, models_1.Course.findByIdAndUpdate(id, body, {
+                    return [4 /*yield*/, models_1.Course.findByIdAndUpdate(id, __assign({}, req.body), {
                             new: true,
                         })];
-                case 2: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
+                case 2: return [4 /*yield*/, ((_b = (_c.sent())) === null || _b === void 0 ? void 0 : _b.populate([
                         {
-                            path: "teacher",
-                            select: "avatar email fullName address phone online",
+                            path: "teachers",
+                            select: "fullName",
                         },
                         {
                             path: "users",
                             select: "avatar email fullName address phone online",
+                        },
+                        {
+                            path: "sections",
+                            select: "lessions baitaps",
+                            populate: [
+                                {
+                                    path: "lessions",
+                                    select: "view time users",
+                                },
+                                {
+                                    path: "baitaps",
+                                    select: "link status outdate time",
+                                },
+                            ],
                         },
                         // {
                         //   path: "ralseHand",
@@ -201,16 +225,16 @@ var CourseApi = /** @class */ (function () {
                         // },
                     ]))];
                 case 3:
-                    coures = _d.sent();
+                    coures = _c.sent();
                     res
                         .json({
-                        course: coures,
+                        data: coures,
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
                     return [3 /*break*/, 5];
                 case 4:
-                    error_3 = _d.sent();
+                    error_3 = _c.sent();
                     next(error_3);
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
@@ -228,12 +252,6 @@ var CourseApi = /** @class */ (function () {
                     coures = [];
                     return [4 /*yield*/, models_1.Course.findById(courseId)];
                 case 1:
-                    // if (!courseId) {
-                    //   coures = await User.find({
-                    //     "role.roleName": role,
-                    //   });
-                    // } else {
-                    // }
                     coures = _d.sent();
                     courseUsers_1 = [];
                     if (!!coures) {
@@ -291,7 +309,7 @@ var CourseApi = /** @class */ (function () {
                             .sort({ createdAt: -1 })
                             .populate([
                             {
-                                path: "teacher",
+                                path: "teachers",
                                 select: "fullName",
                             },
                             {
@@ -299,7 +317,7 @@ var CourseApi = /** @class */ (function () {
                                 select: "avatar email fullName address phone online",
                             },
                             {
-                                path: "chapter",
+                                path: "sections",
                                 select: "lessions baitaps",
                                 populate: [
                                     {

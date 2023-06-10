@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 const mql = window.matchMedia(`(min-width: 800px)`);
 const SideBar = () => {
   const [open, setOpen] = useState(true);
-  const [docked, setDocked] = useState(mql);
+  const [docked, setDocked] = useState(!!mql);
 
   const handleOpen = () => {
     // setOpen(!open);

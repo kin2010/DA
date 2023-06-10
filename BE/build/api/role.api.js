@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+        while (_) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -79,14 +79,21 @@ var RoleService = /** @class */ (function () {
         });
     }); };
     RoleService.addCategory = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var r, error_2;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
+        var _b, name_1, group, r, cate, error_2;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 3, , 4]);
+                    _c.trys.push([0, 3, , 4]);
+                    _b = req.body, name_1 = _b.name, group = _b.group;
                     return [4 /*yield*/, models_1.Category.findOne({ name: req.body.name })];
                 case 1:
-                    r = _b.sent();
+                    r = _c.sent();
+                    if (!group) {
+                        throw new APIError_1.default({
+                            message: "Please choose a category group",
+                            status: http_status_1.default.BAD_REQUEST,
+                        });
+                    }
                     if (!!r) {
                         throw new APIError_1.default({
                             message: "Category is adready exist",
@@ -94,17 +101,85 @@ var RoleService = /** @class */ (function () {
                         });
                     }
                     return [4 /*yield*/, models_1.Category.create({
-                            name: req.body.name,
+                            name: name_1,
+                            group: group,
                         })];
                 case 2:
-                    _b.sent();
-                    res.json({ status: 200 }).end();
+                    cate = _c.sent();
+                    res.json({ data: cate, status: 200 }).end();
                     return [3 /*break*/, 4];
                 case 3:
-                    error_2 = _b.sent();
+                    error_2 = _c.sent();
                     next(error_2);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
+            }
+        });
+    }); };
+    RoleService.addCategoryGroup = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var r, groups, error_3;
+        return __generator(_a, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, models_1.CategoryGroup.findOne({ name: req.body.name })];
+                case 1:
+                    r = _b.sent();
+                    if (!!r) {
+                        throw new APIError_1.default({
+                            message: "Category Group is adready exist",
+                            status: http_status_1.default.BAD_REQUEST,
+                        });
+                    }
+                    return [4 /*yield*/, models_1.CategoryGroup.create({
+                            name: req.body.name,
+                        })];
+                case 2:
+                    groups = _b.sent();
+                    res.json({ data: groups, status: 200 }).end();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_3 = _b.sent();
+                    next(error_3);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); };
+    RoleService.getCategory = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var categorys, error_4;
+        return __generator(_a, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, models_1.Category.aggregate([
+                            {
+                                $lookup: {
+                                    from: "category_groups",
+                                    localField: "group",
+                                    foreignField: "_id",
+                                    as: "group",
+                                },
+                            },
+                            {
+                                $unwind: "$group",
+                            },
+                            {
+                                $group: {
+                                    _id: "$group",
+                                    categories: { $push: "$$ROOT" },
+                                },
+                            },
+                        ])];
+                case 1:
+                    categorys = _b.sent();
+                    res.json({ data: categorys, status: 200 }).end();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _b.sent();
+                    next(error_4);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     }); };

@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+        while (_) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -74,12 +74,12 @@ var http_status_1 = __importDefault(require("http-status"));
 var models_1 = require("../models");
 var chapter_1 = __importDefault(require("../models/chapter"));
 var APIError_1 = __importDefault(require("../utils/APIError"));
-var LessionApi = /** @class */ (function () {
-    function LessionApi() {
+var LectureApi = /** @class */ (function () {
+    function LectureApi() {
     }
     var _a;
-    _a = LessionApi;
-    LessionApi.create = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    _a = LectureApi;
+    LectureApi.create = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
         var chapter, ch, coures, error_1;
         return __generator(_a, function (_b) {
             switch (_b.label) {
@@ -95,7 +95,7 @@ var LessionApi = /** @class */ (function () {
                             status: http_status_1.default.INTERNAL_SERVER_ERROR,
                         });
                     }
-                    return [4 /*yield*/, models_1.Lession.create(__assign({}, req.body))];
+                    return [4 /*yield*/, models_1.Lecture.create(__assign({}, req.body))];
                 case 2: return [4 /*yield*/, (_b.sent()).populate([
                         {
                             path: "teacher",
@@ -143,14 +143,14 @@ var LessionApi = /** @class */ (function () {
             }
         });
     }); };
-    LessionApi.getById = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    LectureApi.getById = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
         var coures, error_2;
         var _b;
         return __generator(_a, function (_c) {
             switch (_c.label) {
                 case 0:
                     _c.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, models_1.Lession.findById(req.params.id)];
+                    return [4 /*yield*/, models_1.Lecture.findById(req.params.id)];
                 case 1: return [4 /*yield*/, ((_b = (_c.sent())) === null || _b === void 0 ? void 0 : _b.populate([
                         {
                             path: "teacher",
@@ -194,7 +194,7 @@ var LessionApi = /** @class */ (function () {
             }
         });
     }); };
-    LessionApi.update = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    LectureApi.update = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
         var _b, id, other, out, coures, error_3;
         var _c;
         return __generator(_a, function (_d) {
@@ -202,7 +202,7 @@ var LessionApi = /** @class */ (function () {
                 case 0:
                     _d.trys.push([0, 4, , 5]);
                     _b = req.body, id = _b.id, other = __rest(_b, ["id"]);
-                    return [4 /*yield*/, models_1.Lession.findById(id)];
+                    return [4 /*yield*/, models_1.Lecture.findById(id)];
                 case 1:
                     out = _d.sent();
                     if (!out) {
@@ -211,7 +211,7 @@ var LessionApi = /** @class */ (function () {
                             status: http_status_1.default.NOT_FOUND,
                         });
                     }
-                    return [4 /*yield*/, models_1.Lession.findByIdAndUpdate(id, __assign({}, other), {
+                    return [4 /*yield*/, models_1.Lecture.findByIdAndUpdate(id, __assign({}, other), {
                             new: true,
                         })];
                 case 2: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
@@ -257,7 +257,7 @@ var LessionApi = /** @class */ (function () {
             }
         });
     }); };
-    LessionApi.updateChapter = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    LectureApi.updateChapter = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
         var _b, idChapter, other, out, chapter, error_4;
         var _c;
         return __generator(_a, function (_d) {
@@ -300,41 +300,42 @@ var LessionApi = /** @class */ (function () {
             }
         });
     }); };
-    LessionApi.addChapter = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var idCourse, cc, data, chapter, error_5;
+    LectureApi.addChapter = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var course, cc, data, section, error_5;
         var _b;
         return __generator(_a, function (_c) {
             switch (_c.label) {
                 case 0:
                     _c.trys.push([0, 5, , 6]);
-                    idCourse = (req === null || req === void 0 ? void 0 : req.body).idCourse;
-                    return [4 /*yield*/, models_1.Course.findById(idCourse)];
+                    course = (req === null || req === void 0 ? void 0 : req.params).course;
+                    console.log(course, "idcour");
+                    return [4 /*yield*/, models_1.Course.findById(course)];
                 case 1:
                     cc = _c.sent();
                     if (!cc) {
                         throw new APIError_1.default({
-                            message: "Id Course is required",
+                            message: "Course id is required",
                             status: http_status_1.default.INTERNAL_SERVER_ERROR,
                         });
                     }
-                    data = __assign(__assign({}, req.body), { course: idCourse });
-                    return [4 /*yield*/, chapter_1.default.create(__assign({}, data))];
+                    data = __assign(__assign({}, req.body), { course: course });
+                    return [4 /*yield*/, models_1.Section.create(__assign({}, data))];
                 case 2: return [4 /*yield*/, ((_b = (_c.sent())) === null || _b === void 0 ? void 0 : _b.populate([
                         {
                             path: "lessions",
-                            select: "teacher mota",
+                            select: "teachers mota",
                         },
                     ]))];
                 case 3:
-                    chapter = _c.sent();
+                    section = _c.sent();
                     return [4 /*yield*/, cc.update({
-                            chapter: __spreadArray(__spreadArray([], cc.chapter, true), [chapter === null || chapter === void 0 ? void 0 : chapter._id], false),
+                            sections: __spreadArray(__spreadArray([], cc.sections, true), [section === null || section === void 0 ? void 0 : section._id], false),
                         })];
                 case 4:
                     _c.sent();
                     res
                         .json({
-                        chapter: chapter,
+                        data: section,
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
@@ -347,7 +348,7 @@ var LessionApi = /** @class */ (function () {
             }
         });
     }); };
-    LessionApi.getChapters = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    LectureApi.getChapters = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
         var idCourse, cc, chapter, error_6;
         return __generator(_a, function (_b) {
             switch (_b.label) {
@@ -413,7 +414,7 @@ var LessionApi = /** @class */ (function () {
             }
         });
     }); };
-    LessionApi.getChapter = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    LectureApi.getChapter = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
         var id, chapter, chapterRes, error_7;
         return __generator(_a, function (_b) {
             switch (_b.label) {
@@ -479,6 +480,6 @@ var LessionApi = /** @class */ (function () {
             }
         });
     }); };
-    return LessionApi;
+    return LectureApi;
 }());
-exports.default = LessionApi;
+exports.default = LectureApi;

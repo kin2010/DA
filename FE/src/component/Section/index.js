@@ -9,7 +9,8 @@ import { Empty } from "antd";
 import SectionAdd from "./SectionAdd";
 import LectureAdd from "../Lecture/Lecture";
 import AssignmentAdd from "../Assigment/AssignmentAdd";
-const Section = () => {
+const Section = ({ section }) => {
+  console.log(section, 99);
   const [showEdit, setShowEdit] = useState(false);
   const [showLecture, setShowLecture] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -51,7 +52,7 @@ const Section = () => {
           >
             <ReorderIcon className="me-4" color="primary" />
             <Typography fontWeight={600} fontSize={14}>
-              Curriculum
+              {section?.name}
             </Typography>
             <div
               className="d-flex align-items-center"
@@ -64,7 +65,11 @@ const Section = () => {
           <Divider></Divider>
           <div className="py-2">
             {showEdit && (
-              <SectionAdd open={showEdit} setOpen={setShowEdit}></SectionAdd>
+              <SectionAdd
+                open={showEdit}
+                setOpen={setShowEdit}
+                section={section}
+              ></SectionAdd>
             )}
             <Empty />
           </div>

@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
-import { createLessionSchema } from "../../Validation/CourseCreate";
+import { createLectureSchema } from "../../Validation/CourseCreate";
 import { openNotification } from "../../Notification";
 import { addSection } from "../../hook/LessionHook";
 import FormControl from "../FormControl";
 import { Button } from "@mui/material";
 import { Divider, Modal, Tabs, Upload } from "antd";
-import Uploadd from "../Upload";
 import { UploadOutlined } from "@ant-design/icons";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import FileUpload from "../FileUpload/FileUpload";
+import { getYoutubeId } from "../../ultis/func";
 
 const LectureAdd = ({ open, setOpen }) => {
   const handleOk = () => {
@@ -22,24 +23,25 @@ const LectureAdd = ({ open, setOpen }) => {
     setOpen(false);
   };
 
-  const handeAddSectionSumbit = async (value) => {
-    const res = await addSection({ ...value });
-    if (res?.status === 200) {
-      openNotification({
-        type: "success",
-        message: "Created successfully",
-      });
-    } else {
-      openNotification({
-        type: "error",
-        message: "Creation failed",
-      });
-    }
-    setOpen(false);
+  const handeAddLessonSumbit = async (value) => {
+    console.log(value);
+    // const res = await addSection({ ...value });
+    // if (res?.status === 200) {
+    //   openNotification({
+    //     type: "success",
+    //     message: "Created successfully",
+    //   });
+    // } else {
+    //   openNotification({
+    //     type: "error",
+    //     message: "Creation failed",
+    //   });
+    // }
+    // setOpen(false);
   };
 
   const onChange = (key) => {
-    console.log(key);
+    // console.log(key);
   };
 
   const Tab1 = () => {
@@ -55,11 +57,31 @@ const LectureAdd = ({ open, setOpen }) => {
     );
   };
   const Tab2 = () => {
+    const { values } = useFormikContext();
+
     return (
       <>
         <label className="col-form-label">Select your video :</label>
-        <Uploadd></Uploadd>
-        <FormControl label={"Youtube URL*"}></FormControl>
+        <FileUpload
+          btnName="Select your video"
+          label="Supports: mp4"
+          accept="video/mp4,video/x-m4v,video/*"
+        />
+        <FormControl name="youtube_url" label={"Youtube URL*"}></FormControl>
+        {!!getYoutubeId(values["youtube_url"]) && (
+          <div className="text-center mt-3">
+            <iframe
+              src={`https://www.youtube.com/embed/${getYoutubeId(
+                values["youtube_url"]
+              )}?controls=1`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
+              allowFullScreen
+              title="Embedded youtube"
+              className="w-75"
+            />
+          </div>
+        )}
       </>
     );
   };
@@ -118,9 +140,9 @@ const LectureAdd = ({ open, setOpen }) => {
   ];
   return (
     <Formik
-      initialValues={{ name: "" }}
-      onSubmit={(value) => handeAddSectionSumbit(value)}
-      validationSchema={createLessionSchema}
+      initialValues={{ name: "", youtube_url: "" }}
+      onSubmit={(value) => handeAddLessonSumbit(value)}
+      validationSchema={createLectureSchema}
     >
       {(props) => (
         <Modal

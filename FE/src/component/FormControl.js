@@ -1,5 +1,5 @@
 import { useFormikContext } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import EditorCommon from "./EdittorCommon/EdittorCommon";
 
 const FormControl = ({ name, type, label, children, inputType, ...other }) => {
@@ -21,6 +21,10 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
     );
   }
 
+  useEffect(() => {
+    console.log(values, 33);
+  }, []);
+
   if (type === "editor") {
     return (
       <div className="mb-3">
@@ -30,7 +34,7 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
       </div>
     );
   }
-
+  console.log(values);
   if (!!children) {
     return (
       <>
@@ -38,6 +42,7 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
         {addPropsToChildren(children, {
           onChange: handleChange,
           name: name,
+          value: values[name] || "",
           ...other,
         })}
         {errors[name] && <div className="feedback">{errors[name]}</div>}
@@ -51,10 +56,10 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
         <input
           style={{ height: "56px" }}
           onChange={handleChange}
-          name="name"
+          name={name}
           className="form-control"
           type={inputType || "text"}
-          defaultValue=""
+          value={!!values[name] ? values[name] : ""}
         />
       )}
       {errors[name] && <div className="feedback">{errors[name]}</div>}
@@ -64,6 +69,7 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
 
 FormControl.defaultProps = {
   type: "input",
+  inputType: "text",
 };
 
 export default FormControl;
