@@ -16,7 +16,6 @@ const AuthContext = ({ children }) => {
 
   const getUser = async () => {
     const token = getToken();
-    console.log("token", token);
     const res = await serviceFetch({
       url: apiURL + "/api/auth/get",
       method: "POST",
@@ -25,7 +24,6 @@ const AuthContext = ({ children }) => {
     if (res?.user) {
       setUser(res?.user);
     }
-    console.log("res", res);
   };
   const data = {
     user,

@@ -1,11 +1,13 @@
 import { NextFunction, RequestHandler, Response } from "express";
 import httpStatus from "http-status";
 import { Query, Params, Request } from "../configs/types";
-import { Course, Lession } from "../models";
+import { Course, Lecture, Section } from "../models";
 import Chapter from "../models/chapter";
 import APIError from "../utils/APIError";
-export type IRequestLession = {
+export type IRequestLecture = {
   id: string;
+  name: string;
+  description: string;
   chapter: string;
   teacher: string[];
   users: string[];
@@ -30,7 +32,7 @@ export type IRequestLession = {
 };
 export type Ichapter = {
   idChapter: string;
-  idCourse: string;
+  course: string;
   name: string;
   lessions: string[];
   baitaps: string[];
@@ -40,13 +42,13 @@ export type Tget = {
   id: string;
 };
 export type IUpdate = {
-  body: IRequestLession;
+  body: IRequestLecture;
   id: string;
 };
 export type IUpdateChapter = { body: Ichapter; id: string };
-export default class LessionApi {
+export default class LectureApi {
   static create = async (
-    req: Request<IRequestLession, Query, Params>,
+    req: Request<IRequestLecture, Query, Params>,
     res: Response,
     next: NextFunction
   ) => {
@@ -60,7 +62,7 @@ export default class LessionApi {
         });
       }
       const coures = await (
-        await Lession.create({ ...req.body })
+        await Lecture.create({ ...req.body })
       ).populate([
         {
           path: "teacher",
@@ -107,7 +109,7 @@ export default class LessionApi {
   ) => {
     try {
       const coures = await (
-        await Lession.findById(req.params.id)
+        await Lecture.findById(req.params.id)
       )?.populate([
         {
           path: "teacher",
@@ -145,13 +147,13 @@ export default class LessionApi {
     }
   };
   static update = async (
-    req: Request<IRequestLession, Query, Params>,
+    req: Request<IRequestLecture, Query, Params>,
     res: Response,
     next: NextFunction
   ) => {
     try {
       const { id, ...other } = req.body;
-      const out = await Lession.findById(id);
+      const out = await Lecture.findById(id);
       if (!out) {
         throw new APIError({
           message: "Not found",
@@ -160,7 +162,7 @@ export default class LessionApi {
       }
 
       const coures = await (
-        await Lession.findByIdAndUpdate(
+        await Lecture.findByIdAndUpdate(
           id,
           { ...other },
           {
@@ -247,32 +249,33 @@ export default class LessionApi {
     next: NextFunction
   ) => {
     try {
-      const { idCourse } = req?.body;
-      const cc = await Course.findById(idCourse);
+      const { course } = req?.params;
+      console.log(course, "idcour");
+      const cc = await Course.findById(course);
       if (!cc) {
         throw new APIError({
-          message: "Id Course is required",
+          message: "Course id is required",
           status: httpStatus.INTERNAL_SERVER_ERROR,
         });
       }
       const data = {
         ...req.body,
-        course: idCourse,
+        course: course,
       };
-      const chapter = await (
-        await Chapter.create({ ...data })
+      const section = await (
+        await Section.create({ ...data })
       )?.populate([
         {
           path: "lessions",
-          select: "teacher mota",
+          select: "teachers mota",
         },
       ]);
       await cc.update({
-        chapter: [...cc.chapter, chapter?._id],
+        sections: [...cc.sections, section?._id],
       });
       res
         .json({
-          chapter: chapter,
+          data: section,
           status: 200,
         })
         .status(httpStatus.OK);

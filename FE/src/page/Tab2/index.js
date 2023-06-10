@@ -3,7 +3,6 @@
 import { List, Typography } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
-import CreateLession from "../Course/CreateLession";
 import AddIcon from "@mui/icons-material/Add";
 import {
   Accordion,
@@ -18,7 +17,7 @@ import { getAllChapters } from "../../hook/LessionHook";
 const Tab2 = ({ course }) => {
   const [data, setData] = useState([]);
   const [chapter, setChapter] = useState([]);
-  const [updateLessionId, setUpdateLessionId] = useState();
+  const [updateLectureId, setUpdateLectureId] = useState();
   const [updateChapterId, setUpdateChapterId] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -59,8 +58,8 @@ const Tab2 = ({ course }) => {
     console.log("add");
     setUpdateChapterId("");
   };
-  const updateLession = (id) => {
-    setUpdateLessionId(id);
+  const updateLecture = (id) => {
+    setUpdateLectureId(id);
   };
   const updateChap = (id) => {
     console.log("setUpdateChap", id);
@@ -103,7 +102,7 @@ const Tab2 = ({ course }) => {
                           !!ch?.lessions?.length ? ch?.lessions : ["..."]
                         }
                         renderItem={(item, key) => (
-                          <List.Item onClick={() => updateLession(item?._id)}>
+                          <List.Item onClick={() => updateLecture(item?._id)}>
                             <Typography.Text mark>[{key + 1}] </Typography.Text>{" "}
                             {item?.name}
                           </List.Item>

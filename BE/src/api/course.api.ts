@@ -8,7 +8,7 @@ export type IRequestCreateCourse = {
   teachers: string;
   users: any;
   name: string;
-  chapter: [
+  sections: [
     {
       name: string;
       lessions: string[];
@@ -50,7 +50,7 @@ export default class CourseApi {
         await Course.create({ ...req.body })
       ).populate([
         {
-          path: "teacher",
+          path: "teachers",
           select: "fullName",
         },
         {
@@ -58,7 +58,7 @@ export default class CourseApi {
           select: "avatar email fullName address phone online",
         },
         {
-          path: "chapter",
+          path: "sections",
           select: "lessions baitaps",
           populate: [
             {
@@ -71,10 +71,14 @@ export default class CourseApi {
             },
           ],
         },
+        {
+          path: "category",
+          select: "name",
+        },
       ]);
-      res.json({ course, status: 200 }).status(httpStatus.OK);
+      res.json({ data: course, status: 200 }).status(httpStatus.OK);
     } catch (error) {
-      next();
+      next(error);
     }
   };
   static getOne = async (
@@ -84,7 +88,13 @@ export default class CourseApi {
   ) => {
     try {
       const { id } = req.params;
-      console.log(id);
+      console.log("id", id, !id);
+      if (!id) {
+        throw new APIError({
+          message: "NOT FOUND !",
+          status: httpStatus.NOT_FOUND,
+        });
+      }
       const coures = await Course.findById(id);
       if (!coures) {
         throw new APIError({
@@ -95,7 +105,7 @@ export default class CourseApi {
 
       const cc = await coures.populate([
         {
-          path: "teacher",
+          path: "teachers",
           select: "fullName",
         },
         {
@@ -103,8 +113,8 @@ export default class CourseApi {
           select: "avatar email fullName address phone online",
         },
         {
-          path: "chapter",
-          select: "lessions baitaps",
+          path: "sections",
+          select: "lessions baitaps name",
           populate: [
             {
               path: "lessions",
@@ -117,7 +127,7 @@ export default class CourseApi {
           ],
         },
       ]);
-      res.json({ course: cc, status: 200 }).status(httpStatus.OK);
+      res.json({ data: cc, status: 200 }).status(httpStatus.OK);
     } catch (error) {
       next(error);
     }
@@ -128,7 +138,7 @@ export default class CourseApi {
     next: NextFunction
   ) => {
     try {
-      const { body, id } = req.body as IUpdate;
+      const { id } = req.params;
       const out = await Course.findById(id);
       if (!out) {
         throw new APIError({
@@ -137,17 +147,35 @@ export default class CourseApi {
         });
       }
       const coures = await (
-        await Course.findByIdAndUpdate(id, body, {
-          new: true,
-        })
+        await Course.findByIdAndUpdate(
+          id,
+          { ...req.body },
+          {
+            new: true,
+          }
+        )
       )?.populate([
         {
-          path: "teacher",
-          select: "avatar email fullName address phone online",
+          path: "teachers",
+          select: "fullName",
         },
         {
           path: "users",
           select: "avatar email fullName address phone online",
+        },
+        {
+          path: "sections",
+          select: "lessions baitaps",
+          populate: [
+            {
+              path: "lessions",
+              select: "view time users",
+            },
+            {
+              path: "baitaps",
+              select: "link status outdate time",
+            },
+          ],
         },
         // {
         //   path: "ralseHand",
@@ -168,7 +196,7 @@ export default class CourseApi {
       ]);
       res
         .json({
-          course: coures,
+          data: coures,
           status: 200,
         })
         .status(httpStatus.OK);
@@ -184,12 +212,6 @@ export default class CourseApi {
     try {
       const { role, courseId } = req.query;
       let coures: any = [];
-      // if (!courseId) {
-      //   coures = await User.find({
-      //     "role.roleName": role,
-      //   });
-      // } else {
-      // }
       coures = await Course.findById(courseId);
       let courseUsers: any[] = [];
       if (!!coures) {
@@ -242,7 +264,7 @@ export default class CourseApi {
         .sort({ createdAt: -1 })
         .populate([
           {
-            path: "teacher",
+            path: "teachers",
             select: "fullName",
           },
           {
@@ -250,7 +272,7 @@ export default class CourseApi {
             select: "avatar email fullName address phone online",
           },
           {
-            path: "chapter",
+            path: "sections",
             select: "lessions baitaps",
             populate: [
               {

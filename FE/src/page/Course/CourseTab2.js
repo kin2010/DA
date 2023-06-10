@@ -10,7 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, ErrorMessage, useFormikContext } from "formik";
 import * as Yup from "yup";
-import { createLessionSchema } from "../../Validation/CourseCreate";
+import { createLectureSchema } from "../../Validation/CourseCreate";
 import FormControl from "../../component/FormControl";
 import { Button, ButtonBase, InputLabel, Select } from "@mui/material";
 import Dropdown from "../../component/Dropdown";
@@ -21,14 +21,15 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import { Modal } from "antd";
 import Section from "../../component/Section";
 import { openNotification } from "../../Notification";
+import { useQueryClient } from "@tanstack/react-query";
 
-const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
+const CourseTab2 = ({ setStep }) => {
   const [validated, setValidated] = React.useState(false);
   const [arrChapter, setArrChapter] = React.useState([]);
   const [chapter, setChapter] = React.useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-
+  const courseId = sessionStorage.getItem("new_course");
   const handleOk = () => {
     setLoading(true);
     setTimeout(() => {
@@ -44,24 +45,15 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
   const navigate = useNavigate();
   const { handleSubmit } = useFormikContext();
 
-  const clickne = (id) => {
-    const copy = ids;
-    if (copy.includes(id)) {
-      const index = ids.findIndex((a) => a === id);
-      copy.splice(index, 1);
-      setIds([...copy]);
-    } else {
-      const cp = ids;
-      cp.push(id);
-      setIds([...cp]);
-    }
-  };
   const showModal = () => {
     setOpen(true);
   };
-
+  const queryClient = useQueryClient();
+  if (!courseId && !!setStep) {
+    setStep(0);
+  }
   const courseService = useCourseService();
-
+  const courseData = queryClient.getQueryData(["course", courseId]);
   const addChapter = () => {
     const add = {
       data: {},
@@ -71,39 +63,13 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
     chapter.push(add);
     setChapter([...chapter]);
   };
-  // const handleSubmit = async (event) => {
-  //   const f = event.currentTarget;
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  //   if (f.checkValidity() === false) {
-  //   } else {
-  //     const data = {
-  //       ...form,
-  //       description: {
-  //         mota: form?.mota,
-  //       },
-  //       teacher: [...ids],
-  //     };
-  //     const res = await courseService.addCourse(data);
-  //     openNotification(res);
-  //     if (res?.status === 200) {
-  //       setCourse(res?.course);
-  //       navigate("/course/create/" + res?.course?._id);
-  //       if (!!changeTab) {
-  //         changeTab(event, "2");
-  //       }
-  //     }
-  //   }
-  //   setValidated(true);
-  // };
 
   const addNewSection = () => {
-    console.log("z");
     setOpen(true);
   };
 
   const handeAddSectionSumbit = async (value) => {
-    const res = await addSection({ ...value });
+    const res = await addSection({ ...value, course: courseId });
     if (res?.status === 200) {
       openNotification({
         type: "success",
@@ -122,7 +88,7 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
       <Formik
         initialValues={{ name: "" }}
         onSubmit={(value) => handeAddSectionSumbit(value)}
-        validationSchema={createLessionSchema}
+        validationSchema={createLectureSchema}
       >
         {(props) => (
           <Modal
@@ -187,7 +153,13 @@ const CourseTab2 = ({ course, setCourse, changeTab, dataTeacher }) => {
                   New Section
                 </Button>
               </div>
-              <Section></Section>
+              <div className="col-12  ">
+                {courseData?.data?.sections?.map((section) => (
+                  <div key={section?._id} className="mt-5">
+                    <Section section={section}></Section>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="form-group col-6"></div>
           </div>

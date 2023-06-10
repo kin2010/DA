@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { createLessionSchema } from "../../Validation/CourseCreate";
+import { createLectureSchema } from "../../Validation/CourseCreate";
 import { openNotification } from "../../Notification";
 import { addSection } from "../../hook/LessionHook";
 import FormControl from "../FormControl";
@@ -123,7 +123,7 @@ const AssignmentAdd = ({ open, setOpen }) => {
     <Formik
       initialValues={{ name: "" }}
       onSubmit={(value) => handeAddSectionSumbit(value)}
-      validationSchema={createLessionSchema}
+      validationSchema={createLectureSchema}
     >
       {(props) => (
         <Modal

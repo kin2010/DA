@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiURL } from "../Context/constant";
 import { serviceFetch } from "../ultis/service";
+import { useEffect, useState } from "react";
 
-export const addLession = async (body) => {
+export const addLecture = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/lession",
     method: "POST",
@@ -63,7 +64,7 @@ export const addCourse = async (body) => {
   });
   return data;
 };
-export const updateLession = async (body) => {
+export const updateLecture = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/lession",
     method: "PUT",
@@ -73,7 +74,7 @@ export const updateLession = async (body) => {
   });
   return data;
 };
-export const getLessionById = async (body) => {
+export const getLectureById = async (body) => {
   const { id, ...other } = body;
   const data = await serviceFetch({
     url: apiURL + "/api/lession/" + body?.id,
@@ -86,11 +87,12 @@ export const getLessionById = async (body) => {
 };
 
 export const updateCourse = async (body) => {
+  console.log(body, "params");
   const data = await serviceFetch({
     url: apiURL + "/api/course/" + body?.id,
     method: "PUT",
     data: {
-      ...body,
+      ...body?.body,
     },
   });
   return data;
@@ -127,9 +129,20 @@ export const addSection = async (body) => {
   return data;
 };
 
-export const useLessionService = () => {
+export const updateSection = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/section/" + body?.id,
+    method: "PUT",
+    data: {
+      ...body?.body,
+    },
+  });
+  return data;
+};
+
+export const useLectureService = () => {
   const queryClient = useQueryClient();
-  const addLessionMutation = useMutation(addLession, {
+  const addLectureMutation = useMutation(addLecture, {
     onSuccess: (data) => {
       if (data.status === 200) {
         queryClient.setQueryData(["lession", data?.lession?._id], data);
@@ -142,44 +155,73 @@ export const useLessionService = () => {
     },
   });
   return {
-    addLession: async (body) => {
-      return addLessionMutation.mutateAsync({ ...body });
+    addLecture: async (body) => {
+      return addLectureMutation.mutateAsync({ ...body });
     },
   };
 };
 
 export const useCourseService = () => {
+  const [id, setId] = useState(
+    !!sessionStorage.getItem("new_course")
+      ? sessionStorage.getItem("new_course")
+      : ""
+  );
+  const { data } = useQuery(["course", id], getCourse);
   const queryClient = useQueryClient();
-  const addCourseMutation = useMutation(addCourse, {
-    onSuccess: (data) => {
-      if (data?.status === 200) {
-        queryClient.setQueryData(["course", data?.course?._id], data);
-      } else {
-        const dt = {
-          course: {},
-        };
-        queryClient.setQueryData(["course"], dt);
-      }
-    },
-  });
   const updatedCourseMutation = useMutation(updateCourse, {
     onSuccess: (data) => {
       if (data.status === 200) {
-        queryClient.setQueryData(["course_update", data?.course?._id], data);
+        queryClient.invalidateQueries(["course", id]);
       } else {
-        const dt = {
-          course: {},
-        };
-        queryClient.setQueryData(["course"], dt);
+        queryClient.setQueryData(["course", id], null);
       }
     },
   });
-  return {
-    addCourse: async (body) => {
-      return addCourseMutation.mutateAsync({ ...body });
+
+  const addSectionMutation = useMutation(addSection, {
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        queryClient.invalidateQueries(["course", id]);
+      }
     },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const updateSectionMutation = useMutation(updateSection, {
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        queryClient.invalidateQueries(["course", id]);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  return {
+    // addCourse: async (body) => {
+    //   return addCourseMutation.mutateAsync({ ...body });
+    // },
     updateCourse: async (body) => {
-      return updatedCourseMutation.mutateAsync({ ...body });
+      return await updatedCourseMutation.mutateAsync({ ...body });
+    },
+    addSection: async (body) => {
+      return await addSectionMutation.mutateAsync({ ...body });
+    },
+    updateSection: async (body) => {
+      return await updateSectionMutation.mutateAsync({ ...body });
+    },
+    get: (id) => {
+      return data;
+    },
+    fetch: async (params) => {
+      console.log("prefetchh");
+      const res = await queryClient.fetchQuery(["course", params], getCourse);
+      setId(id);
+      return res;
     },
   };
 };
@@ -187,6 +229,17 @@ export const useCourseService = () => {
 export const getByRole = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/course/getbyrole",
+    method: "GET",
+    params: {
+      ...body,
+    },
+  });
+  return data;
+};
+
+export const getAllCategories = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/categories",
     method: "GET",
     params: {
       ...body,

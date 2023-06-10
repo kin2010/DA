@@ -46,7 +46,7 @@ function getStyles(name, value, theme) {
 export default function DropdownTeacger({ data }) {
   const theme = useTheme();
   const [value, setValue] = React.useState([]);
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue, values } = useFormikContext();
 
   const handleChange = (event) => {
     const {
@@ -56,11 +56,18 @@ export default function DropdownTeacger({ data }) {
     setFieldValue("teachers", value || []);
   };
 
+  useEffect(() => {
+    if (!!values["teachers"]?.length) {
+      setValue([...values["teachers"]]);
+    }
+  }, [values["teachers"]]);
+
   return (
     <div>
       <FormControl sx={{ m: 1, width: "100%", margin: 0 }}>
         <InputLabel id="demo-multiple-chip-label">Teacher</InputLabel>
         <Select
+          className="bg-white"
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple

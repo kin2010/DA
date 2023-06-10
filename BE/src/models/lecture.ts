@@ -1,5 +1,5 @@
 import { Document, Schema, model } from "mongoose";
-export interface ILession extends Document {
+export interface ILecture extends Document {
   _id: string;
   teacher: string;
   users: string[];
@@ -7,7 +7,7 @@ export interface ILession extends Document {
   end: Date;
   video: string;
   name: string;
-  desc: string;
+  description: string;
   ralseHand: [
     {
       time: Date;
@@ -43,7 +43,10 @@ const roleSchema = new Schema(
     end: {
       type: String,
     },
-    desc: {
+    description: {
+      type: String,
+    },
+    name: {
       type: String,
     },
     time: {
@@ -55,9 +58,6 @@ const roleSchema = new Schema(
       default: 1,
     },
     video: {
-      type: String,
-    },
-    name: {
       type: String,
     },
     ralseHand: [
@@ -91,5 +91,5 @@ const roleSchema = new Schema(
   },
   { timestamps: true }
 );
-const Lession = model<ILession>("Lession", roleSchema);
-export default Lession;
+const Lecture = model<ILecture>("Lecture", roleSchema);
+export default Lecture;

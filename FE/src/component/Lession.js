@@ -17,14 +17,14 @@ const Des = ({
   time,
   member,
   isEdit,
-  setUpdateLessionId,
+  setUpdateLectureId,
   lession,
-  setIsShowLession,
+  setIsShowLecture,
 }) => {
   const { _id } = lession;
   const handleEdit = () => {
-    setIsShowLession(true);
-    setUpdateLessionId(_id);
+    setIsShowLecture(true);
+    setUpdateLectureId(_id);
   };
   const handleRemove = (id) => {
     //
@@ -93,8 +93,8 @@ const Des = ({
     </>
   );
 };
-const Lession = (props) => {
-  const { lession, isEdit, setUpdateLessionId, setIsShowLession } = props;
+const Lecture = (props) => {
+  const { lession, isEdit, setUpdateLectureId, setIsShowLecture } = props;
   const { name, time, view, member, _id } = lession;
   const data = [
     {
@@ -118,8 +118,8 @@ const Lession = (props) => {
                 member={member}
                 isEdit={isEdit}
                 lession={lession}
-                setUpdateLessionId={setUpdateLessionId}
-                setIsShowLession={setIsShowLession}
+                setUpdateLectureId={setUpdateLectureId}
+                setIsShowLecture={setIsShowLecture}
               />
             }
           />
@@ -129,4 +129,4 @@ const Lession = (props) => {
   );
 };
 
-export default Lession;
+export default Lecture;

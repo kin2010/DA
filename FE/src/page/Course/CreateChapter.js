@@ -7,19 +7,19 @@ import Form from "react-bootstrap/Form";
 import Editor from ".";
 import { Box, Chip, Stack } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import CreateLession from "./CreateLession";
+import CreateLecture from "./CreateLecture";
 const CreateChapter = () => {
-  const [arrlession, setLessions] = useState([]);
-  const addLession = () => {
+  const [arrlession, setLectures] = useState([]);
+  const addLecture = () => {
     const add = {
       lession: {},
 
       index: arrlession.length + 1,
     };
     arrlession.push(add);
-    setLessions([...arrlession]);
+    setLectures([...arrlession]);
   };
-  const replaceLession = (lession, le) => {
+  const replaceLecture = (lession, le) => {
     // const ind = arrlession.findIndex((arr) => arr.index === le.index);
     // const arrz = arrlession;
     // arrz.splice(ind, 1, {
@@ -27,7 +27,7 @@ const CreateChapter = () => {
     //   show: true,
     //   index: le.index,
     // });
-    // setLessions({
+    // setLectures({
     //   ...arrz,
     // });
   };
@@ -41,7 +41,7 @@ const CreateChapter = () => {
       name: e?.target?.value,
     });
   };
-  const changeLession = (id) => {
+  const changeLecture = (id) => {
     const arr = chapter.lession;
     arr.push(id);
     setChapter({
@@ -66,7 +66,7 @@ const CreateChapter = () => {
         <Box className="d-flex align-items-center justify-content-between  mt-5">
           <Form.Label className="labell me-5 ">Bài giảng :</Form.Label>
           <AddBoxIcon
-            onClick={addLession}
+            onClick={addLecture}
             style={{ fontSize: "55px" }}
             color="primary"
           />
@@ -75,11 +75,11 @@ const CreateChapter = () => {
           {!!arrlession.length &&
             arrlession.map((le, index) => (
               <div key={le.index}>
-                <CreateLession
-                  setLe={changeLession}
+                <CreateLecture
+                  setLe={changeLecture}
                   arr={arrlession}
                   data={le}
-                ></CreateLession>
+                ></CreateLecture>
               </div>
             ))}
         </div>

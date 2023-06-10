@@ -6,6 +6,6 @@ export const courseCreateSchema = Yup.object({
   requirement: Yup.string().required(),
 });
 
-export const createLessionSchema = Yup.object({
+export const createLectureSchema = Yup.object({
   name: Yup.string().min(3).required(),
 });

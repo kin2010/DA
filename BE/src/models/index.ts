@@ -13,8 +13,8 @@ export type { ICourse } from "./course";
 export { default as Chapter } from "./chapter";
 export type { Ichapter } from "./chapter";
 
-export { default as Lession } from "./lession";
-export type { ILession } from "./lession";
+export { default as Lecture } from "./lecture";
+export type { ILecture } from "./lecture";
 
 export { default as Meeting } from "./meeting";
 export type { IMeeting } from "./meeting";
@@ -24,3 +24,6 @@ export type { ICategory } from "./category";
 
 export { default as Section } from "./section";
 export type { ISection } from "./section";
+
+export { default as CategoryGroup } from "./categorygroup";
+export type { ICategoryGroup } from "./categorygroup";

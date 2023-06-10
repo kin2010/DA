@@ -15,7 +15,7 @@ var roleSchema = new mongoose_1.Schema({
     lessions: [
         {
             type: "ObjectId",
-            ref: "Lession",
+            ref: "Lecture",
         },
     ],
     baitaps: [

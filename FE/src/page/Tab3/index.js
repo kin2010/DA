@@ -18,18 +18,18 @@ import {
 } from "@mui/material";
 import { getAllChapters } from "../../hook/LessionHook";
 import { useParams } from "react-router-dom";
-import CreateLession from "../Course/CreateLession";
-import Lession from "../../component/Lession";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { getChapterById } from "../../hook/LessionHook";
 import ModalCommon from "../../component/Modal";
+import CreateLecture from "../Course/CreateLession";
+import Lecture from "../../component/Lession";
 const Tab3 = () => {
   const [chapters, setChapters] = React.useState([]);
   const [vl, setVl] = useState(false);
   const [validated, setValidated] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState();
-  const [isShowLession, setIsShowLession] = useState(false);
-  const [updateLessionId, setUpdateLessionId] = useState("");
+  const [isShowLecture, setIsShowLecture] = useState(false);
+  const [updateLectureId, setUpdateLectureId] = useState("");
 
   const { id } = useParams();
   const handleChange = (e) => {
@@ -76,9 +76,9 @@ const Tab3 = () => {
     setChapters(res?.chapters);
   };
 
-  const addLession = () => {
-    setUpdateLessionId("");
-    setIsShowLession(true);
+  const addLecture = () => {
+    setUpdateLectureId("");
+    setIsShowLecture(true);
   };
 
   const getChapter = async (id) => {
@@ -92,8 +92,8 @@ const Tab3 = () => {
   };
 
   useEffect(() => {
-    console.log("isshoq", isShowLession);
-  }, [isShowLession]);
+    console.log("isshoq", isShowLecture);
+  }, [isShowLecture]);
 
   useEffect(() => {
     console.log("sad");
@@ -150,18 +150,18 @@ const Tab3 = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     {selectedChapter?.lessions?.map((lession) => (
-                      <Lession
+                      <Lecture
                         lession={lession}
                         key={lession?._id}
                         className="lession"
                         isEdit
-                        setUpdateLessionId={setUpdateLessionId}
-                        setIsShowLession={setIsShowLession}
-                      ></Lession>
+                        setUpdateLectureId={setUpdateLectureId}
+                        setIsShowLecture={setIsShowLecture}
+                      ></Lecture>
                     ))}
                     <div
                       className="d-flex align-center mt-3"
-                      onClick={addLession}
+                      onClick={addLecture}
                     >
                       <PostAddIcon
                         style={{ fontSize: "20px", marginRight: "4px" }}
@@ -171,13 +171,13 @@ const Tab3 = () => {
                     </div>
                   </AccordionDetails>
                 </Accordion>
-                <CreateLession
-                  isShowLession={isShowLession}
+                <CreateLecture
+                  isShowLecture={isShowLecture}
                   refetch={getChapter}
                   idChapter={selectedChapter}
-                  setIsShowLession={setIsShowLession}
-                  updateLessionId={updateLessionId}
-                ></CreateLession>
+                  setIsShowLecture={setIsShowLecture}
+                  updateLectureId={updateLectureId}
+                ></CreateLecture>
               </>
             )}
           </Col>

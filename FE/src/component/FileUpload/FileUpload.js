@@ -5,7 +5,8 @@ import { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-
+import "../../../node_modules/video-react/dist/video-react.css"; // import css
+import { Player } from "video-react";
 const FileUpload = ({ btnName, label, thumbnail, ...props }) => {
   const [fileList, setFileList] = useState([]);
 
@@ -20,10 +21,23 @@ const FileUpload = ({ btnName, label, thumbnail, ...props }) => {
       }}
     >
       <Upload
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture"
         defaultFileList={[...fileList]}
         itemRender={(originNode, file, currFileList, actions) => {
+          console.log(file);
+          if (file?.type?.includes("video")) {
+            const reader = new FileReader();
+            console.log(file);
+            const url = URL.createObjectURL(file.originFileObj);
+            return (
+              <Player
+                className="mt-3"
+                playsInline
+                poster="/assets/poster.png"
+                src={url}
+              />
+            );
+          }
           return (
             <div className="d-flex align-items-center justify-content-center flex-column">
               <img alt="thumbnail" src={file?.thumbUrl}></img>

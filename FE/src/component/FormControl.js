@@ -1,5 +1,5 @@
 import { useFormikContext } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import EditorCommon from "./EdittorCommon/EdittorCommon";
 
 const FormControl = ({ name, type, label, children, inputType, ...other }) => {
@@ -21,6 +21,10 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
     );
   }
 
+  useEffect(() => {
+    console.log(values, 33);
+  }, []);
+
   if (type === "editor") {
     return (
       <div className="mb-3">
@@ -38,12 +42,14 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
         {addPropsToChildren(children, {
           onChange: handleChange,
           name: name,
+          value: values[name] || "",
           ...other,
         })}
         {errors[name] && <div className="feedback">{errors[name]}</div>}
       </>
     );
   }
+
   return (
     <>
       <label className="col-form-label">{label}</label>
@@ -54,7 +60,7 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
           name="name"
           className="form-control"
           type={inputType || "text"}
-          defaultValue=""
+          value={values[name] || ""}
         />
       )}
       {errors[name] && <div className="feedback">{errors[name]}</div>}

@@ -12,26 +12,26 @@ import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import { addMinutes } from "date-fns";
 import { dateFormat } from "../../ultis/func";
 import {
-  getLessionById,
-  updateLession,
+  getLectureById,
+  updateLecture,
   useCourseService,
-  useLessionService,
+  useLectureService,
 } from "../../hook/LessionHook";
 import { AppContextProvider } from "../../Context/AppContext";
-import Lession from "../../component/Lession";
+import Lecture from "../../component/Lession";
 import ModalCommon from "../../component/Modal";
-function CreateLession({
+function CreateLecture({
   course,
   idChapter,
   refetch,
-  updateLessionId,
-  setIsShowLession,
-  isShowLession,
+  updateLectureId,
+  setIsShowLecture,
+  isShowLecture,
 }) {
   const [validated, setValidated] = useState(false);
-  const lessionService = useLessionService();
+  const lessionService = useLectureService();
   const { openNotification } = useContext(AppContextProvider);
-  const [lession, setLession] = useState({});
+  const [lession, setLecture] = useState({});
   const [form, setForm] = useState({
     name: "",
     desc: "",
@@ -62,17 +62,17 @@ function CreateLession({
   };
 
   useEffect(() => {
-    if (!!updateLessionId) {
+    if (!!updateLectureId) {
       reset();
-      fetchLession();
+      fetchLecture();
     } else {
       reset();
     }
-  }, [updateLessionId]);
+  }, [updateLectureId]);
 
-  const fetchLession = async () => {
-    const params = { id: updateLessionId };
-    const res = await getLessionById(params);
+  const fetchLecture = async () => {
+    const params = { id: updateLectureId };
+    const res = await getLectureById(params);
     setForm({ ...res?.lession });
   };
 
@@ -101,33 +101,32 @@ function CreateLession({
     // });
   };
   const save = async (e) => {
-    console.log("first");
     e.preventDefault();
     e.stopPropagation();
     const ff = e.currentTarget;
     if (ff?.checkValidity() === false) {
     } else {
       try {
-        if (!updateLessionId) {
+        if (!updateLectureId) {
           const params = { ...form, chapter: idChapter };
-          const res = await lessionService.addLession(params);
+          const res = await lessionService.addLecture(params);
           console.log(res);
           if (!!refetch) {
             refetch();
           }
           if (res?.status === 200) {
             openNotification(res);
-            setIsShowLession(false);
+            setIsShowLecture(false);
           }
         } else {
-          const params = { ...form, id: updateLessionId };
-          const res = await updateLession(params);
+          const params = { ...form, id: updateLectureId };
+          const res = await updateLecture(params);
           if (res?.status === 200) {
             if (!!refetch) {
               refetch();
             }
             openNotification(res);
-            setIsShowLession(false);
+            setIsShowLecture(false);
           }
         }
       } catch (error) {
@@ -140,8 +139,8 @@ function CreateLession({
   return (
     <>
       <ModalCommon
-        open={isShowLession}
-        setOpen={setIsShowLession}
+        open={isShowLecture}
+        setOpen={setIsShowLecture}
         title="Tạo bài giảng"
         footer={<></>}
       >
@@ -225,16 +224,16 @@ function CreateLession({
             </Form>
           </>
         ) : (
-          <Lession
+          <Lecture
             view={lession?.view}
             time={lession?.time}
             name={lession?.name}
             member={lession?.member}
-          ></Lession>
+          ></Lecture>
         )}
       </ModalCommon>
     </>
   );
 }
 
-export default CreateLession;
+export default CreateLecture;

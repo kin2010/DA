@@ -8,7 +8,6 @@ export const useStartPeerSession = (room, userMediaStream, localVideoRef) => {
   const [connectedUsers, setConnectedUsers] = useState([]);
 
   useEffect(() => {
-    console.log("first", peerVideoConnection, room, userMediaStream);
     if (!!userMediaStream?.active) {
       peerVideoConnection.joinRoom(room);
       peerVideoConnection.onAddUser((user) => {
