@@ -8,12 +8,14 @@ export type IRequestLecture = {
   id: string;
   name: string;
   description: string;
-  chapter: string;
+  section: string;
   teacher: string[];
   users: string[];
   start: Date;
   end: Date;
-  video: string;
+  video: string[];
+  attachments: string[];
+  youtube_url: string;
   ralseHand: [
     {
       time: Date;
@@ -53,15 +55,16 @@ export default class LectureApi {
     next: NextFunction
   ) => {
     try {
-      const { chapter } = req.body;
-      const ch = await Chapter.findById(chapter);
+      const { section } = req.body;
+      console.log(section, 3);
+      const ch = await Section.findById(section);
       if (!ch) {
         throw new APIError({
-          message: "Id Chapter is required",
+          message: "Section Id is required",
           status: httpStatus.INTERNAL_SERVER_ERROR,
         });
       }
-      const coures = await (
+      const lecture = await (
         await Lecture.create({ ...req.body })
       ).populate([
         {
@@ -89,11 +92,12 @@ export default class LectureApi {
           },
         },
       ]);
-      await ch.updateOne({ $set: { lessions: [...ch.lessions, coures?._id] } });
-
+      await ch.updateOne({
+        $set: { lectures: [...ch.lectures, lecture?._id] },
+      });
       res
         .json({
-          lession: coures,
+          lession: lecture,
           message: "Create successfully ",
           status: 200,
         })
@@ -212,7 +216,7 @@ export default class LectureApi {
   ) => {
     try {
       const { idChapter, ...other } = req.body;
-      const out = await Chapter.findById(idChapter);
+      const out = await Section.findById(idChapter);
       if (!out) {
         throw new APIError({
           message: "Not found",
@@ -220,7 +224,7 @@ export default class LectureApi {
         });
       }
       const chapter = await (
-        await Chapter.findByIdAndUpdate(
+        await Section.findByIdAndUpdate(
           idChapter,
           { ...other },
           {
@@ -297,7 +301,7 @@ export default class LectureApi {
           status: httpStatus.INTERNAL_SERVER_ERROR,
         });
       }
-      const chapter = await Chapter.find({ course: idCourse }).populate([
+      const chapter = await Section.find({ course: idCourse }).populate([
         {
           path: "lessions",
           select: "name mota teacher users ralseHand plusMark",
@@ -347,7 +351,7 @@ export default class LectureApi {
   ) => {
     try {
       const { id } = req?.params;
-      const chapter = await Chapter.findById(id);
+      const chapter = await Section.findById(id);
       if (!chapter) {
         throw new APIError({
           message: "NOT FOUND !",

@@ -5,7 +5,6 @@ export interface ILecture extends Document {
   users: string[];
   start: Date;
   end: Date;
-  video: string;
   name: string;
   description: string;
   ralseHand: [
@@ -23,6 +22,10 @@ export interface ILecture extends Document {
   baitap: string[];
   time: number;
   view: number;
+  video: string[];
+  attachments: string[];
+  youtube_url: string;
+  section: string;
 }
 
 const roleSchema = new Schema(
@@ -57,7 +60,20 @@ const roleSchema = new Schema(
       type: Number,
       default: 1,
     },
-    video: {
+    video: [
+      {
+        type: String,
+      },
+    ],
+    attachments: [
+      {
+        type: String,
+      },
+    ],
+    youtube_url: {
+      type: String,
+    },
+    section: {
       type: String,
     },
     ralseHand: [

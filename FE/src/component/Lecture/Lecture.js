@@ -1,17 +1,25 @@
 import React, { useState } from "react";
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { createLectureSchema } from "../../Validation/CourseCreate";
 import { openNotification } from "../../Notification";
-import { addSection } from "../../hook/LessionHook";
+import {
+  addLecture,
+  addSection,
+  useCourseService,
+} from "../../hook/LessionHook";
 import FormControl from "../FormControl";
 import { Button } from "@mui/material";
 import { Divider, Modal, Tabs, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import FileUpload from "../FileUpload/FileUpload";
+import { getYoutubeId } from "../../ultis/func";
+import { useQueryClient } from "@tanstack/react-query";
 
-const LectureAdd = ({ open, setOpen }) => {
+const LectureAdd = ({ open, setOpen, section }) => {
+  const courseService = useCourseService();
+
   const handleOk = () => {
     setTimeout(() => {
       setOpen(false);
@@ -24,19 +32,23 @@ const LectureAdd = ({ open, setOpen }) => {
 
   const handeAddLessonSumbit = async (value) => {
     console.log(value);
-    // const res = await addSection({ ...value });
-    // if (res?.status === 200) {
-    //   openNotification({
-    //     type: "success",
-    //     message: "Created successfully",
-    //   });
-    // } else {
-    //   openNotification({
-    //     type: "error",
-    //     message: "Creation failed",
-    //   });
-    // }
-    // setOpen(false);
+    const res = await courseService.addLecture({
+      ...value,
+      section: section?._id,
+    });
+    if (res?.status === 200) {
+      openNotification({
+        type: "success",
+        message: "Created successfully",
+      });
+      // qye;
+    } else {
+      openNotification({
+        type: "error",
+        message: res?.message,
+      });
+    }
+    setOpen(false);
   };
 
   const onChange = (key) => {
@@ -56,6 +68,8 @@ const LectureAdd = ({ open, setOpen }) => {
     );
   };
   const Tab2 = () => {
+    const { values } = useFormikContext();
+
     return (
       <>
         <label className="col-form-label">Select your video :</label>
@@ -63,8 +77,23 @@ const LectureAdd = ({ open, setOpen }) => {
           btnName="Select your video"
           label="Supports: mp4"
           accept="video/mp4,video/x-m4v,video/*"
+          formName="video"
         />
-        <FormControl label={"Youtube URL*"}></FormControl>
+        <FormControl name="youtube_url" label={"Youtube URL*"}></FormControl>
+        {!!getYoutubeId(values["youtube_url"]) && (
+          <div className="text-center mt-3">
+            <iframe
+              src={`https://www.youtube.com/embed/${getYoutubeId(
+                values["youtube_url"]
+              )}?controls=1`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
+              allowFullScreen
+              title="Embedded youtube"
+              className="w-75"
+            />
+          </div>
+        )}
       </>
     );
   };
@@ -74,32 +103,13 @@ const LectureAdd = ({ open, setOpen }) => {
 
     return (
       <>
-        <div
-          className="p-3 text-center"
-          style={{
-            border: "2px dashed #757575",
-            minHeight: "200px",
-            maxHeight: "400px",
-            overflowY: "auto",
-          }}
-        >
-          <Upload
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            listType="picture"
-            defaultFileList={[...fileList]}
-            multiple
-          >
-            <Button variant="outlined" icon={<UploadOutlined />}>
-              <AddBoxIcon
-                style={{ fontSize: "18px", marginRight: "10px" }}
-              ></AddBoxIcon>
-              ATTACHMENTS
-            </Button>
-          </Upload>
-          <label className="col-form-label">
-            Supports: jpg, jpeg, png, pdf or .zip
-          </label>
-        </div>
+        <FileUpload
+          btnName="ATTACHMENTS"
+          label="Supports: jpg, jpeg, png, pdf or .zip"
+          accept="image/*, .pdf"
+          formName="attachment"
+          multiple
+        ></FileUpload>
       </>
     );
   };
@@ -123,7 +133,7 @@ const LectureAdd = ({ open, setOpen }) => {
   ];
   return (
     <Formik
-      initialValues={{ name: "" }}
+      initialValues={{ name: "", youtube_url: "" }}
       onSubmit={(value) => handeAddLessonSumbit(value)}
       validationSchema={createLectureSchema}
     >

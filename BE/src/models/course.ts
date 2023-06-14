@@ -13,12 +13,20 @@ export interface ICourse extends Document {
   price: Number;
   status: string;
   image: String;
-  lessions: string[];
+  lectures: string[];
   category: string;
+  owner: string;
+  sections_info: Object[];
+  video: string[];
+  thumbnail: string[];
 }
 
 const courseSchema = new Schema(
   {
+    owner: {
+      type: "ObjectId",
+      ref: "User",
+    },
     teachers: [
       {
         type: "ObjectId",
@@ -65,10 +73,25 @@ const courseSchema = new Schema(
     image: {
       type: String,
     },
+    sections_info: [
+      {
+        type: Object,
+      },
+    ],
     lessions: {
       type: "ObjectId",
       ref: "Lecture",
     },
+    video: [
+      {
+        type: String,
+      },
+    ],
+    thumbnail: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -2,8 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 
-import { Col, Divider, Row } from "antd";
-import AddIcon from "@mui/icons-material/Add";
+import { Divider, Empty } from "antd";
 import { addSection, useCourseService } from "../../hook/LessionHook";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -12,9 +11,7 @@ import { Formik, Field, ErrorMessage, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { createLectureSchema } from "../../Validation/CourseCreate";
 import FormControl from "../../component/FormControl";
-import { Button, ButtonBase, InputLabel, Select } from "@mui/material";
-import Dropdown from "../../component/Dropdown";
-import Chapter from "../../component/Chapter";
+import { Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ViewListIcon from "@mui/icons-material/ViewList";
@@ -154,11 +151,24 @@ const CourseTab2 = ({ setStep }) => {
                 </Button>
               </div>
               <div className="col-12  ">
-                {courseData?.data?.sections?.map((section) => (
-                  <div key={section?._id} className="mt-5">
-                    <Section section={section}></Section>
+                {!!courseData?.data?.sections_info?.length ? (
+                  courseData?.data?.sections_info?.map((data) => (
+                    <div key={data?.section?._id} className="mt-5">
+                      <Section propData={data}></Section>
+                    </div>
+                  ))
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      border: "0.5px solid #12121220",
+                      background: "white",
+                      padding: "15px",
+                    }}
+                  >
+                    <Empty />
                   </div>
-                ))}
+                )}
               </div>
             </div>
             <div className="form-group col-6"></div>

@@ -2,6 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var courseSchema = new mongoose_1.Schema({
+    owner: {
+        type: "ObjectId",
+        ref: "User",
+    },
     teachers: [
         {
             type: "ObjectId",
@@ -48,10 +52,25 @@ var courseSchema = new mongoose_1.Schema({
     image: {
         type: String,
     },
+    sections_info: [
+        {
+            type: Object,
+        },
+    ],
     lessions: {
         type: "ObjectId",
         ref: "Lecture",
     },
+    video: [
+        {
+            type: String,
+        },
+    ],
+    thumbnail: [
+        {
+            type: String,
+        },
+    ],
 }, { timestamps: true });
 var Course = (0, mongoose_1.model)("Course", courseSchema);
 exports.default = Course;

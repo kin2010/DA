@@ -1,14 +1,90 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { Upload } from "antd";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import "../../../node_modules/video-react/dist/video-react.css"; // import css
 import { Player } from "video-react";
-const FileUpload = ({ btnName, label, thumbnail, ...props }) => {
+import { uploadFile } from "../../hook/LessionHook";
+import { useFormikContext } from "formik";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import BBackdrop from "../BackDrop";
+const FileUpload = ({ formName, btnName, label, thumbnail, ...props }) => {
   const [fileList, setFileList] = useState([]);
+  const cloudaryUploadRef = useRef();
+  const widgetRef = useRef();
+  const { values, setFieldValue } = useFormikContext();
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    cloudaryUploadRef.current = window.cloudinary;
+    widgetRef.current = cloudaryUploadRef.current.createUploadWidget(
+      {
+        cloudName: "drvb2kjug",
+        uploadPreset: "dzvpbt10",
+      },
+      function (error, result) {
+        if (!error && result && result?.event === "success") {
+          // const imageUrl = result.info.secure_url;
+        }
+      }
+    );
+  }, []);
+
+  const handleChange = async ({ file, fileList }) => {
+    if (fileList.length > 0) {
+      if (fileList?.every((file) => file?.status === "done")) {
+        handleUpload(fileList);
+      }
+    }
+    // if (file.status === "done") {
+    //   const formData = new FormData();
+    //   formData.append("file", file?.originFileObj);
+    //   formData.append("upload_preset", "dzvpbt10");
+    //   formData.append("api_key", "772276885786162");
+    //   const res = await uploadFile(formData);
+    //   if (res?.data?.url) {
+    //     console.log(res?.data?.url);
+    //     if (!!formName) {
+    //       setFieldValue(formName, res?.data?.url);
+    //     }
+    //   }
+    // }
+  };
+
+  const handleUpload = async (files) => {
+    let arr = [];
+    setLoading(true);
+    if (files?.length) {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file?.originFileObj);
+        formData.append("upload_preset", "dzvpbt10");
+        formData.append("api_key", "772276885786162");
+        const res = await uploadFile(formData);
+        console.log(res?.data?.url, 333);
+        if (res?.data?.url) {
+          if (!!formName) {
+            arr.push(res?.data?.url);
+          }
+        }
+      }
+      setLoading(false);
+      setFieldValue(formName, !!arr?.length ? arr : []);
+    }
+  };
+
+  const dummyRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess("ok");
+    }, 0);
+  };
+
+  const beforeUpload = (file) => {
+    const isLt10M = file.size / 1024 / 1024 < 10;
+    return isLt10M;
+  };
 
   return (
     <div
@@ -20,14 +96,15 @@ const FileUpload = ({ btnName, label, thumbnail, ...props }) => {
         overflowY: "auto",
       }}
     >
+      <BBackdrop open={loading} setOpen={setLoading}></BBackdrop>
       <Upload
+        beforeUpload={beforeUpload}
+        customRequest={dummyRequest}
         listType="picture"
         defaultFileList={[...fileList]}
         itemRender={(originNode, file, currFileList, actions) => {
-          console.log(file);
           if (file?.type?.includes("video")) {
             const reader = new FileReader();
-            console.log(file);
             const url = URL.createObjectURL(file.originFileObj);
             return (
               <Player
@@ -39,8 +116,23 @@ const FileUpload = ({ btnName, label, thumbnail, ...props }) => {
             );
           }
           return (
-            <div className="d-flex align-items-center justify-content-center flex-column">
-              <img alt="thumbnail" src={file?.thumbUrl}></img>
+            <div
+              style={{
+                border: "0.5px solid gray",
+                borderRadius: "5px",
+                padding: "5px",
+              }}
+              className="d-flex align-items-center justify-content-between flex-colum my-2"
+            >
+              {file?.type?.includes("image") ? (
+                <img alt="thumbnail" src={file?.thumbUrl}></img>
+              ) : (
+                <AttachFileIcon
+                  color="info"
+                  style={{ fontSize: "50px" }}
+                ></AttachFileIcon>
+              )}
+              <div>{file?.name}</div>
               <Button
                 onClick={() => {
                   actions.remove();
@@ -49,12 +141,12 @@ const FileUpload = ({ btnName, label, thumbnail, ...props }) => {
                 color="error"
               >
                 <DeleteSweepIcon></DeleteSweepIcon>
-                Remove
               </Button>
             </div>
           );
         }}
         {...props}
+        onChange={handleChange}
       >
         <Button variant="outlined" icon={<UploadOutlined />}>
           <AddBoxIcon

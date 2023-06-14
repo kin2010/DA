@@ -22,7 +22,7 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
   }
 
   useEffect(() => {
-    console.log(values, 33);
+    // console.log(values, 33);
   }, []);
 
   if (type === "editor") {
@@ -57,10 +57,10 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
         <input
           style={{ height: "56px" }}
           onChange={handleChange}
-          name="name"
+          name={name}
           className="form-control"
           type={inputType || "text"}
-          value={values[name] || ""}
+          value={!!values[name] ? values[name] : ""}
         />
       )}
       {errors[name] && <div className="feedback">{errors[name]}</div>}
@@ -70,6 +70,7 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
 
 FormControl.defaultProps = {
   type: "input",
+  inputType: "text",
 };
 
 export default FormControl;

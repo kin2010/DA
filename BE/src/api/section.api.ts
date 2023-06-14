@@ -85,8 +85,8 @@ export default class SectionService {
         await Section.create({ ...data })
       )?.populate([
         {
-          path: "lessions",
-          select: "teachers mota",
+          path: "lectures",
+          select: "",
         },
       ]);
       console.log([...cc.sections, section?._id]);

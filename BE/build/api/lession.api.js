@@ -72,7 +72,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var http_status_1 = __importDefault(require("http-status"));
 var models_1 = require("../models");
-var chapter_1 = __importDefault(require("../models/chapter"));
 var APIError_1 = __importDefault(require("../utils/APIError"));
 var LectureApi = /** @class */ (function () {
     function LectureApi() {
@@ -80,18 +79,19 @@ var LectureApi = /** @class */ (function () {
     var _a;
     _a = LectureApi;
     LectureApi.create = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var chapter, ch, coures, error_1;
+        var section, ch, lecture, error_1;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 5, , 6]);
-                    chapter = req.body.chapter;
-                    return [4 /*yield*/, chapter_1.default.findById(chapter)];
+                    section = req.body.section;
+                    console.log(section, 3);
+                    return [4 /*yield*/, models_1.Section.findById(section)];
                 case 1:
                     ch = _b.sent();
                     if (!ch) {
                         throw new APIError_1.default({
-                            message: "Id Chapter is required",
+                            message: "Section Id is required",
                             status: http_status_1.default.INTERNAL_SERVER_ERROR,
                         });
                     }
@@ -123,13 +123,15 @@ var LectureApi = /** @class */ (function () {
                         },
                     ])];
                 case 3:
-                    coures = _b.sent();
-                    return [4 /*yield*/, ch.updateOne({ $set: { lessions: __spreadArray(__spreadArray([], ch.lessions, true), [coures === null || coures === void 0 ? void 0 : coures._id], false) } })];
+                    lecture = _b.sent();
+                    return [4 /*yield*/, ch.updateOne({
+                            $set: { lectures: __spreadArray(__spreadArray([], ch.lectures, true), [lecture === null || lecture === void 0 ? void 0 : lecture._id], false) },
+                        })];
                 case 4:
                     _b.sent();
                     res
                         .json({
-                        lession: coures,
+                        lession: lecture,
                         message: "Create successfully ",
                         status: 200,
                     })
@@ -265,7 +267,7 @@ var LectureApi = /** @class */ (function () {
                 case 0:
                     _d.trys.push([0, 4, , 5]);
                     _b = req.body, idChapter = _b.idChapter, other = __rest(_b, ["idChapter"]);
-                    return [4 /*yield*/, chapter_1.default.findById(idChapter)];
+                    return [4 /*yield*/, models_1.Section.findById(idChapter)];
                 case 1:
                     out = _d.sent();
                     if (!out) {
@@ -274,7 +276,7 @@ var LectureApi = /** @class */ (function () {
                             status: http_status_1.default.NOT_FOUND,
                         });
                     }
-                    return [4 /*yield*/, chapter_1.default.findByIdAndUpdate(idChapter, __assign({}, other), {
+                    return [4 /*yield*/, models_1.Section.findByIdAndUpdate(idChapter, __assign({}, other), {
                             new: true,
                         })];
                 case 2: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
@@ -364,7 +366,7 @@ var LectureApi = /** @class */ (function () {
                             status: http_status_1.default.INTERNAL_SERVER_ERROR,
                         });
                     }
-                    return [4 /*yield*/, chapter_1.default.find({ course: idCourse }).populate([
+                    return [4 /*yield*/, models_1.Section.find({ course: idCourse }).populate([
                             {
                                 path: "lessions",
                                 select: "name mota teacher users ralseHand plusMark",
@@ -421,7 +423,7 @@ var LectureApi = /** @class */ (function () {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
                     id = (req === null || req === void 0 ? void 0 : req.params).id;
-                    return [4 /*yield*/, chapter_1.default.findById(id)];
+                    return [4 /*yield*/, models_1.Section.findById(id)];
                 case 1:
                     chapter = _b.sent();
                     if (!chapter) {

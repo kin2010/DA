@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiURL } from "../Context/constant";
 import { serviceFetch } from "../ultis/service";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { getToken } from "../ultis/Common";
 
 export const addLecture = async (body) => {
   const data = await serviceFetch({
@@ -12,6 +14,16 @@ export const addLecture = async (body) => {
     },
   });
   return data;
+};
+
+export const getUserData = async () => {
+  const token = getToken();
+  const res = await serviceFetch({
+    url: apiURL + "/api/auth/get",
+    method: "POST",
+    data: { token: token },
+  });
+  return res;
 };
 
 export const addChapter = async (body) => {
@@ -162,12 +174,16 @@ export const useLectureService = () => {
 };
 
 export const useCourseService = () => {
+  const retryOptions = {
+    retry: 2, // Number of retry attempts
+    retryDelay: 5000, // Delay between retry attempts in milliseconds
+  };
   const [id, setId] = useState(
     !!sessionStorage.getItem("new_course")
       ? sessionStorage.getItem("new_course")
       : ""
   );
-  const { data } = useQuery(["course", id], getCourse);
+  const { data } = useQuery(["course", id], getCourse, retryOptions);
   const queryClient = useQueryClient();
   const updatedCourseMutation = useMutation(updateCourse, {
     onSuccess: (data) => {
@@ -201,6 +217,28 @@ export const useCourseService = () => {
     },
   });
 
+  const addLectureMutation = useMutation(addLecture, {
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        queryClient.invalidateQueries(["course", id]);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const addAssignmentMutation = useMutation(addAssignment, {
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        queryClient.invalidateQueries(["course", id]);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   return {
     // addCourse: async (body) => {
     //   return addCourseMutation.mutateAsync({ ...body });
@@ -213,6 +251,12 @@ export const useCourseService = () => {
     },
     updateSection: async (body) => {
       return await updateSectionMutation.mutateAsync({ ...body });
+    },
+    addLecture: async (body) => {
+      return await addLectureMutation.mutateAsync({ ...body });
+    },
+    addAssignment: async (body) => {
+      return await addAssignmentMutation.mutateAsync({ ...body });
     },
     get: (id) => {
       return data;
@@ -242,6 +286,26 @@ export const getAllCategories = async (body) => {
     url: apiURL + "/api/auth/categories",
     method: "GET",
     params: {
+      ...body,
+    },
+  });
+  return data;
+};
+
+export const uploadFile = async (body) => {
+  console.log("body: " + JSON.stringify(body));
+  const res = await axios.post(
+    "https://api.cloudinary.com/v1_1/drvb2kjug/upload",
+    body
+  );
+  return res;
+};
+
+export const addAssignment = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/assignment",
+    method: "POST",
+    data: {
       ...body,
     },
   });

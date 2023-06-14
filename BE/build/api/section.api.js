@@ -143,8 +143,8 @@ var SectionService = /** @class */ (function () {
                     return [4 /*yield*/, models_1.Section.create(__assign({}, data))];
                 case 2: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
                         {
-                            path: "lessions",
-                            select: "teachers mota",
+                            path: "lectures",
+                            select: "",
                         },
                     ]))];
                 case 3:

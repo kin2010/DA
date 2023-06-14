@@ -62,7 +62,7 @@ const EditorCommon = ({ handleChange, name }) => {
     if (!!values[name]) {
       setData(values[name]);
     }
-  }, [values[name]]);
+  }, []);
 
   useEffect(() => {
     setFieldValue(name, data);

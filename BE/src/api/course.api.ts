@@ -11,7 +11,7 @@ export type IRequestCreateCourse = {
   sections: [
     {
       name: string;
-      lessions: string[];
+      lectures: string[];
       baitaps: string[];
     }
   ];
@@ -51,19 +51,27 @@ export default class CourseApi {
       ).populate([
         {
           path: "teachers",
-          select: "fullName",
+          select: "",
+        },
+        {
+          path: "owner",
+          select: "",
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "sections",
-          select: "lessions baitaps",
+          select: "",
           populate: [
             {
-              path: "lessions",
-              select: "view time users",
+              path: "lectures",
+              select: "",
+            },
+            {
+              path: "assignments",
+              select: "",
             },
             {
               path: "baitaps",
@@ -88,25 +96,27 @@ export default class CourseApi {
   ) => {
     try {
       const { id } = req.params;
-      console.log("id", id, !id);
       if (!id) {
         throw new APIError({
           message: "NOT FOUND !",
           status: httpStatus.NOT_FOUND,
         });
       }
-      const coures = await Course.findById(id);
-      if (!coures) {
+      const courseData = await Course.findById(id);
+      if (!courseData) {
         throw new APIError({
           message: "NOT FOUND !",
           status: httpStatus.NOT_FOUND,
         });
       }
-
-      const cc = await coures.populate([
+      const coursePopulate: any = await courseData.populate([
         {
           path: "teachers",
           select: "fullName",
+        },
+        {
+          path: "owner",
+          select: "",
         },
         {
           path: "users",
@@ -114,11 +124,15 @@ export default class CourseApi {
         },
         {
           path: "sections",
-          select: "lessions baitaps name",
+          select: "",
           populate: [
             {
-              path: "lessions",
-              select: "view time users",
+              path: "lectures",
+              select: "",
+            },
+            {
+              path: "assignments",
+              select: "",
             },
             {
               path: "baitaps",
@@ -127,7 +141,32 @@ export default class CourseApi {
           ],
         },
       ]);
-      res.json({ data: cc, status: 200 }).status(httpStatus.OK);
+      // const coures: any = Course.find({ _id: id })
+
+      const sections: any = coursePopulate?.sections;
+      const newSections = sections?.map((section: any) => {
+        let combinedData: any = [];
+        const lectures = section?.lectures || [];
+        const assignments = section?.assignments || [];
+        lectures?.map((lecture: any) => {
+          combinedData?.push({
+            type: "lecture",
+            item: lecture,
+            createdAt: lecture?.createdAt,
+          });
+        });
+        assignments?.map((assignment: any) => {
+          combinedData?.push({
+            type: "assignment",
+            item: assignment,
+            createdAt: assignment?.createdAt,
+          });
+        });
+        combinedData.sort((a: any, b: any) => a?.createdAt - b?.createdAt);
+        return { section: section, data: combinedData };
+      });
+      coursePopulate.sections_info = newSections;
+      res.json({ data: coursePopulate, status: 200 }).status(httpStatus.OK);
     } catch (error) {
       next(error);
     }
@@ -160,16 +199,24 @@ export default class CourseApi {
           select: "fullName",
         },
         {
+          path: "owner",
+          select: "",
+        },
+        {
           path: "users",
           select: "avatar email fullName address phone online",
         },
         {
           path: "sections",
-          select: "lessions baitaps",
+          select: "lectures baitaps",
           populate: [
             {
-              path: "lessions",
-              select: "view time users",
+              path: "lectures",
+              select: "",
+            },
+            {
+              path: "assignments",
+              select: "",
             },
             {
               path: "baitaps",
@@ -256,7 +303,6 @@ export default class CourseApi {
   ) => {
     try {
       const { limit, skip } = req.query;
-      // console.log(req.query);
       const count = await Course.find({});
       const courses = await Course.find({})
         .limit(parseInt(limit as string))
@@ -273,11 +319,15 @@ export default class CourseApi {
           },
           {
             path: "sections",
-            select: "lessions baitaps",
+            select: "",
             populate: [
               {
-                path: "lessions",
+                path: "lectures",
                 select: "view time users",
+              },
+              {
+                path: "assignments",
+                select: "",
               },
               {
                 path: "baitaps",

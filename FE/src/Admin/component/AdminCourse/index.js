@@ -21,8 +21,9 @@ import CourseTab2 from "../../../page/Course/CourseTab2";
 import CourseTab3 from "../../../page/Course/CourseTab3";
 import CourseTab4 from "../../../page/Course/CourseTab4";
 import CourseTab5 from "../../../page/Course/CourseTab5";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { openNotification } from "../../../Notification";
+import { AuthContextProvider } from "../../../Context/AuthContext";
 
 const steps = ["BASIC", "CURRICULUMN", "MEDIA", "PRICE", "PUBLIC"];
 
@@ -36,14 +37,15 @@ export default function AdminCourse() {
   const handleStep = (step) => {
     setStep(step, true);
   };
+  const queryClient = useQueryClient();
   const { data } = useQuery(["categories"], getAllCategories);
   const courseService = useCourseService();
   const courseData = courseService.get();
-
   const initialValues = {
     name: "",
   };
-
+  const userData = queryClient.getQueryData(["user"]);
+  console.log(userData);
   const appendData = async () => {
     const res = await getByRole({ role: "Teacher" });
     setTeacher(res?.users);
@@ -109,7 +111,7 @@ export default function AdminCourse() {
         });
       }
     } else {
-      const res = await addCourse(value);
+      const res = await addCourse({ ...value, owner: userData?.user?._id });
       if (res?.status === 200) {
         openNotification({
           type: "success",
@@ -175,6 +177,8 @@ export default function AdminCourse() {
                           course={course}
                           setCourse={setCourse}
                           dataTeacher={teacher}
+                          setStep={setStep}
+                          step={step}
                         ></CourseTab3>
                       )}
                       {step === 3 && (

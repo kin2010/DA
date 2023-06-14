@@ -2,10 +2,11 @@ import { Document, Schema, model } from "mongoose";
 export interface ISection extends Document {
   _id: string;
   name: string;
-  lessions: string[];
+  lectures: string[];
   baitaps: string[];
   mota: string;
   course: string;
+  assignments: string[];
 }
 
 const sectionSchema = new Schema(
@@ -20,10 +21,16 @@ const sectionSchema = new Schema(
     mota: {
       type: String,
     },
-    lessions: [
+    lectures: [
       {
         type: "ObjectId",
         ref: "Lecture",
+      },
+    ],
+    assignments: [
+      {
+        type: "ObjectId",
+        ref: "Assignment",
       },
     ],
     baitaps: [

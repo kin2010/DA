@@ -68,19 +68,27 @@ var CourseApi = /** @class */ (function () {
                 case 1: return [4 /*yield*/, (_b.sent()).populate([
                         {
                             path: "teachers",
-                            select: "fullName",
+                            select: "",
+                        },
+                        {
+                            path: "owner",
+                            select: "",
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "sections",
-                            select: "lessions baitaps",
+                            select: "",
                             populate: [
                                 {
-                                    path: "lessions",
-                                    select: "view time users",
+                                    path: "lectures",
+                                    select: "",
+                                },
+                                {
+                                    path: "assignments",
+                                    select: "",
                                 },
                                 {
                                     path: "baitaps",
@@ -106,13 +114,12 @@ var CourseApi = /** @class */ (function () {
         });
     }); };
     CourseApi.getOne = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, coures, cc, error_2;
+        var id, courseData, coursePopulate, sections, newSections, error_2;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 3, , 4]);
                     id = req.params.id;
-                    console.log("id", id, !id);
                     if (!id) {
                         throw new APIError_1.default({
                             message: "NOT FOUND !",
@@ -121,17 +128,21 @@ var CourseApi = /** @class */ (function () {
                     }
                     return [4 /*yield*/, models_1.Course.findById(id)];
                 case 1:
-                    coures = _b.sent();
-                    if (!coures) {
+                    courseData = _b.sent();
+                    if (!courseData) {
                         throw new APIError_1.default({
                             message: "NOT FOUND !",
                             status: http_status_1.default.NOT_FOUND,
                         });
                     }
-                    return [4 /*yield*/, coures.populate([
+                    return [4 /*yield*/, courseData.populate([
                             {
                                 path: "teachers",
                                 select: "fullName",
+                            },
+                            {
+                                path: "owner",
+                                select: "",
                             },
                             {
                                 path: "users",
@@ -139,11 +150,15 @@ var CourseApi = /** @class */ (function () {
                             },
                             {
                                 path: "sections",
-                                select: "lessions baitaps name",
+                                select: "",
                                 populate: [
                                     {
-                                        path: "lessions",
-                                        select: "view time users",
+                                        path: "lectures",
+                                        select: "",
+                                    },
+                                    {
+                                        path: "assignments",
+                                        select: "",
                                     },
                                     {
                                         path: "baitaps",
@@ -153,8 +168,31 @@ var CourseApi = /** @class */ (function () {
                             },
                         ])];
                 case 2:
-                    cc = _b.sent();
-                    res.json({ data: cc, status: 200 }).status(http_status_1.default.OK);
+                    coursePopulate = _b.sent();
+                    sections = coursePopulate === null || coursePopulate === void 0 ? void 0 : coursePopulate.sections;
+                    newSections = sections === null || sections === void 0 ? void 0 : sections.map(function (section) {
+                        var combinedData = [];
+                        var lectures = (section === null || section === void 0 ? void 0 : section.lectures) || [];
+                        var assignments = (section === null || section === void 0 ? void 0 : section.assignments) || [];
+                        lectures === null || lectures === void 0 ? void 0 : lectures.map(function (lecture) {
+                            combinedData === null || combinedData === void 0 ? void 0 : combinedData.push({
+                                type: "lecture",
+                                item: lecture,
+                                createdAt: lecture === null || lecture === void 0 ? void 0 : lecture.createdAt,
+                            });
+                        });
+                        assignments === null || assignments === void 0 ? void 0 : assignments.map(function (assignment) {
+                            combinedData === null || combinedData === void 0 ? void 0 : combinedData.push({
+                                type: "assignment",
+                                item: assignment,
+                                createdAt: assignment === null || assignment === void 0 ? void 0 : assignment.createdAt,
+                            });
+                        });
+                        combinedData.sort(function (a, b) { return (a === null || a === void 0 ? void 0 : a.createdAt) - (b === null || b === void 0 ? void 0 : b.createdAt); });
+                        return { section: section, data: combinedData };
+                    });
+                    coursePopulate.sections_info = newSections;
+                    res.json({ data: coursePopulate, status: 200 }).status(http_status_1.default.OK);
                     return [3 /*break*/, 4];
                 case 3:
                     error_2 = _b.sent();
@@ -190,16 +228,24 @@ var CourseApi = /** @class */ (function () {
                             select: "fullName",
                         },
                         {
+                            path: "owner",
+                            select: "",
+                        },
+                        {
                             path: "users",
                             select: "avatar email fullName address phone online",
                         },
                         {
                             path: "sections",
-                            select: "lessions baitaps",
+                            select: "lectures baitaps",
                             populate: [
                                 {
-                                    path: "lessions",
-                                    select: "view time users",
+                                    path: "lectures",
+                                    select: "",
+                                },
+                                {
+                                    path: "assignments",
+                                    select: "",
                                 },
                                 {
                                     path: "baitaps",
@@ -318,11 +364,15 @@ var CourseApi = /** @class */ (function () {
                             },
                             {
                                 path: "sections",
-                                select: "lessions baitaps",
+                                select: "",
                                 populate: [
                                     {
-                                        path: "lessions",
+                                        path: "lectures",
                                         select: "view time users",
+                                    },
+                                    {
+                                        path: "assignments",
+                                        select: "",
                                     },
                                     {
                                         path: "baitaps",

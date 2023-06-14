@@ -4,29 +4,22 @@ import { getToken } from "../ultis/Common";
 import axios from "axios";
 import { apiURL } from "./constant";
 import { serviceFetch } from "../ultis/service";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getUserData } from "../hook/LessionHook";
 export const AuthContextProvider = createContext();
 const AuthContext = ({ children }) => {
   const [user, setUser] = useState();
+  const queryClient = useQueryClient();
+  const { data: userData } = useQuery(["user"], getUserData);
   useEffect(() => {
     const token = getToken();
     if (!!token) {
-      getUser();
+      // getUser();
     }
   }, []);
 
-  const getUser = async () => {
-    const token = getToken();
-    const res = await serviceFetch({
-      url: apiURL + "/api/auth/get",
-      method: "POST",
-      data: { token: token },
-    });
-    if (res?.user) {
-      setUser(res?.user);
-    }
-  };
   const data = {
-    user,
+    userData,
     setUser,
   };
   return (

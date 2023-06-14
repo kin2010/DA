@@ -9,8 +9,9 @@ import { Empty } from "antd";
 import SectionAdd from "./SectionAdd";
 import LectureAdd from "../Lecture/Lecture";
 import AssignmentAdd from "../Assigment/AssignmentAdd";
-const Section = ({ section }) => {
-  console.log(section, 99);
+import DescriptionIcon from "@mui/icons-material/Description";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+const Section = ({ propData }) => {
   const [showEdit, setShowEdit] = useState(false);
   const [showLecture, setShowLecture] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
@@ -28,11 +29,19 @@ const Section = ({ section }) => {
       setShowAssessment(true);
     }
   };
-
+  console.log(propData);
   return (
     <>
-      <LectureAdd open={showLecture} setOpen={setShowLecture} />
-      <AssignmentAdd open={showAssessment} setOpen={setShowAssessment} />
+      <LectureAdd
+        section={propData?.section}
+        open={showLecture}
+        setOpen={setShowLecture}
+      />
+      <AssignmentAdd
+        section={propData?.section}
+        open={showAssessment}
+        setOpen={setShowAssessment}
+      />
       <div>
         <div
           style={{
@@ -52,7 +61,7 @@ const Section = ({ section }) => {
           >
             <ReorderIcon className="me-4" color="primary" />
             <Typography fontWeight={600} fontSize={14}>
-              {section?.name}
+              {propData?.section?.name}
             </Typography>
             <div
               className="d-flex align-items-center"
@@ -68,10 +77,53 @@ const Section = ({ section }) => {
               <SectionAdd
                 open={showEdit}
                 setOpen={setShowEdit}
-                section={section}
+                section={propData?.section}
               ></SectionAdd>
             )}
-            <Empty />
+            {!!propData?.data?.length ? (
+              <>
+                {propData?.data?.map((value) => (
+                  <div
+                    key={value?.item?._id}
+                    style={{
+                      background: "#f7f7f7",
+                      padding: "10px",
+                      borderRadius: "4px",
+                    }}
+                    className="mb-3 d-flex align-items-center"
+                  >
+                    {value?.type === "lecture" && (
+                      <DescriptionIcon
+                        color="info"
+                        className="me-3"
+                      ></DescriptionIcon>
+                    )}
+                    {value?.type === "assignment" && (
+                      <AssignmentIcon
+                        color="success"
+                        className="me-3"
+                      ></AssignmentIcon>
+                    )}
+                    {value?.item?.name}
+                    <div
+                      className="d-flex align-items-center ms-3"
+                      style={{ gap: "0 10px" }}
+                    >
+                      <EditNoteIcon
+                        onClick={edit}
+                        color="primary"
+                      ></EditNoteIcon>
+                      <DeleteSweepIcon
+                        onClick={remove}
+                        color="error"
+                      ></DeleteSweepIcon>
+                    </div>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <Empty />
+            )}
           </div>
         </div>
         <div

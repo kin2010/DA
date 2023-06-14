@@ -12,10 +12,16 @@ var sectionSchema = new mongoose_1.Schema({
     mota: {
         type: String,
     },
-    lessions: [
+    lectures: [
         {
             type: "ObjectId",
             ref: "Lecture",
+        },
+    ],
+    assignments: [
+        {
+            type: "ObjectId",
+            ref: "Assignment",
         },
     ],
     baitaps: [

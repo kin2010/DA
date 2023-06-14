@@ -32,7 +32,20 @@ var roleSchema = new mongoose_1.Schema({
         type: Number,
         default: 1,
     },
-    video: {
+    video: [
+        {
+            type: String,
+        },
+    ],
+    attachments: [
+        {
+            type: String,
+        },
+    ],
+    youtube_url: {
+        type: String,
+    },
+    section: {
         type: String,
     },
     ralseHand: [
