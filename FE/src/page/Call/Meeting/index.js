@@ -46,9 +46,11 @@ const Meeting = () => {
     //
     setCallShown(true);
   };
+
   useEffect(() => {
     setUserStream(userMediaStream || null);
   }, [userMediaStream]);
+
   if (isLoading) {
     return (
       <>
@@ -84,6 +86,9 @@ const Meeting = () => {
         />
       </>
     );
+  }
+  if (!!userStream) {
+    return <Stream initStream={userStream} />;
   }
   return (
     <>

@@ -4,7 +4,7 @@ export interface ICategoryGroup extends Document {
   name: string;
 }
 
-const categorySchema = new Schema(
+const categoryGroupSchema = new Schema(
   {
     name: {
       type: String,
@@ -12,5 +12,8 @@ const categorySchema = new Schema(
   },
   { timestamps: true }
 );
-const CategoryGroup = model<ICategoryGroup>("category_group", categorySchema);
+const CategoryGroup = model<ICategoryGroup>(
+  "category_group",
+  categoryGroupSchema
+);
 export default CategoryGroup;

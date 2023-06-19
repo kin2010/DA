@@ -33,6 +33,7 @@ import { URL } from "../../Context/constant";
 import ReorderIcon from "@mui/icons-material/Reorder";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { PRIMARY } from "../../Constant/app";
+import MeetingAdd from "./MeetingAdd";
 // import { Comment } from "antd";
 const host =
   process.env.NODE_ENV === "development"
@@ -58,7 +59,7 @@ const GroupDetail = () => {
   const [meetings, setMeetings] = useState([]);
 
   const [contents, setContents] = useState([]);
-
+  const [openMtg, setOpenMtg] = useState(false);
   const handleClick = (event) => {
     setAnchorEl(event.target);
   };
@@ -153,22 +154,29 @@ const GroupDetail = () => {
   };
 
   const handleMeetingNow = async () => {
-    const params = {
-      group: id,
-      createdby: userData?.user?._id,
-    };
-    const res = await groupServices.addMeeting(params);
-    console.log(res);
-    if (res?.meeting?._id) {
-      setTimeout(() => {
-        window?.open(URL + "/meeting/" + res?.meeting?._id);
-      }, 2000);
-    }
+    // const params = {
+    //   group: id,
+    //   createdby: userData?.user?._id,
+    // };
+    // const res = await groupServices.addMeeting(params);
+    // console.log(res);
+    // if (res?.meeting?._id) {
+    //   setTimeout(() => {
+    //     window?.open(URL + "/meeting/" + res?.meeting?._id);
+    //   }, 2000);
+    // }
+    setOpenMtg(true);
     handleClose();
   };
 
   return (
     <>
+      <MeetingAdd
+        group={id}
+        user={userData?.user?._id}
+        open={openMtg}
+        setOpen={setOpenMtg}
+      ></MeetingAdd>
       <HeaderAppBar></HeaderAppBar>
 
       <Row>
@@ -348,7 +356,9 @@ const GroupDetail = () => {
                               color="primary"
                             />
                             <Typography fontWeight={600} fontSize={14}>
-                              Cuộc hội thoại Group
+                              {content?.data?.name
+                                ? "Meeting: " + content?.data?.name
+                                : "Meeting: Cuộc hội thoại Group"}
                             </Typography>
                             <div
                               className="d-flex align-items-center"
@@ -446,7 +456,12 @@ const GroupDetail = () => {
               <div className="mt-3">
                 {" "}
                 <Form.Item>
-                  <TextArea rows={4} onChange={onChange} value={value} />
+                  <TextArea
+                    placeholder="Nhập bình luận ..."
+                    rows={4}
+                    onChange={onChange}
+                    value={value}
+                  />
                 </Form.Item>
                 <Form.Item>
                   <Button
@@ -455,7 +470,7 @@ const GroupDetail = () => {
                     onClick={onSubmit}
                     type="primary"
                   >
-                    Add Comment
+                    Bình luận
                   </Button>
                 </Form.Item>
               </div>
