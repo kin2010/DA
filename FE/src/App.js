@@ -25,6 +25,7 @@ import Checkout from "./page/Checkout/Checkout";
 import ProtectedRoute from "./ultis/PrivateRoute";
 import AppResult from "./page/Result/ResultComponent";
 import Dashboard from "./Admin/component/Dashboard";
+import ManagerCourse from "./Admin/component/ManageCourse/ManageCourse";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
@@ -103,7 +104,7 @@ function App() {
                 ></Route>
                 <Route
                   path="/admin/course"
-                  element={<AdminCourse></AdminCourse>}
+                  element={<ManagerCourse></ManagerCourse>}
                 ></Route>
               </Route>
               <Route exact path="*" element={Error}></Route>

@@ -23,6 +23,7 @@ export interface ICourse extends Document {
   publish: boolean;
   discount: number;
   groups: string[];
+  admin_comment: string;
 }
 
 const courseSchema = new Schema(
@@ -107,6 +108,12 @@ const courseSchema = new Schema(
     },
     publish: {
       type: Boolean,
+    },
+    status: {
+      type: String,
+    },
+    admin_comment: {
+      type: String,
     },
   },
   { timestamps: true }

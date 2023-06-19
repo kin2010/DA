@@ -23,7 +23,7 @@ export default function IconBreadcrumbs() {
             href="/"
           >
             <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            MUI
+            Admin
           </Link>
           <Link
             underline="hover"
@@ -32,15 +32,8 @@ export default function IconBreadcrumbs() {
             href="/material-ui/getting-started/installation/"
           >
             <WhatshotIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            Core
+            Trang chủ
           </Link>
-          <Typography
-            sx={{ display: "flex", alignItems: "center" }}
-            color="text.primary"
-          >
-            <GrainIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            Breadcrumb
-          </Typography>
         </Breadcrumbs>
       </div>
     </div>

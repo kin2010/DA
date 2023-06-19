@@ -233,7 +233,7 @@ var CourseApi = /** @class */ (function () {
                 case 2: return [4 /*yield*/, ((_b = (_c.sent())) === null || _b === void 0 ? void 0 : _b.populate([
                         {
                             path: "teachers",
-                            select: "fullName",
+                            select: "",
                         },
                         {
                             path: "owner",
@@ -241,7 +241,7 @@ var CourseApi = /** @class */ (function () {
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "sections",
@@ -266,7 +266,7 @@ var CourseApi = /** @class */ (function () {
                         //   select: "time user",
                         //   populate: {
                         //     path: "user",
-                        //     select: "avatar email fullName address phone online",
+                        //     select: "",
                         //   },
                         // },
                         // {
@@ -274,7 +274,7 @@ var CourseApi = /** @class */ (function () {
                         //   select: "time user",
                         //   populate: {
                         //     path: "user",
-                        //     select: "avatar email fullName address phone online",
+                        //     select: "",
                         //   },
                         // },
                     ]))];
@@ -364,11 +364,15 @@ var CourseApi = /** @class */ (function () {
                             .populate([
                             {
                                 path: "teachers",
-                                select: "fullName",
+                                select: "",
                             },
                             {
                                 path: "users",
-                                select: "avatar email fullName address phone online",
+                                select: "",
+                            },
+                            {
+                                path: "category",
+                                select: "",
                             },
                             {
                                 path: "sections",
@@ -376,7 +380,7 @@ var CourseApi = /** @class */ (function () {
                                 populate: [
                                     {
                                         path: "lectures",
-                                        select: "view time users",
+                                        select: "",
                                     },
                                     {
                                         path: "assignments",
@@ -387,6 +391,10 @@ var CourseApi = /** @class */ (function () {
                                         select: "link status outdate time",
                                     },
                                 ],
+                            },
+                            {
+                                path: "owner",
+                                select: "",
                             },
                         ])];
                 case 2:

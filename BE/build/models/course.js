@@ -83,6 +83,12 @@ var courseSchema = new mongoose_1.Schema({
     publish: {
         type: Boolean,
     },
+    status: {
+        type: String,
+    },
+    admin_comment: {
+        type: String,
+    },
 }, { timestamps: true });
 var Course = (0, mongoose_1.model)("Course", courseSchema);
 exports.default = Course;

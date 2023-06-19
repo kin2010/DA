@@ -204,7 +204,7 @@ export default class CourseApi {
       )?.populate([
         {
           path: "teachers",
-          select: "fullName",
+          select: "",
         },
         {
           path: "owner",
@@ -212,7 +212,7 @@ export default class CourseApi {
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "sections",
@@ -237,7 +237,7 @@ export default class CourseApi {
         //   select: "time user",
         //   populate: {
         //     path: "user",
-        //     select: "avatar email fullName address phone online",
+        //     select: "",
         //   },
         // },
         // {
@@ -245,7 +245,7 @@ export default class CourseApi {
         //   select: "time user",
         //   populate: {
         //     path: "user",
-        //     select: "avatar email fullName address phone online",
+        //     select: "",
         //   },
         // },
       ]);
@@ -319,11 +319,15 @@ export default class CourseApi {
         .populate([
           {
             path: "teachers",
-            select: "fullName",
+            select: "",
           },
           {
             path: "users",
-            select: "avatar email fullName address phone online",
+            select: "",
+          },
+          {
+            path: "category",
+            select: "",
           },
           {
             path: "sections",
@@ -331,7 +335,7 @@ export default class CourseApi {
             populate: [
               {
                 path: "lectures",
-                select: "view time users",
+                select: "",
               },
               {
                 path: "assignments",
@@ -342,6 +346,10 @@ export default class CourseApi {
                 select: "link status outdate time",
               },
             ],
+          },
+          {
+            path: "owner",
+            select: "",
           },
         ]);
       res
