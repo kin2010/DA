@@ -121,4 +121,49 @@ export default class OrderApi {
       next(error);
     }
   };
+  static getAllOrder = async (
+    req: Request<Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { limit, skip } = req.query;
+      const count = await Order.find({});
+      const groups = await Order.find({})
+        .limit(parseInt(limit as string))
+        .skip(parseInt(skip as string))
+        .sort({ createdAt: -1 })
+
+        .populate([
+          {
+            path: "courses",
+            select: "",
+            populate: [
+              {
+                path: "teachers",
+                select: "",
+              },
+              {
+                path: "users",
+                select: "",
+              },
+            ],
+          },
+          {
+            path: "user",
+            select: "",
+          },
+        ]);
+      res
+        .json({
+          data: groups,
+          status: 200,
+          count: count,
+        })
+        .status(httpStatus.OK)
+        .end();
+    } catch (error) {
+      next(error);
+    }
+  };
 }

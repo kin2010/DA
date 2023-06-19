@@ -85,19 +85,16 @@ const AssignmentAdd = ({ open, setOpen, section }) => {
             onCancel={handleCancel}
             footer={null}
             width={700}
-            title="Add Assignment"
+            title="Thêm nhiệm vụ / bài tập"
           >
             <form onSubmit={props.handleSubmit} className="mb-3">
               <div className="mt-3 ">
-                <FormControl
-                  name="name"
-                  label={"Assignment Title*"}
-                ></FormControl>
-                <FormControl name="description" label={"Description*"}>
+                <FormControl name="name" label={"Tiêu đề*"}></FormControl>
+                <FormControl name="description" label={"Mô tả*"}>
                   <EditorCommon></EditorCommon>
                 </FormControl>
                 <br></br>
-                <label className="col-form-label ">Time Duration*</label>
+                <label className="col-form-label ">Thời gian*</label>
                 <br></br>
                 <RangeTimePicker />
                 <br></br>
@@ -105,14 +102,14 @@ const AssignmentAdd = ({ open, setOpen, section }) => {
                   <FormControl
                     name="mark"
                     inputType={"number"}
-                    label={"Total Number*"}
+                    label={"Tổng số điểm:*"}
                   ></FormControl>
                 </div>
 
                 <FileUpload
-                  btnName={"ATTACHMENTS"}
+                  btnName={"Đính kèm"}
                   formName={"attachments"}
-                  label={"Supports: jpg, jpeg, png, pdf or .zip"}
+                  label={"hỗ trợ: jpg, jpeg, png, pdf or .zip"}
                   accept="image/*,.pdf,.zip"
                   multiple
                 ></FileUpload>
@@ -141,7 +138,7 @@ const AssignmentAdd = ({ open, setOpen, section }) => {
                     key="submit"
                     type="submit"
                   >
-                    Add Assignment
+                    Thêm Nhiệm vụ / Bài tập
                   </Button>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiURL } from "../Context/constant";
+import { URL, apiURL } from "../Context/constant";
 import { serviceFetch } from "../ultis/service";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -436,6 +436,22 @@ export const addOrder = async (body) => {
   return data;
 };
 
+export const getAllOrder = async ({ queryKey }) => {
+  const data = await serviceFetch(
+    {
+      url: apiURL + "/api/order/all",
+      method: "GET",
+      params: {
+        ...queryKey[1],
+      },
+    },
+    URL,
+    null,
+    true
+  );
+  return data;
+};
+
 export const updateOrder = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/order",
@@ -467,6 +483,21 @@ export const createMeeting = async (body) => {
 export const getMeeting = async ({ queryKey }) => {
   const data = await serviceFetch({
     url: apiURL + "/api/meeting/get/" + queryKey[1],
+    method: "GET",
+  });
+  return data;
+};
+
+export const adminGetAllCategory = async ({ queryKey }) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/allcategory",
+    method: "GET",
+  });
+  return data;
+};
+export const adminGetAllCategoryGroup = async ({ queryKey }) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/allcategorygroup",
     method: "GET",
   });
   return data;

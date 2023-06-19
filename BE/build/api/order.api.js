@@ -190,6 +190,59 @@ var OrderApi = /** @class */ (function () {
             }
         });
     }); };
+    OrderApi.getAllOrder = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, limit, skip, count, groups, error_4;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 3, , 4]);
+                    _b = req.query, limit = _b.limit, skip = _b.skip;
+                    return [4 /*yield*/, models_1.Order.find({})];
+                case 1:
+                    count = _c.sent();
+                    return [4 /*yield*/, models_1.Order.find({})
+                            .limit(parseInt(limit))
+                            .skip(parseInt(skip))
+                            .sort({ createdAt: -1 })
+                            .populate([
+                            {
+                                path: "courses",
+                                select: "",
+                                populate: [
+                                    {
+                                        path: "teachers",
+                                        select: "",
+                                    },
+                                    {
+                                        path: "users",
+                                        select: "",
+                                    },
+                                ],
+                            },
+                            {
+                                path: "user",
+                                select: "",
+                            },
+                        ])];
+                case 2:
+                    groups = _c.sent();
+                    res
+                        .json({
+                        data: groups,
+                        status: 200,
+                        count: count,
+                    })
+                        .status(http_status_1.default.OK)
+                        .end();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_4 = _c.sent();
+                    next(error_4);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); };
     return OrderApi;
 }());
 exports.default = OrderApi;

@@ -9,4 +9,6 @@ router.route("/get").post(AuthService.getUser);
 router.route("/category").post(RoleSerice.addCategory);
 router.route("/categorygroup").post(RoleSerice.addCategoryGroup);
 router.route("/categories").get(RoleSerice.getCategory);
+router.route("/allcategory").get(RoleSerice.getAllCategory);
+router.route("/allcategorygroup").get(RoleSerice.getAllCategoryGroup);
 export default router;

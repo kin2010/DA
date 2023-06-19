@@ -123,7 +123,7 @@ app.post("/payment", function (req, res) { return __awaiter(void 0, void 0, void
                                         name: item === null || item === void 0 ? void 0 : item.name,
                                         images: [
                                             !!((_a = item === null || item === void 0 ? void 0 : item.thumbnail) === null || _a === void 0 ? void 0 : _a.length)
-                                                ? item === null || item === void 0 ? void 0 : item.thumbnails[0]
+                                                ? item === null || item === void 0 ? void 0 : item.thumbnail[0]
                                                 : "http://localhost:3000/images/course.jpg",
                                         ],
                                     },

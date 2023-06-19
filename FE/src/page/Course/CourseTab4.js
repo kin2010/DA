@@ -60,18 +60,18 @@ const CourseTab4 = ({ setStep, step }) => {
               <div className="row">
                 <div className="col-12">
                   <div className="ml-auto">
-                    <h3>Price</h3>
+                    <h3>Giá</h3>
                   </div>
                 </div>
                 <div className="col-12 mt-3">
-                  <label className="col-form-label me-5">Free :</label>
+                  <label className="col-form-label me-5">Miễn phí :</label>
                   <SWitchPrice></SWitchPrice>
                   <div className="col-6 mt-3">
                     <FormControl
                       prefix="VND"
                       disabled={disabled}
                       name="price"
-                      label={"Discount Price*"}
+                      label={"Giá *"}
                       type="input_number"
                     ></FormControl>
                   </div>
@@ -80,7 +80,7 @@ const CourseTab4 = ({ setStep, step }) => {
                       prefix="VND"
                       disabled={disabled}
                       name="discount"
-                      label={"Discount Price*"}
+                      label={"Khuyến mãi*"}
                       type="input_number"
                     ></FormControl>
                   </div>

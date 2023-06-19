@@ -47,7 +47,7 @@ const items = [
         getItem("Quản lí thể loại", "4", <AccountBoxIcon />),
         getItem("Quản lí giảng viên", "5", <AccountBoxIcon />),
         getItem("Quản lí người dùng", "6", <PeopleAltIcon />),
-        getItem("Quản lí tố cáo", "7", <FlagCircleIcon />),
+        // getItem("Quản lí tố cáo", "7", <FlagCircleIcon />),
       ],
       "group"
     ),
@@ -62,6 +62,20 @@ const Admin = () => {
         break;
       case "2":
         navigate("/admin/course");
+        break;
+      case "3":
+        navigate("/admin/order");
+        break;
+      case "4":
+        navigate("/admin/category");
+        break;
+      case "5":
+        navigate("/admin/category");
+        // navigate("/admin/teacher");
+        break;
+      case "6":
+        navigate("/admin/category");
+        // navigate("/admin/user");
         break;
 
       default:

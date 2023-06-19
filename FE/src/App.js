@@ -26,6 +26,8 @@ import ProtectedRoute from "./ultis/PrivateRoute";
 import AppResult from "./page/Result/ResultComponent";
 import Dashboard from "./Admin/component/Dashboard";
 import ManagerCourse from "./Admin/component/ManageCourse/ManageCourse";
+import ManagerOrder from "./Admin/component/ManagerOrder/ManagerOrder";
+import ManagerCategory from "./Admin/component/ManagerCategory/ManagerCategory";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
@@ -56,9 +58,6 @@ function App() {
               <Route path="/call" element={<Call />}>
                 <Route exact path="/call" element={<StreamVideo />}></Route>
               </Route>
-              {/* <Route exact path="/meeting" element={<PrivateRoute />}>
-                <Route exact path="/meeting" element={<Meeting />}></Route>
-              </Route> */}
               <Route
                 exact
                 path="/meeting"
@@ -81,9 +80,22 @@ function App() {
               <Route path="/group">
                 <Route exact path=":id" element={<GroupDetail />}></Route>
               </Route>
-              <Route exact path="/course" element={<Course />}>
-                <Route exact path=":id" element={<CourseDetail />}></Route>
-              </Route>
+              <Route
+                exact
+                path="/course/:id"
+                element={<CourseDetail />}
+              ></Route>
+              <Route
+                exact
+                path="/course/create"
+                element={
+                  <ProtectedRoute requirementRole={"Teacher"}>
+                    <AdminCourse />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route exact path="/course" element={<Course />}></Route>
+
               {/* <Route path="/course/create" element={<CrCourse />}>
                 <Route path=":id" element={<CrCourse />}></Route>
               </Route> */}
@@ -105,6 +117,14 @@ function App() {
                 <Route
                   path="/admin/course"
                   element={<ManagerCourse></ManagerCourse>}
+                ></Route>
+                <Route
+                  path="/admin/order"
+                  element={<ManagerOrder></ManagerOrder>}
+                ></Route>
+                <Route
+                  path="/admin/category"
+                  element={<ManagerCategory></ManagerCategory>}
                 ></Route>
               </Route>
               <Route exact path="*" element={Error}></Route>

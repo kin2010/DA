@@ -183,6 +183,49 @@ var RoleService = /** @class */ (function () {
             }
         });
     }); };
+    RoleService.getAllCategory = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var categorys, error_5;
+        return __generator(_a, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, models_1.Category.find({}).populate([
+                            {
+                                path: "group",
+                                select: "",
+                            },
+                        ])];
+                case 1:
+                    categorys = _b.sent();
+                    res.json({ data: categorys, status: 200 }).end();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_5 = _b.sent();
+                    next(error_5);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+    RoleService.getAllCategoryGroup = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var categorys, error_6;
+        return __generator(_a, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, models_1.CategoryGroup.find({})];
+                case 1:
+                    categorys = _b.sent();
+                    res.json({ data: categorys, status: 200 }).end();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_6 = _b.sent();
+                    next(error_6);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
     return RoleService;
 }());
 exports.default = RoleService;

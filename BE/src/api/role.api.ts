@@ -116,4 +116,35 @@ export default class RoleService {
       next(error);
     }
   };
+  static getAllCategory = async (
+    req: Request<ICategory, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const categorys = await Category.find({}).populate([
+        {
+          path: "group",
+          select: "",
+        },
+      ]);
+
+      res.json({ data: categorys, status: 200 }).end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  static getAllCategoryGroup = async (
+    req: Request<ICategory, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const categorys = await CategoryGroup.find({});
+
+      res.json({ data: categorys, status: 200 }).end();
+    } catch (error) {
+      next(error);
+    }
+  };
 }

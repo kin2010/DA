@@ -109,17 +109,17 @@ const CourseTab2 = ({ setStep }) => {
         {(props) => (
           <Modal
             open={openGroup}
-            title="New Group"
+            title="Thêm Group"
             // onOk={handleOk}
             onCancel={handleCancelGroup}
             footer={null}
           >
             <form onSubmit={props.handleSubmit}>
-              <FormControl name="name" label={"Group name*"}></FormControl>
+              <FormControl name="name" label={"Tên group*"}></FormControl>
               <FormControl
                 name="description"
                 type={"editor"}
-                label={"Description*"}
+                label={"Mô tả*"}
               ></FormControl>
 
               <Divider></Divider>
@@ -130,7 +130,7 @@ const CourseTab2 = ({ setStep }) => {
                   key="back"
                   onClick={handleCancel}
                 >
-                  Close
+                  Đóng
                 </Button>
                 <Button
                   size="small"
@@ -139,7 +139,7 @@ const CourseTab2 = ({ setStep }) => {
                   key="submit"
                   type="submit"
                 >
-                  Add Group
+                  Thêm Group
                 </Button>
               </div>
             </form>
@@ -151,7 +151,7 @@ const CourseTab2 = ({ setStep }) => {
           <div className="row">
             <div className="col-12">
               <div className="ml-auto">
-                <h3>Group</h3>
+                <h3>Group học tập</h3>
               </div>
             </div>
             <div className="col-12 mt-3">
@@ -208,13 +208,13 @@ const CourseTab2 = ({ setStep }) => {
         {(props) => (
           <Modal
             open={open}
-            title="New Section"
+            title="Học phần mới"
             onOk={handleOk}
             onCancel={handleCancel}
             footer={null}
           >
             <form onSubmit={props.handleSubmit}>
-              <FormControl name="name" label={"Section Name*"}></FormControl>
+              <FormControl name="name" label={"Tên học phần*"}></FormControl>
               <Divider></Divider>
               <div className="mt-3 d-flex justify-content-end">
                 <Button
@@ -223,7 +223,7 @@ const CourseTab2 = ({ setStep }) => {
                   key="back"
                   onClick={handleCancel}
                 >
-                  Close
+                  Thoát
                 </Button>
                 <Button
                   size="small"
@@ -232,7 +232,7 @@ const CourseTab2 = ({ setStep }) => {
                   key="submit"
                   type="submit"
                 >
-                  Add Section
+                  Thêm học phần
                 </Button>
               </div>
             </form>
@@ -244,7 +244,7 @@ const CourseTab2 = ({ setStep }) => {
           <div className="row">
             <div className="col-12">
               <div className="ml-auto">
-                <h3>Curriculum</h3>
+                <h3>Đề cương khóa học</h3>
               </div>
             </div>
             <div className="col-12 mt-3">
@@ -258,14 +258,14 @@ const CourseTab2 = ({ setStep }) => {
                 }}
               >
                 <ViewListIcon className="me-4" color="primary" />
-                <Typography>Curriculum</Typography>
+                <Typography>Đề cương</Typography>
                 <Button
                   variant="contained"
                   className="ms-auto"
                   color="primary"
                   onClick={addNewSection}
                 >
-                  New Section
+                  Thêm học phần
                 </Button>
               </div>
               <div className="col-12  ">

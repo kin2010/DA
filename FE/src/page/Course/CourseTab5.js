@@ -72,8 +72,8 @@ const CourseTab5 = () => {
                 title={
                   <>
                     {courseData?.publish
-                      ? "Your course is publish"
-                      : "Your course is in a draft state. Publish now"}
+                      ? "Khóa học đã được xuất bản, hãy chờ hệ thống chúng tôi phản hồi cho bạn"
+                      : "Khóa học đang ở bản nháp, công bố ngay"}
                     <span
                       className="ms-2 text-center"
                       style={{
@@ -85,7 +85,7 @@ const CourseTab5 = () => {
                           className="link"
                           to={"/course/" + courseData?._id}
                         >
-                          View course preview
+                          Xem chi tiết khóa học
                         </Link>
                       )}
                     </span>

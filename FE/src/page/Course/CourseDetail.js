@@ -320,7 +320,7 @@ const CourseDetail = () => {
                         <img src="assets/images/testimonials/pic1.jpg" alt="" />
                       </div>
                       <div className="instructor-info">
-                        <h6>Keny White </h6>
+                        <h6>Giảng viên 1 </h6>
                         <span>Professor</span>
                         <ul className="list-inline m-tb10">
                           <li>
@@ -344,53 +344,14 @@ const CourseDetail = () => {
                             </a>
                           </li>
                         </ul>
-                        <p className="m-b0">
+                        {/* <p className="m-b0">
                           Lorem Ipsum is simply dummy text of the printing and
                           typesetting industry. Lorem Ipsum has been the
                           industry's standard dummy text ever since the 1500s,
                           when an unknown printer took a galley of type and
                           scrambled it to make a type specimen book. It has
                           survived not only five centuries
-                        </p>
-                      </div>
-                    </div>
-                    <div className="instructor-bx">
-                      <div className="instructor-author">
-                        <img src="assets/images/testimonials/pic2.jpg" alt="" />
-                      </div>
-                      <div className="instructor-info">
-                        <h6>Keny White </h6>
-                        <span>Professor</span>
-                        <ul className="list-inline m-tb10">
-                          <li>
-                            <a href="#" className="btn sharp-sm facebook">
-                              <i className="fa fa-facebook" />
-                            </a>
-                          </li>
-                          <li>
-                            <a href="#" className="btn sharp-sm twitter">
-                              <i className="fa fa-twitter" />
-                            </a>
-                          </li>
-                          <li>
-                            <a href="#" className="btn sharp-sm linkedin">
-                              <i className="fa fa-linkedin" />
-                            </a>
-                          </li>
-                          <li>
-                            <a href="#" className="btn sharp-sm google-plus">
-                              <i className="fa fa-google-plus" />
-                            </a>
-                          </li>
-                        </ul>
-                        <p className="m-b0">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy text ever since the 1500s,
-                          when an unknown printer took a galley of type and
-                          scrambled it to make a type specimen book. It has
-                          survived not only five centuries
-                        </p>
+                        </p> */}
                       </div>
                     </div>
                   </div>
@@ -496,7 +457,7 @@ const CourseDetail = () => {
       </div>
       {/* Content END*/}
       {/* Footer ==== */}
-      <footer>
+      {/* <footer>
         <div className="footer-top">
           <div className="pt-exebar">
             <div className="container">
@@ -725,7 +686,7 @@ const CourseDetail = () => {
             </div>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </>
   );
 };

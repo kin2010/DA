@@ -137,15 +137,15 @@ const Section = ({ propData }) => {
         >
           <div style={{ cursor: "pointer" }} onClick={() => handleShow("1")}>
             <AddBoxIcon fontSize="10" className="mr-3"></AddBoxIcon>
-            Lecture
+            Bài học
           </div>
-          <div style={{ cursor: "pointer" }} onClick={() => handleShow("2")}>
+          {/* <div style={{ cursor: "pointer" }} onClick={() => handleShow("2")}>
             <AddBoxIcon fontSize="10" className="mr-3"></AddBoxIcon>
             Quiz
-          </div>
+          </div> */}
           <div style={{ cursor: "pointer" }} onClick={() => handleShow("3")}>
             <AddBoxIcon fontSize="10" className="mr-3"></AddBoxIcon>
-            Assignment
+            Nhiệm vụ/ Bài tập
           </div>
         </div>
       </div>

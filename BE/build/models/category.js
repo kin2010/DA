@@ -7,6 +7,7 @@ var categorySchema = new mongoose_1.Schema({
     },
     group: {
         type: "ObjectId",
+        ref: "category_group",
     },
 }, { timestamps: true });
 var Category = (0, mongoose_1.model)("Category", categorySchema);

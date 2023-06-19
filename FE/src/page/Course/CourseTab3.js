@@ -53,9 +53,7 @@ const CourseTab3 = ({ setStep, step }) => {
                 </div>
               </div>
               <div className="col-6 mt-3">
-                <label className="col-form-label">
-                  Intro Course overview :
-                </label>
+                <label className="col-form-label">Giới thiệu khóa học :</label>
                 <div className=" text-center">
                   <FileUpload
                     btnName="UPLOAD VIDEO"
@@ -66,7 +64,7 @@ const CourseTab3 = ({ setStep, step }) => {
                 </div>
               </div>
               <div className="col-6 mt-3">
-                <label className="col-form-label">Course thumbnail* :</label>
+                <label className="col-form-label">Hình ảnh khóa học :</label>
                 <div className=" text-center">
                   <FileUpload
                     btnName={"CHOOSE THUMBNAIL"}

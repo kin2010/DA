@@ -69,18 +69,18 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
               <h3>1. Thông tin cơ bản</h3>
             </div>
           </div>
-          <div className="form-group col-6">
+          <div className="form-group col-12">
             <div>
-              <FormControl label="Course title" name="name"></FormControl>
+              <FormControl label="Tên khóa học" name="name"></FormControl>
             </div>
           </div>
 
-          <div className="form-group col-6">
+          {/* <div className="form-group col-6">
             <label className="col-form-label">Giảng viên đào tạo:</label>
             <div>
               <Dropdown data={dataTeacher}></Dropdown>
             </div>
-          </div>
+          </div> */}
           <div className="seperator" />
           <div className="col-12 m-t20">
             <div className="ml-auto m-b5">
@@ -89,7 +89,7 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
           </div>
           <div className="form-group col-12">
             <FormControl
-              label={"Course description"}
+              label={"Mô tả khóa học"}
               name="description"
               type={"editor"}
             ></FormControl>

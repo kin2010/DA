@@ -544,7 +544,7 @@ const Course = () => {
       </div>
       {/* Content END*/}
       {/* Footer ==== */}
-      <footer>
+      {/* <footer>
         <div className="footer-top">
           <div className="pt-exebar">
             <div className="container">
@@ -773,7 +773,7 @@ const Course = () => {
             </div>
           </div>
         </div>
-      </footer>
+      </footer> */}
       {/* Footer END ==== */}
       <button className="back-to-top fa fa-chevron-up" />
     </div>

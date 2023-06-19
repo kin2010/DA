@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { SearchOutlined } from "@ant-design/icons";
-import { Input, Space, Table } from "antd";
+import { Space, Table } from "antd";
 import { forwardRef, useMemo, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import IconBreadcrumbs from "../BreadCrumb";
@@ -23,6 +23,9 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { openNotification } from "../../../Notification";
 import TextArea from "antd/lib/input/TextArea";
+import { Input } from "antd";
+import React from "react";
+const { Search } = Input;
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -38,6 +41,7 @@ const Phanhoi = ({ setAdminComment, adminComment }) => {
     />
   );
 };
+const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 const ManagerCourse = () => {
   const [page, setPage] = useState(1);
   const [queryparams, setQueryparams] = useState({
@@ -49,6 +53,10 @@ const ManagerCourse = () => {
   const [selectedId, setSelectedId] = useState("");
   const [action, setAction] = useState("");
   const courseService = useCourseService();
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+
   const handlePaginationChange = (e, page) => {
     setPage(page);
     setQueryparams({
@@ -185,7 +193,7 @@ const ManagerCourse = () => {
     }
     return { text1, text2 };
   }, [selectedId, action]);
-
+  const onSearch = (value) => console.log(value);
   return (
     <>
       <Dialog
@@ -243,12 +251,17 @@ const ManagerCourse = () => {
 
       <div>
         <div className="col-lg-12 m-b20">
-          <div className="pagination-bx rounded-sm gray clearfix">
-            <Pagination
-              onChange={handlePaginationChange}
-              count={!!data?.count ? Math.round(data?.count / 5) : 1}
-              color="primary"
-            />
+          <div className="d-flex align-items-center justify-content-between">
+            <div>
+              <Pagination
+                onChange={handlePaginationChange}
+                count={!!data?.count ? Math.round(data?.count / 5) : 1}
+                color="primary"
+              />
+            </div>
+            <div>
+              <Search placeholder="Tìm kiếm" onSearch={onSearch} enterButton />
+            </div>
           </div>
         </div>
       </div>

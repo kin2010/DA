@@ -58,11 +58,11 @@ const LectureAdd = ({ open, setOpen, section }) => {
   const Tab1 = () => {
     return (
       <>
-        <FormControl name="name" label="Lecture Title*"></FormControl>
+        <FormControl name="name" label="Tên bài giảng*"></FormControl>
         <FormControl
           type={"editor"}
           name="description"
-          label="Description*"
+          label="Mô tả*"
         ></FormControl>
       </>
     );
@@ -72,14 +72,17 @@ const LectureAdd = ({ open, setOpen, section }) => {
 
     return (
       <>
-        <label className="col-form-label">Select your video :</label>
+        <label className="col-form-label">Chọn video bài giảng :</label>
         <FileUpload
-          btnName="Select your video"
-          label="Supports: mp4"
+          btnName="Chọn video"
+          label="Hỗ trợ: mp4"
           accept="video/mp4,video/x-m4v,video/*"
           formName="video"
         />
-        <FormControl name="youtube_url" label={"Youtube URL*"}></FormControl>
+        <FormControl
+          name="youtube_url"
+          label={"Đường dẫn yoututbe*"}
+        ></FormControl>
         {!!getYoutubeId(values["youtube_url"]) && (
           <div className="text-center mt-3">
             <iframe
@@ -104,8 +107,8 @@ const LectureAdd = ({ open, setOpen, section }) => {
     return (
       <>
         <FileUpload
-          btnName="ATTACHMENTS"
-          label="Supports: jpg, jpeg, png, pdf or .zip"
+          btnName="Thêm tệp đính kèm"
+          label="hỗ trợ: jpg, jpeg, png, pdf or .zip"
           accept="image/*, .pdf"
           formName="attachments"
           multiple
@@ -117,7 +120,7 @@ const LectureAdd = ({ open, setOpen, section }) => {
   const items = [
     {
       key: "1",
-      label: `Basic`,
+      label: `Cơ bản`,
       children: <Tab1 />,
     },
     {
@@ -127,7 +130,7 @@ const LectureAdd = ({ open, setOpen, section }) => {
     },
     {
       key: "3",
-      label: `Attachments`,
+      label: `Đính kèm`,
       children: <Tab3 />,
     },
   ];
@@ -171,7 +174,7 @@ const LectureAdd = ({ open, setOpen, section }) => {
                   key="submit"
                   type="submit"
                 >
-                  Add Lecture
+                  Thêm bài giảng
                 </Button>
               </div>
             </div>

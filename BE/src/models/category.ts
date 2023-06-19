@@ -12,6 +12,7 @@ const categorySchema = new Schema(
     },
     group: {
       type: "ObjectId",
+      ref: "category_group",
     },
   },
   { timestamps: true }

@@ -6,7 +6,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import IconBreadcrumbs from "../BreadCrumb";
 import { useState } from "react";
-import { Button, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import CourseTab1 from "../../../page/Course/CourseTab1";
 import {
   addCourse,
@@ -24,8 +24,9 @@ import CourseTab5 from "../../../page/Course/CourseTab5";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { openNotification } from "../../../Notification";
 import { AuthContextProvider } from "../../../Context/AuthContext";
+import HeaderAppBar from "../../../page/Header/AppBar";
 
-const steps = ["BASIC", "CURRICULUMN", "MEDIA", "PRICE", "PUBLIC"];
+const steps = ["CƠ BẢN", "ĐỀ CƯƠNG", "MEDIA", "GIÁ", "PUBLISH"];
 
 export const COURSE_CREATE_QUERY = ["new_course"];
 
@@ -45,7 +46,6 @@ export default function AdminCourse() {
     name: "",
   };
   const userData = queryClient.getQueryData(["user"]);
-  console.log(userData);
   const appendData = async () => {
     const res = await getByRole({ role: "Teacher" });
     setTeacher(res?.users);
@@ -131,109 +131,118 @@ export default function AdminCourse() {
   };
 
   return (
-    <main className="ttr-wrapper">
-      <div className="container-fluid">
-        <IconBreadcrumbs></IconBreadcrumbs>
-        <div className="row">
-          <div className="col-lg-12 m-b30">
-            <div className="widget-box">
-              <div className="wc-title">
-                <h4>Create New Course</h4>
-              </div>
-              <Box sx={{ width: "100%" }}>
-                <Stepper activeStep={step} alternativeLabel>
-                  {steps.map((label, index) => (
-                    <Step key={label}>
-                      <StepLabel onClick={() => handleStep(index)}>
-                        {label}
-                      </StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-                <Formik
-                  initialValues={initialValues}
-                  validationSchema={courseCreateSchema}
-                  onSubmit={(value) => onSubmit(value)}
-                >
-                  {(props) => (
-                    <>
-                      {step === 0 && (
-                        <CourseTab1
-                          course={course}
-                          setCourse={setCourse}
-                          dataTeacher={teacher}
-                        ></CourseTab1>
-                      )}
-                      {step === 1 && (
-                        <CourseTab2
-                          course={course}
-                          setCourse={setCourse}
-                          dataTeacher={teacher}
-                          setStep={setStep}
-                        ></CourseTab2>
-                      )}
-                      {step === 2 && (
-                        <CourseTab3
-                          course={course}
-                          setCourse={setCourse}
-                          dataTeacher={teacher}
-                          setStep={setStep}
-                          step={step}
-                        ></CourseTab3>
-                      )}
-                      {step === 3 && (
-                        <CourseTab4
-                          course={course}
-                          setCourse={setCourse}
-                          dataTeacher={teacher}
-                          setStep={setStep}
-                          step={step}
-                        ></CourseTab4>
-                      )}
-                      {step === 4 && (
-                        <CourseTab5
-                          course={course}
-                          setCourse={setCourse}
-                          dataTeacher={teacher}
-                          setStep={setStep}
-                          step={step}
-                        ></CourseTab5>
-                      )}
-                    </>
-                  )}
-                </Formik>
-                <div>
-                  <React.Fragment>
-                    <Box
-                      sx={{ display: "flex", flexDirection: "row", p: "30px" }}
+    <>
+      <HeaderAppBar />
+      <Container>
+        <main className="ttr-wrapper">
+          <div className="container-fluid">
+            <IconBreadcrumbs></IconBreadcrumbs>
+            <div className="row">
+              <div className="col-lg-12 m-b30">
+                <div className="widget-box">
+                  <div className="wc-title">
+                    <h4>Tạo khóa học mới</h4>
+                  </div>
+                  <Box sx={{ width: "100%" }}>
+                    <Stepper activeStep={step} alternativeLabel>
+                      {steps.map((label, index) => (
+                        <Step key={label}>
+                          <StepLabel onClick={() => handleStep(index)}>
+                            {label}
+                          </StepLabel>
+                        </Step>
+                      ))}
+                    </Stepper>
+                    <Formik
+                      initialValues={initialValues}
+                      validationSchema={courseCreateSchema}
+                      onSubmit={(value) => onSubmit(value)}
                     >
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={step === 0}
-                        onClick={handleBack}
-                        sx={{ mr: 1 }}
-                      >
-                        PREVIOUS
-                      </Button>
-                      <Box sx={{ flex: "1 1 auto" }} />
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleNext}
-                        sx={{ mr: 1 }}
-                      >
-                        NEXT
-                      </Button>
-                    </Box>
-                  </React.Fragment>
+                      {(props) => (
+                        <>
+                          {step === 0 && (
+                            <CourseTab1
+                              course={course}
+                              setCourse={setCourse}
+                              dataTeacher={teacher}
+                            ></CourseTab1>
+                          )}
+                          {step === 1 && (
+                            <CourseTab2
+                              course={course}
+                              setCourse={setCourse}
+                              dataTeacher={teacher}
+                              setStep={setStep}
+                            ></CourseTab2>
+                          )}
+                          {step === 2 && (
+                            <CourseTab3
+                              course={course}
+                              setCourse={setCourse}
+                              dataTeacher={teacher}
+                              setStep={setStep}
+                              step={step}
+                            ></CourseTab3>
+                          )}
+                          {step === 3 && (
+                            <CourseTab4
+                              course={course}
+                              setCourse={setCourse}
+                              dataTeacher={teacher}
+                              setStep={setStep}
+                              step={step}
+                            ></CourseTab4>
+                          )}
+                          {step === 4 && (
+                            <CourseTab5
+                              course={course}
+                              setCourse={setCourse}
+                              dataTeacher={teacher}
+                              setStep={setStep}
+                              step={step}
+                            ></CourseTab5>
+                          )}
+                        </>
+                      )}
+                    </Formik>
+                    <div>
+                      <React.Fragment>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            p: "30px",
+                          }}
+                        >
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={step === 0}
+                            onClick={handleBack}
+                            sx={{ mr: 1 }}
+                          >
+                            PREVIOUS
+                          </Button>
+                          <Box sx={{ flex: "1 1 auto" }} />
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleNext}
+                            sx={{ mr: 1 }}
+                          >
+                            NEXT
+                          </Button>
+                        </Box>
+                      </React.Fragment>
+                    </div>
+                  </Box>
                 </div>
-              </Box>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </main>
+        </main>
+      </Container>
+    </>
   );
 }
 {

@@ -82,7 +82,7 @@ app.post("/payment", async (req: any, res: any) => {
               name: item?.name,
               images: [
                 !!item?.thumbnail?.length
-                  ? item?.thumbnails[0]
+                  ? item?.thumbnail[0]
                   : "http://localhost:3000/images/course.jpg",
               ],
             },

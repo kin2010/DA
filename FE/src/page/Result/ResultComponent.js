@@ -66,7 +66,14 @@ const AppResult = () => {
                     minWidth: "60px",
                   }}
                 >
-                  <img src={cart?.thumbnai || "../images/course.jpg"} alt="" />
+                  <img
+                    src={
+                      !!cart?.thumbnail?.length
+                        ? cart?.thumbnail[0]
+                        : "../images/course.jpg"
+                    }
+                    alt=""
+                  />
                 </div>
                 <div className="card-courses-full-dec">
                   <div className="card-courses-title">
