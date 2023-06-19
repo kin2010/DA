@@ -4,14 +4,33 @@ import { apiURL } from "../Context/constant";
 import { serviceFetch } from "../ultis/service";
 
 export const login = async ({ email, password }) => {
-  const data = await serviceFetch({
-    url: apiURL + "/api/auth/login",
-    method: "POST",
-    data: {
-      email,
-      password,
+  const data = await serviceFetch(
+    {
+      url: apiURL + "/api/auth/login",
+      method: "POST",
+      data: {
+        email,
+        password,
+      },
     },
-  });
+    apiURL,
+    null,
+    true
+  );
+  return data;
+};
+
+export const register = async (body) => {
+  const data = await serviceFetch(
+    {
+      url: apiURL + "/api/auth/register",
+      method: "POST",
+      data: { ...body },
+    },
+    apiURL,
+    null,
+    true
+  );
   return data;
 };
 

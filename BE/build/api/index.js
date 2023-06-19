@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AssignmentService = exports.SectionService = exports.MeetingSerivce = exports.LectureService = exports.RoleSerice = exports.AuthService = void 0;
+exports.OrderService = exports.GroupService = exports.AssignmentService = exports.SectionService = exports.MeetingSerivce = exports.LectureService = exports.RoleSerice = exports.AuthService = void 0;
 var auth_api_1 = require("./auth.api");
 Object.defineProperty(exports, "AuthService", { enumerable: true, get: function () { return __importDefault(auth_api_1).default; } });
 var role_api_1 = require("./role.api");
@@ -16,3 +16,7 @@ var section_api_1 = require("./section.api");
 Object.defineProperty(exports, "SectionService", { enumerable: true, get: function () { return __importDefault(section_api_1).default; } });
 var assignment_1 = require("./assignment");
 Object.defineProperty(exports, "AssignmentService", { enumerable: true, get: function () { return __importDefault(assignment_1).default; } });
+var group_api_1 = require("./group.api");
+Object.defineProperty(exports, "GroupService", { enumerable: true, get: function () { return __importDefault(group_api_1).default; } });
+var order_api_1 = require("./order.api");
+Object.defineProperty(exports, "OrderService", { enumerable: true, get: function () { return __importDefault(order_api_1).default; } });

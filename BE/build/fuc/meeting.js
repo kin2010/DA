@@ -36,19 +36,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.meetingChat = exports.userExit = exports.userStartMeeting = void 0;
+exports.groupChat = exports.meetingChat = exports.userExit = exports.userStartMeeting = void 0;
+var models_1 = require("../models");
 var fetch_1 = require("../utils/fetch");
 var userStartMeeting = function (room, user) { return __awaiter(void 0, void 0, void 0, function () {
-    var isRoomExist, newRoom, member, set, newuser, newmtg;
+    var isRoomExist, newRoom, member, set, newuser, meeting;
     var _a, _b;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0: return [4 /*yield*/, (0, fetch_1.serviceFetch)({
-                    url: "api/meeting",
+                    url: "api/meeting/" + room,
                     method: "GET",
-                    data: {
-                        url: room,
-                    },
                 })];
             case 1:
                 isRoomExist = _c.sent();
@@ -57,7 +55,13 @@ var userStartMeeting = function (room, user) { return __awaiter(void 0, void 0, 
                         url: "api/meeting",
                         method: "POST",
                         data: {
-                            url: room,
+                            attendance: [
+                                {
+                                    user: user,
+                                    time: new Date(),
+                                    status: "join",
+                                },
+                            ],
                             users: [user],
                         },
                     })];
@@ -69,17 +73,21 @@ var userStartMeeting = function (room, user) { return __awaiter(void 0, void 0, 
                 set = new Set(member);
                 set.add(user);
                 newuser = Array.from(set);
-                return [4 /*yield*/, (0, fetch_1.serviceFetch)({
-                        url: "api/meeting",
-                        method: "PUT",
-                        data: {
-                            _id: (_b = isRoomExist === null || isRoomExist === void 0 ? void 0 : isRoomExist.meeting) === null || _b === void 0 ? void 0 : _b._id,
-                            data: { users: newuser },
+                return [4 /*yield*/, models_1.Meeting.findByIdAndUpdate((_b = isRoomExist === null || isRoomExist === void 0 ? void 0 : isRoomExist.meeting) === null || _b === void 0 ? void 0 : _b._id, {
+                        $push: {
+                            attendance: {
+                                user: user,
+                                time: new Date(),
+                                status: "join",
+                            },
                         },
-                    })];
+                        $addToSet: {
+                            users: user,
+                        },
+                    }, { new: true })];
             case 4:
-                newmtg = _c.sent();
-                return [2 /*return*/, newmtg];
+                meeting = _c.sent();
+                return [2 /*return*/, { meeting: meeting }];
         }
     });
 }); };
@@ -131,3 +139,31 @@ var meetingChat = function (body) { return __awaiter(void 0, void 0, void 0, fun
     });
 }); };
 exports.meetingChat = meetingChat;
+var groupChat = function (body) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, msg, group, time, rs;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                userId = body.userId, msg = body.msg, group = body.group, time = body.time;
+                return [4 /*yield*/, (0, fetch_1.serviceFetch)({
+                        url: "/api/group/chat",
+                        method: "POST",
+                        data: {
+                            userId: userId,
+                            group: group,
+                            msg: msg,
+                            time: time || new Date(),
+                        },
+                    })];
+            case 1:
+                rs = _b.sent();
+                console.log(rs, 111);
+                if ((rs === null || rs === void 0 ? void 0 : rs.status) === 200) {
+                    return [2 /*return*/, (_a = rs === null || rs === void 0 ? void 0 : rs.data) === null || _a === void 0 ? void 0 : _a.chats];
+                }
+                return [2 /*return*/, []];
+        }
+    });
+}); };
+exports.groupChat = groupChat;

@@ -159,7 +159,6 @@ var AssignmentService = /** @class */ (function () {
                     res
                         .json({
                         data: assignment,
-                        message: "Create successfully ",
                         status: 200,
                     })
                         .status(http_status_1.default.OK);

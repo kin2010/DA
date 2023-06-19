@@ -30,3 +30,9 @@ export type { ICategoryGroup } from "./categorygroup";
 
 export { default as Assignment } from "./assignments";
 export type { IAssignment } from "./assignments";
+
+export { default as Group } from "./group";
+export type { IGroup } from "./group";
+
+export { default as Order } from "./order";
+export type { IOrder } from "./order";

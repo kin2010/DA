@@ -114,14 +114,14 @@ function CreateLecture({
           if (!!refetch) {
             refetch();
           }
-          if (res?.status === 200) {
+          if (!res?.message) {
             openNotification(res);
             setIsShowLecture(false);
           }
         } else {
           const params = { ...form, id: updateLectureId };
           const res = await updateLecture(params);
-          if (res?.status === 200) {
+          if (!res?.message) {
             if (!!refetch) {
               refetch();
             }

@@ -24,6 +24,15 @@ export interface IMeeting extends Document {
   ];
   time: number;
   status: string;
+  group: string;
+  attendance: [
+    {
+      user: string;
+      time: string;
+      status: string;
+    }
+  ];
+  createdby: string;
 }
 type STATUS = "end" | "incomming" | "starting";
 const meetingSchema = new Schema(
@@ -60,6 +69,14 @@ const meetingSchema = new Schema(
     name: {
       type: String,
     },
+    createdby: {
+      type: "ObjectId",
+      ref: "User",
+    },
+    group: {
+      type: "ObjectId",
+      ref: "Group",
+    },
     ralseHand: [
       {
         user: {
@@ -90,6 +107,16 @@ const meetingSchema = new Schema(
         },
         time: { type: Date },
         msg: { type: String },
+      },
+    ],
+    attendance: [
+      {
+        user: {
+          type: "ObjectId",
+          ref: "User",
+        },
+        time: { type: Date },
+        status: { type: String },
       },
     ],
     status: {

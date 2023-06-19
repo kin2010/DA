@@ -5,7 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "Roboto", sans-serif !important;
+  /* font-family: "Roboto", sans-serif !important; */
+  font-family: "Montserrat", sans-serif !important;
 }
 
 code {
@@ -93,4 +94,34 @@ body {
 }
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   color: white !important;
+}
+a {
+  color: #616161 !important;
+}
+a:hover {
+  color: #1890ff !important;
+}
+.link {
+  color: #1890ff !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.link:hover {
+  color: #616161 !important;
+}
+.MuiDivider-root {
+  border-color: #616161;
+}
+.white {
+  color: white !important;
+}
+.mychat {
+  background: #1976d210;
+}
+.ant-comment {
+  background-color: unset !important;
+}
+.MuiPopover-paper {
+  /* top: 167px !important;
+  left: 1440px !important; */
 }

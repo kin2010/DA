@@ -1,3 +1,4 @@
+import { boolean, number } from "joi";
 import { Document, Schema, model } from "mongoose";
 export interface ICourse extends Document {
   _id: string;
@@ -19,6 +20,9 @@ export interface ICourse extends Document {
   sections_info: Object[];
   video: string[];
   thumbnail: string[];
+  publish: boolean;
+  discount: number;
+  groups: string[];
 }
 
 const courseSchema = new Schema(
@@ -43,6 +47,12 @@ const courseSchema = new Schema(
       {
         type: "ObjectId",
         ref: "Section",
+      },
+    ],
+    groups: [
+      {
+        type: "ObjectId",
+        ref: "Group",
       },
     ],
     category: {
@@ -92,6 +102,12 @@ const courseSchema = new Schema(
         type: String,
       },
     ],
+    discount: {
+      type: Number,
+    },
+    publish: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );

@@ -257,7 +257,7 @@ export default function Tab4({ ids }) {
       },
     };
     const res = await updateCourse(params);
-    if (res?.status === 200) {
+    if (!res?.message) {
       openNotification({
         message: "Thêm thành viên thành công",
         status: 200,

@@ -56,7 +56,6 @@ export default class LectureApi {
   ) => {
     try {
       const { section } = req.body;
-      console.log(section, 3);
       const ch = await Section.findById(section);
       if (!ch) {
         throw new APIError({
@@ -69,18 +68,18 @@ export default class LectureApi {
       ).populate([
         {
           path: "teacher",
-          select: "fullName",
+          select: "",
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "ralseHand",
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
@@ -88,7 +87,7 @@ export default class LectureApi {
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
       ]);
@@ -97,8 +96,7 @@ export default class LectureApi {
       });
       res
         .json({
-          lession: lecture,
-          message: "Create successfully ",
+          data: lecture,
           status: 200,
         })
         .status(httpStatus.OK);
@@ -112,23 +110,23 @@ export default class LectureApi {
     next: NextFunction
   ) => {
     try {
-      const coures = await (
+      const lecture = await (
         await Lecture.findById(req.params.id)
       )?.populate([
         {
           path: "teacher",
-          select: "fullName",
+          select: "",
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "ralseHand",
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
@@ -136,18 +134,33 @@ export default class LectureApi {
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
       ]);
+      if (!lecture) {
+        throw new APIError({
+          message: "NOT FOUND",
+          status: httpStatus.INTERNAL_SERVER_ERROR,
+        });
+      }
+      const sectionId = lecture?.section;
+      const section = await Section.findById(sectionId);
+      let courseData: any;
+      if (section?.course) {
+        courseData = await Course.findById(section.course);
+      }
+      if (lecture) {
+        lecture.course = courseData;
+      }
       res
         .json({
-          lession: coures,
+          data: lecture,
           status: 200,
         })
         .status(httpStatus.OK);
     } catch (error) {
-      next();
+      next(error);
     }
   };
   static update = async (
@@ -180,14 +193,14 @@ export default class LectureApi {
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "ralseHand",
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
@@ -195,7 +208,7 @@ export default class LectureApi {
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
       ]);
@@ -312,14 +325,14 @@ export default class LectureApi {
             },
             {
               path: "users",
-              select: "avatar email fullName address phone online",
+              select: "",
             },
             {
               path: "ralseHand",
               select: "time user",
               populate: {
                 path: "user",
-                select: "avatar email fullName address phone online",
+                select: "",
               },
             },
             {
@@ -327,7 +340,7 @@ export default class LectureApi {
               select: "time user",
               populate: {
                 path: "user",
-                select: "avatar email fullName address phone online",
+                select: "",
               },
             },
           ],
@@ -369,14 +382,14 @@ export default class LectureApi {
             },
             {
               path: "users",
-              select: "avatar email fullName address phone online",
+              select: "",
             },
             {
               path: "ralseHand",
               select: "time user",
               populate: {
                 path: "user",
-                select: "avatar email fullName address phone online",
+                select: "",
               },
             },
             {
@@ -384,7 +397,7 @@ export default class LectureApi {
               select: "time user",
               populate: {
                 path: "user",
-                select: "avatar email fullName address phone online",
+                select: "",
               },
             },
           ],

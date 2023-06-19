@@ -57,12 +57,13 @@ import { useFormikContext } from "formik";
 const EditorCommon = ({ handleChange, name }) => {
   const [data, setData] = useState("");
   const { setFieldValue, values } = useFormikContext();
-
+  const [first, setFirst] = useState(true);
   useEffect(() => {
-    if (!!values[name]) {
+    if (!!values[name] && !!first) {
       setData(values[name]);
+      setFirst(false);
     }
-  }, []);
+  }, [values[name]]);
 
   useEffect(() => {
     setFieldValue(name, data);

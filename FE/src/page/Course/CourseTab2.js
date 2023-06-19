@@ -9,7 +9,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, ErrorMessage, useFormikContext } from "formik";
 import * as Yup from "yup";
-import { createLectureSchema } from "../../Validation/CourseCreate";
+import {
+  createGroupSchema,
+  createLectureSchema,
+} from "../../Validation/CourseCreate";
 import FormControl from "../../component/FormControl";
 import { Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -19,6 +22,7 @@ import { Modal } from "antd";
 import Section from "../../component/Section";
 import { openNotification } from "../../Notification";
 import { useQueryClient } from "@tanstack/react-query";
+import Group from "../Group";
 
 const CourseTab2 = ({ setStep }) => {
   const [validated, setValidated] = React.useState(false);
@@ -26,6 +30,7 @@ const CourseTab2 = ({ setStep }) => {
   const [chapter, setChapter] = React.useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState(false);
   const courseId = sessionStorage.getItem("new_course");
   const handleOk = () => {
     setLoading(true);
@@ -36,6 +41,9 @@ const CourseTab2 = ({ setStep }) => {
   };
   const handleCancel = () => {
     setOpen(false);
+  };
+  const handleCancelGroup = () => {
+    setOpenGroup(false);
   };
 
   const [ids, setIds] = useState([]);
@@ -51,23 +59,17 @@ const CourseTab2 = ({ setStep }) => {
   }
   const courseService = useCourseService();
   const courseData = queryClient.getQueryData(["course", courseId]);
-  const addChapter = () => {
-    const add = {
-      data: {},
-
-      index: chapter.length + 1,
-    };
-    chapter.push(add);
-    setChapter([...chapter]);
-  };
 
   const addNewSection = () => {
     setOpen(true);
   };
+  const addNewGroup = () => {
+    setOpenGroup(true);
+  };
 
   const handeAddSectionSumbit = async (value) => {
-    const res = await addSection({ ...value, course: courseId });
-    if (res?.status === 200) {
+    const res = await courseService.addSection({ ...value, course: courseId });
+    if (!res?.message) {
       openNotification({
         type: "success",
         message: "Created successfully",
@@ -80,8 +82,124 @@ const CourseTab2 = ({ setStep }) => {
     }
     setOpen(false);
   };
+  const addGroup = async (value) => {
+    console.log(value);
+    const res = await courseService.addGroup({ ...value, course: courseId });
+    if (!res?.message) {
+      openNotification({
+        type: "success",
+        message: "Created successfully",
+      });
+    } else {
+      openNotification({
+        type: "error",
+        message: "Creation failed",
+      });
+    }
+    setOpenGroup(false);
+  };
+
   return (
     <>
+      <Formik
+        initialValues={{ name: "" }}
+        onSubmit={(value) => addGroup(value)}
+        validationSchema={createGroupSchema}
+      >
+        {(props) => (
+          <Modal
+            open={openGroup}
+            title="New Group"
+            // onOk={handleOk}
+            onCancel={handleCancelGroup}
+            footer={null}
+          >
+            <form onSubmit={props.handleSubmit}>
+              <FormControl name="name" label={"Group name*"}></FormControl>
+              <FormControl
+                name="description"
+                type={"editor"}
+                label={"Description*"}
+              ></FormControl>
+
+              <Divider></Divider>
+              <div className="mt-3 d-flex justify-content-end">
+                <Button
+                  size="small"
+                  variant="outlined"
+                  key="back"
+                  onClick={handleCancel}
+                >
+                  Close
+                </Button>
+                <Button
+                  size="small"
+                  className="ms-2"
+                  variant="contained"
+                  key="submit"
+                  type="submit"
+                >
+                  Add Group
+                </Button>
+              </div>
+            </form>
+          </Modal>
+        )}
+      </Formik>
+      <div className="widget-inner">
+        <form className={"edit-profile m-b30"} onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="col-12">
+              <div className="ml-auto">
+                <h3>Group</h3>
+              </div>
+            </div>
+            <div className="col-12 mt-3">
+              <div
+                className="d-flex align-items-center mb-5 col-12"
+                style={{
+                  width: "100%",
+                  padding: "10px ",
+                  border: "0.5px solid #12121220",
+                  background: "white",
+                }}
+              >
+                <ViewListIcon className="me-4" color="primary" />
+                <Typography>Group</Typography>
+                <Button
+                  variant="contained"
+                  className="ms-auto"
+                  color="primary"
+                  onClick={addNewGroup}
+                >
+                  New Group
+                </Button>
+              </div>
+              <div className="col-12  ">
+                {!!courseData?.groups?.length ? (
+                  courseData?.groups?.map((data) => (
+                    <div key={data?._id} className="mt-5">
+                      <Group propData={data}></Group>
+                    </div>
+                  ))
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      border: "0.5px solid #12121220",
+                      background: "white",
+                      padding: "15px",
+                    }}
+                  >
+                    <Empty />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="form-group col-6"></div>
+          </div>
+        </form>
+      </div>
       <Formik
         initialValues={{ name: "" }}
         onSubmit={(value) => handeAddSectionSumbit(value)}
@@ -151,8 +269,8 @@ const CourseTab2 = ({ setStep }) => {
                 </Button>
               </div>
               <div className="col-12  ">
-                {!!courseData?.data?.sections_info?.length ? (
-                  courseData?.data?.sections_info?.map((data) => (
+                {!!courseData?.sections_info?.length ? (
+                  courseData?.sections_info?.map((data) => (
                     <div key={data?.section?._id} className="mt-5">
                       <Section propData={data}></Section>
                     </div>

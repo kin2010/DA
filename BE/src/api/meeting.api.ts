@@ -1,11 +1,11 @@
 import { NextFunction, Response } from "express";
 import httpStatus from "http-status";
 import { Query, Params, Request } from "../configs/types";
-import { IMeeting, Meeting, User } from "../models";
+import { Group, IMeeting, Meeting, User } from "../models";
 import APIError from "../utils/APIError";
 
 type GetRoomRequestType = {
-  url?: string;
+  id?: string;
   _id?: string;
 };
 
@@ -39,42 +39,45 @@ export default class MeetingApi {
       ).populate([
         {
           path: "teacher",
-          select: "fullName",
+          select: "",
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "ralseHand",
-          select: "time user",
+          select: "",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
           path: "plusMark",
-          select: "time user",
+          select: "",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
           path: "chat",
-          select: "user time msg",
+          select: "",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
       ]);
-
+      await Group.findOneAndUpdate(
+        { _id: req.body?.group },
+        { $push: { meetings: mtg?._id } },
+        { new: true }
+      );
       res
         .json({
           meeting: mtg,
-          message: "Create successfully ",
           status: 200,
         })
         .status(httpStatus.OK);
@@ -88,23 +91,23 @@ export default class MeetingApi {
     next: NextFunction
   ) => {
     try {
-      const { url } = req.body;
-      if (!url) {
-        throw new APIError({
-          message: "Room not found",
-          status: 404,
-        });
-      }
-      const mtg = await Meeting.findOne({ url: url });
+      const { id } = req.params;
+      const mtg = await Meeting.findById(id);
       if (!mtg) {
         throw new APIError({
           message: "Room not found",
           status: 404,
         });
       }
+      const mtgRes = await mtg.populate([
+        {
+          path: "group",
+          select: "",
+        },
+      ]);
       res
         .json({
-          meeting: mtg,
+          meeting: mtgRes,
           status: 200,
         })
         .status(200)
@@ -131,18 +134,18 @@ export default class MeetingApi {
       )?.populate([
         {
           path: "teacher",
-          select: "fullName",
+          select: "",
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "ralseHand",
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
@@ -150,7 +153,7 @@ export default class MeetingApi {
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
@@ -158,7 +161,7 @@ export default class MeetingApi {
           select: "user time msg",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
       ]);
@@ -372,6 +375,60 @@ export default class MeetingApi {
       res
         .json({
           msg: rs,
+          status: 200,
+        })
+        .status(200)
+        .end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  static getById = async (
+    req: Request<Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const mtg = await Meeting.findById(req.params.id);
+      if (!mtg) {
+        throw new APIError({
+          status: httpStatus.NOT_FOUND,
+          message: "NOT FOUND",
+        });
+      }
+      const mtgres = await mtg.populate([
+        {
+          path: "group",
+          select: "",
+          populate: {
+            path: "course",
+            select: "",
+          },
+        },
+        {
+          path: "chat",
+          select: "",
+          populate: {
+            path: "user",
+            select: "",
+          },
+        },
+        {
+          path: "users",
+          select: "",
+        },
+        {
+          path: "attendance",
+          select: "",
+          populate: {
+            path: "user",
+            select: "",
+          },
+        },
+      ]);
+      res
+        .json({
+          data: mtgres,
           status: 200,
         })
         .status(200)

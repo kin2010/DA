@@ -32,7 +32,7 @@ const SectionAdd = ({ open, setOpen, section }) => {
       },
     };
     const res = await courseService.updateSection(params);
-    if (res?.status === 200) {
+    if (!res?.message) {
       openNotification({
         type: "success",
         message: "Created successfully",

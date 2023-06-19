@@ -48,6 +48,9 @@ var roleSchema = new mongoose_1.Schema({
     section: {
         type: String,
     },
+    course: {
+        type: Object,
+    },
     ralseHand: [
         {
             user: {

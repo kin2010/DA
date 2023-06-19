@@ -5,8 +5,8 @@ import React, { useEffect, useState } from "react";
 
 import { Col, Row } from "antd";
 import AddIcon from "@mui/icons-material/Add";
-import { useCourseService } from "../../hook/LessionHook";
-import { useQueryClient } from "@tanstack/react-query";
+import { getAllCategories, useCourseService } from "../../hook/LessionHook";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Tab2 from "../Tab2";
 import TeacherModal from "../../component/TeacherModal";
 import { serviceFetch } from "../../ultis/service";
@@ -25,6 +25,7 @@ import { courseCreateSchema } from "../../Validation/CourseCreate";
 import FormControl from "../../component/FormControl";
 import { Button, ButtonBase, InputLabel, Select } from "@mui/material";
 import Dropdown from "../../component/Dropdown";
+import { Select as SeclectAntd } from "antd";
 const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
   const { openNotification } = React.useContext(AppContextProvider);
   const [open, setOpen] = useState(false);
@@ -32,21 +33,20 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
   const navigate = useNavigate();
   const { handleSubmit, setFieldValue, setValues, values } = useFormikContext();
   const queryClient = useQueryClient();
-  const { data } = queryClient.getQueryData(["categories"]) || { data: null };
   const courseId = sessionStorage.getItem("new_course");
-
+  const { data } = useQuery(["categories"], getAllCategories);
   const courseService = useCourseService();
   const courseData = courseService.get();
 
   useEffect(() => {
     if (!!courseData) {
       setValues({
-        name: courseData?.data?.name,
-        teachers: courseData?.data?.teachers?.map((teacher) => teacher?._id),
-        description: courseData?.data?.description,
-        target: courseData?.data?.target,
-        requirement: courseData?.data?.requirement,
-        category: courseData?.data?.category,
+        name: courseData?.name,
+        teachers: courseData?.teachers?.map((teacher) => teacher?._id),
+        description: courseData?.description,
+        target: courseData?.target,
+        requirement: courseData?.requirement,
+        category: courseData?.category,
       });
     }
   }, [courseData]);
@@ -56,13 +56,17 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
     setFieldValue("category", e.target?.value || "");
   };
 
+  const SkillChange = (value) => {
+    setFieldValue("skill_lever", value || "");
+  };
+
   return (
     <div className="widget-inner">
       <form className={"course-cr m-b30"} onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-12">
             <div className="ml-auto">
-              <h3>1. Basic info</h3>
+              <h3>1. Thông tin cơ bản</h3>
             </div>
           </div>
           <div className="form-group col-6">
@@ -72,7 +76,7 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
           </div>
 
           <div className="form-group col-6">
-            <label className="col-form-label">Teachers :</label>
+            <label className="col-form-label">Giảng viên đào tạo:</label>
             <div>
               <Dropdown data={dataTeacher}></Dropdown>
             </div>
@@ -80,27 +84,33 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
           <div className="seperator" />
           <div className="col-12 m-t20">
             <div className="ml-auto m-b5">
-              <h3>2. Description</h3>
+              <h3>2. Mô tả khóa học</h3>
             </div>
           </div>
           <div className="form-group col-12">
-            <label className="col-form-label">Course description</label>
-            <div>
-              <EditorCommon name="description"></EditorCommon>
-            </div>
+            <FormControl
+              label={"Course description"}
+              name="description"
+              type={"editor"}
+            ></FormControl>
           </div>
           <div className="form-group col-6">
             <FormControl
-              label="What will students learn in your course?*"
+              label="Mục tiêu khóa học *"
               name="target"
+              type={"editor"}
             >
               <textarea className="form-control" />
             </FormControl>
           </div>
           <div className="form-group col-6">
-            <FormControl label="Requirements*" name="requirement">
+            {/* <FormControl label="Requirements*" name="requirement">
               <textarea className="form-control" />
-            </FormControl>
+            </FormControl> */}
+            <label className="col-form-label">Yêu cầu khóa học*</label>
+            <div>
+              <EditorCommon name="requirement"></EditorCommon>
+            </div>
           </div>
           <div className="col-12 m-t20">
             <div className="ml-auto">
@@ -113,7 +123,7 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
                 <tr className="list-item">
                   <td>
                     <div className="row">
-                      <div className="col-md-12">
+                      <div className="col-md-6">
                         <label className="col-form-label">
                           Course Category
                         </label>
@@ -161,14 +171,32 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
                           </Select>
                         </div>
                       </div>
-                      {/* <div className="col-md-2">
-                            <label className="col-form-label">Close</label>
-                            <div className="form-group">
-                              <a className="delete" href="#">
-                                <i className="fa fa-close" />
-                              </a>
-                            </div>
-                          </div> */}
+                      <div className="col-md-6">
+                        <label className="col-form-label">Skill Level</label>
+                        <div>
+                          <SeclectAntd
+                            style={{ width: "100%", background: "white" }}
+                            mode="tags"
+                            onChange={SkillChange}
+                            value={values["skill_level"]}
+                            placeholder="Skill Lever"
+                            options={[
+                              {
+                                value: "Beginner",
+                                label: "Beginner",
+                              },
+                              {
+                                value: "Intermediate",
+                                label: "Intermediate",
+                              },
+                              {
+                                value: "Expect",
+                                label: "Expect",
+                              },
+                            ]}
+                          ></SeclectAntd>
+                        </div>
+                      </div>
                     </div>
                   </td>
                 </tr>

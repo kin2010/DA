@@ -95,12 +95,12 @@ export default function AdminCourse() {
         id: courseData?.data?._id,
         body: value,
       });
-      if (res?.status === 200) {
+      if (!res?.message) {
         openNotification({
           type: "success",
           message: "SAVED",
         });
-        sessionStorage.setItem("new_course", courseData?.data?._id);
+        sessionStorage.setItem("new_course", courseData?._id);
         setTimeout(() => {
           setStep(step + 1);
         }, 2000);
@@ -112,12 +112,12 @@ export default function AdminCourse() {
       }
     } else {
       const res = await addCourse({ ...value, owner: userData?.user?._id });
-      if (res?.status === 200) {
+      if (!res?.message) {
         openNotification({
           type: "success",
           message: "SAVED",
         });
-        sessionStorage.setItem("new_course", res?.data?._id);
+        sessionStorage.setItem("new_course", res?._id);
         setTimeout(() => {
           setStep(step + 1);
         }, 2000);
@@ -186,6 +186,8 @@ export default function AdminCourse() {
                           course={course}
                           setCourse={setCourse}
                           dataTeacher={teacher}
+                          setStep={setStep}
+                          step={step}
                         ></CourseTab4>
                       )}
                       {step === 4 && (
@@ -193,6 +195,8 @@ export default function AdminCourse() {
                           course={course}
                           setCourse={setCourse}
                           dataTeacher={teacher}
+                          setStep={setStep}
+                          step={step}
                         ></CourseTab5>
                       )}
                     </>

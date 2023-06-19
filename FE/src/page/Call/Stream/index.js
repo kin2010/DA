@@ -23,7 +23,7 @@ import {
 } from "../../../ultis/helper";
 import "../../Call/index.css";
 import FooterVideo from "./FooterVideo";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { PRIMARY } from "../../../Constant/app";
 import { AuthContextProvider } from "../../../Context/AuthContext";
 import { Avatar, Button } from "@mui/material";
@@ -35,6 +35,7 @@ import TextArea from "antd/lib/input/TextArea";
 import { Comment, Space } from "antd";
 import { DefaultAvatar, capitalizeFullName } from "../../../ultis/user";
 import { format } from "date-fns";
+import { useQueryClient } from "@tanstack/react-query";
 // const host = "http://192.168.1.15:3333";
 const host =
   process.env.NODE_ENV === "development"
@@ -44,7 +45,8 @@ const host =
 const Stream = (props) => {
   const { initStream } = props;
   const [roomMember, setRoomMember] = useState();
-  const { user } = useContext(AuthContextProvider);
+  const queryClient = useQueryClient();
+  const { user } = queryClient.getQueryData(["user"]) || { user: null };
   const [newz, setNew] = useState(false);
   const [roomName, setRoomName] = useState();
   const localVideoref1 = useRef();
@@ -53,9 +55,10 @@ const Stream = (props) => {
   const [isMemberShow, setIsMemberShown] = useState(false);
   const [showchat, setshowchat] = useState(true);
   const [message, setMessages] = useState([]);
+  const { id } = useParams();
 
   useEffect(() => {
-    const room = searchParams.get("room");
+    const room = id;
 
     const socket = socketIOClient(host, {
       query: {
@@ -64,7 +67,6 @@ const Stream = (props) => {
       },
     });
     const arr = [];
-    const socketId = socket.id;
     console.log("connected", socket.id);
     let myStream = initStream;
     let screen = "";
@@ -715,6 +717,7 @@ const Stream = (props) => {
     };
     getAndSetUserStream();
     adjustVideoElemSize();
+    console.log(99999999999999999999999999, user, user?._id);
     socket.on("connect", () => {
       socket.emit("subscribe", {
         room: room,

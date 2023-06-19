@@ -1,16 +1,12 @@
-/* eslint-disable no-unused-vars */
-import { Navigate } from "react-router-dom";
-import { getToken, getRoleID } from "./Common";
-//user authen
-
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, Route, withRouter } from "react-router-dom";
+import { getToken } from "./Common";
 
-const PrivateRoute = () => {
-  if (!getToken()) return <Navigate to="/login" />;
-  else {
-    return <Outlet />;
+const ProtectedRoute = ({ redirectPath = "/login", children }) => {
+  if (!getToken()) {
+    return <Navigate to={redirectPath} replace />;
   }
-};
 
-export default PrivateRoute;
+  return children ? children : <Outlet />;
+};
+export default ProtectedRoute;

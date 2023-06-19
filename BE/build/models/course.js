@@ -24,6 +24,12 @@ var courseSchema = new mongoose_1.Schema({
             ref: "Section",
         },
     ],
+    groups: [
+        {
+            type: "ObjectId",
+            ref: "Group",
+        },
+    ],
     category: {
         type: "ObjectId",
         ref: "Category",
@@ -71,6 +77,12 @@ var courseSchema = new mongoose_1.Schema({
             type: String,
         },
     ],
+    discount: {
+        type: Number,
+    },
+    publish: {
+        type: Boolean,
+    },
 }, { timestamps: true });
 var Course = (0, mongoose_1.model)("Course", courseSchema);
 exports.default = Course;

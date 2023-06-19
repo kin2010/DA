@@ -56,6 +56,8 @@ var cors_1 = __importDefault(require("cors"));
 var error_middleware_1 = __importDefault(require("./middlewares/error.middleware"));
 var index_1 = __importDefault(require("./router/index"));
 var meeting_1 = require("./fuc/meeting");
+var models_1 = require("./models");
+var mongoose_1 = require("mongoose");
 var express = require("express");
 var app = express();
 var server = require("http").Server(app);
@@ -67,57 +69,6 @@ var io = require("socket.io")(server, {
 // const stream = require("./webs/stream");
 var port = 3333;
 var room = [];
-var client = [];
-// let activeSockets: {
-//   room: string;
-//   id: string;
-// }[] = [];
-// io.on("connect", (socket: any) => {
-//   socket.on("joinRoom", (room: string) => {
-//     const existingSocket = activeSockets?.find(
-//       (s) => s.room === room && s.id === socket.id
-//     );
-//     if (!existingSocket) {
-//       activeSockets = [...activeSockets, { id: socket.id, room }];
-//       socket.emit(`${room}-update-user-list`, {
-//         users: activeSockets
-//           .filter((s) => s.room === room && s.id !== socket.id)
-//           .map((existingSocket) => existingSocket.id),
-//         current: socket.id,
-//       });
-//       socket.broadcast.emit(`${room}-add-user`, {
-//         user: socket.id,
-//       });
-//     }
-//     console.log(`Client ${socket.id} joined ${room}`);
-//   });
-//   socket.on("call-user", (data: any) => {
-//     socket.to(data.to).emit("call-made", {
-//       offer: data.offer,
-//       socket: socket.id,
-//     });
-//   });
-//   socket.on("make-answer", (data: any) => {
-//     socket.to(data.to).emit("answer-made", {
-//       socket: socket.id,
-//       answer: data.answer,
-//     });
-//   });
-//   socket.on("'reject-call", (data: any) => {
-//     socket.to(data.from).emit("call-rejected", {
-//       socket: socket.id,
-//     });
-//   });
-//   socket.on("disconnect", () => {
-//     const existingSocket = activeSockets.find((sc) => sc.id === socket.id);
-//     if (!existingSocket) return;
-//     activeSockets = activeSockets.filter((sc) => sc.id !== socket.id);
-//     socket.broadcast.emit(`${existingSocket.room}-remove-user`, {
-//       socketId: socket.id,
-//     });
-//     console.log(`Client disconnected: ${socket.id}`);
-//   });
-// });
 var getRoomMember = function (id) {
     room.forEach(function (a) {
         var _a;
@@ -146,21 +97,88 @@ app.use(function (req, res, next) {
     }
     return next();
 });
+var groupOnlines = {};
 app.use("/api", index_1.default);
+var secret = "sk_test_51LMxCAI6HAK9mOVZ7xKAVLvrxjVYNFzMs76u982XHNRqlpSPsY0gzaTDlJ8UxaiqMR7CarhZauZxCFuvP2S15zM500edPrGS1g";
+var stripe = require("stripe")(secret);
+app.post("/payment", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var session, course, e_1;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    return __generator(this, function (_j) {
+        switch (_j.label) {
+            case 0:
+                console.log(req === null || req === void 0 ? void 0 : req.body);
+                _j.label = 1;
+            case 1:
+                _j.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, stripe.checkout.sessions.create({
+                        payment_method_types: ["card"],
+                        mode: "payment",
+                        line_items: (_b = (_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.items) === null || _b === void 0 ? void 0 : _b.map(function (item) {
+                            var _a;
+                            return {
+                                price_data: {
+                                    currency: "vnd",
+                                    product_data: {
+                                        name: item === null || item === void 0 ? void 0 : item.name,
+                                        images: [
+                                            !!((_a = item === null || item === void 0 ? void 0 : item.thumbnail) === null || _a === void 0 ? void 0 : _a.length)
+                                                ? item === null || item === void 0 ? void 0 : item.thumbnails[0]
+                                                : "http://localhost:3000/images/course.jpg",
+                                        ],
+                                    },
+                                    unit_amount: item === null || item === void 0 ? void 0 : item.price,
+                                },
+                                quantity: 1,
+                            };
+                        }),
+                        success_url: ((_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.success_url) || "",
+                        cancel_url: ((_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.cancel_url) || "",
+                    })];
+            case 2:
+                session = _j.sent();
+                course = (_f = (_e = req === null || req === void 0 ? void 0 : req.body) === null || _e === void 0 ? void 0 : _e.courses) === null || _f === void 0 ? void 0 : _f.map(function (c) {
+                    return c;
+                    return new mongoose_1.Schema.Types.ObjectId(c);
+                });
+                return [4 /*yield*/, models_1.Course.updateMany({
+                        _id: { $in: course },
+                    }, { $addToSet: { users: (_g = req === null || req === void 0 ? void 0 : req.body) === null || _g === void 0 ? void 0 : _g.user } }, { new: true })];
+            case 3:
+                _j.sent();
+                console.log(11, course, (_h = req === null || req === void 0 ? void 0 : req.body) === null || _h === void 0 ? void 0 : _h.user);
+                res.json({ url: session.url });
+                return [3 /*break*/, 5];
+            case 4:
+                e_1 = _j.sent();
+                res.status(500).json({ error: e_1 === null || e_1 === void 0 ? void 0 : e_1.message });
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); });
 var onlineUsers = new Map();
 io.on("connect", function (socket) {
-    var _a, _b;
+    var _a, _b, _c;
     console.log(socket === null || socket === void 0 ? void 0 : socket.id, " connected");
     var userId = (_a = socket.handshake.query) === null || _a === void 0 ? void 0 : _a.userId;
     var roomQuery = (_b = socket.handshake.query) === null || _b === void 0 ? void 0 : _b.roomUrl;
+    var groupQuery = (_c = socket.handshake.query) === null || _c === void 0 ? void 0 : _c.group;
+    if (!!groupQuery) {
+        socket.join(groupQuery);
+    }
     try {
         socket.on("subscribe", function (data) { return __awaiter(void 0, void 0, void 0, function () {
-            var mtgRoom, roomInfo;
+            var meetingId, roomInfo;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        mtgRoom = data === null || data === void 0 ? void 0 : data.room;
-                        return [4 /*yield*/, (0, meeting_1.userStartMeeting)(mtgRoom, userId)];
+                        //subscribe/join a room
+                        //  room: room,
+                        // socketId: socket.id,
+                        console.log(99999999999);
+                        meetingId = data === null || data === void 0 ? void 0 : data.room;
+                        return [4 /*yield*/, (0, meeting_1.userStartMeeting)(meetingId, userId)];
                     case 1:
                         roomInfo = _a.sent();
                         socket.join(data.room);
@@ -222,7 +240,7 @@ io.on("connect", function (socket) {
                     case 0:
                         room = data.room, sender = data.sender, msg = data.msg, time = data.time;
                         return [4 /*yield*/, (0, meeting_1.meetingChat)({
-                                userId: sender,
+                                userId: userId,
                                 message: msg,
                                 room: room,
                                 time: time,
@@ -238,8 +256,45 @@ io.on("connect", function (socket) {
                 }
             });
         }); });
+        socket.on("group_chat", function (data) { return __awaiter(void 0, void 0, void 0, function () {
+            var group, sender, msg, time, newMsg;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        group = data.group, sender = data.sender, msg = data.msg, time = data.time;
+                        return [4 /*yield*/, (0, meeting_1.groupChat)({
+                                userId: userId,
+                                msg: msg,
+                                group: group,
+                                time: time,
+                            })];
+                    case 1:
+                        newMsg = _a.sent();
+                        console.log("new", newMsg);
+                        io.to(group).emit("group_chat", {
+                            sender: data.sender,
+                            msg: data.msg,
+                            newMsg: newMsg,
+                        });
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        socket.on("group_join", function (data) { return __awaiter(void 0, void 0, void 0, function () {
+            var newId, group, ol, newOl;
+            return __generator(this, function (_a) {
+                newId = data.userId, group = data.group;
+                ol = !!groupOnlines[group] ? groupOnlines[group] : [];
+                newOl = __spreadArray(__spreadArray([], ol, true), [newId], false);
+                groupOnlines[group] = newOl;
+                io.to(group).emit("group_join", {
+                    onlines: newOl,
+                });
+                return [2 /*return*/];
+            });
+        }); });
         socket.on("disconnect", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var rs;
+            var rs, onlines, cp, index;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, (0, meeting_1.userExit)(userId, roomQuery)];
@@ -249,6 +304,13 @@ io.on("connect", function (socket) {
                         console.log(rs, "exit");
                         socket.to(roomQuery).emit("user_exit", {
                             data: rs,
+                        });
+                        onlines = groupOnlines[groupQuery] || [];
+                        cp = onlines;
+                        index = onlines.indexOf(userId);
+                        cp.splice(index, 1);
+                        socket.to(groupQuery).emit("group_exit", {
+                            onlines: cp,
                         });
                         console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
                         return [2 /*return*/];

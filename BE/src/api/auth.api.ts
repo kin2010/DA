@@ -87,7 +87,9 @@ export default class AuthService {
         role: r._id,
       };
       const res1 = await User.create(newUser);
-      res.json(res1).status(httpStatus.CREATED).end();
+      const token = JWT.sign({ _id: res1._id as unknown as string });
+
+      res.json({ data: res1, token: token }).status(httpStatus.CREATED).end();
     } catch (error) {
       next(error);
     }

@@ -10,12 +10,10 @@ export const AuthContextProvider = createContext();
 const AuthContext = ({ children }) => {
   const [user, setUser] = useState();
   const queryClient = useQueryClient();
-  const { data: userData } = useQuery(["user"], getUserData);
+  const { data: userData, refetch } = useQuery(["user"], getUserData);
+
   useEffect(() => {
-    const token = getToken();
-    if (!!token) {
-      // getUser();
-    }
+    refetch();
   }, []);
 
   const data = {

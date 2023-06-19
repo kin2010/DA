@@ -72,7 +72,6 @@ export default class AssignmentService {
       res
         .json({
           data: assignment,
-          message: "Create successfully ",
           status: 200,
         })
         .status(httpStatus.OK);

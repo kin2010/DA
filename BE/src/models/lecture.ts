@@ -26,6 +26,7 @@ export interface ILecture extends Document {
   attachments: string[];
   youtube_url: string;
   section: string;
+  course: Object;
 }
 
 const roleSchema = new Schema(
@@ -75,6 +76,9 @@ const roleSchema = new Schema(
     },
     section: {
       type: String,
+    },
+    course: {
+      type: Object,
     },
     ralseHand: [
       {

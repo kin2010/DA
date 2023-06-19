@@ -7,11 +7,17 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import "./index.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCreateMediaStream } from "../../../hook/useCreateMediaStream";
 import Audio from "./Audio";
 import { AppContextProvider } from "../../../Context/AppContext";
 import Stream from "../Stream";
+import { AuthContextProvider } from "../../../Context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { getMeeting } from "../../../hook/LessionHook";
+import HeaderAppBar from "../../Header/AppBar";
+import { Backdrop, CircularProgress } from "@mui/material";
+import { Result } from "antd";
 const Meeting = () => {
   const { room } = useParams();
   const videoRef = useRef();
@@ -20,6 +26,16 @@ const Meeting = () => {
     audio: true,
     webcam: true,
   });
+  const { id } = useParams();
+  const { data: meeting, isLoading } = useQuery(
+    ["meeting_detail", id],
+    getMeeting,
+    {
+      retry: 0,
+    }
+  );
+  const { userData: user } = useContext(AuthContextProvider);
+  const navigate = useNavigate();
   const userMediaStream = useCreateMediaStream(
     videoRef,
     stream.audio,
@@ -33,10 +49,45 @@ const Meeting = () => {
   useEffect(() => {
     setUserStream(userMediaStream || null);
   }, [userMediaStream]);
-
+  if (isLoading) {
+    return (
+      <>
+        <HeaderAppBar />
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={true}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </>
+    );
+  }
+  if (
+    // !!meeting?.group?.course &&
+    !(meeting?.group?.course?.users || [])?.find(
+      (item) => user?.user?._id === item
+    )
+  ) {
+    return (
+      <>
+        {" "}
+        <HeaderAppBar />{" "}
+        <Result
+          status="404"
+          title="404"
+          subTitle="Bạn không có quyền để tham gia cuộc Meeting này"
+          extra={
+            <Button onClick={() => navigate("/")} type="primary">
+              Trang chủ
+            </Button>
+          }
+        />
+      </>
+    );
+  }
   return (
     <>
-      {!callShown && <Header />}
+      {!callShown && <HeaderAppBar />}
       {!callShown ? (
         <div
           style={{
@@ -74,7 +125,7 @@ const Meeting = () => {
           </div>
         </div>
       ) : (
-        <Stream initStream={userStream} />
+        <>{!!user?.user && <Stream initStream={userStream} />}</>
       )}
     </>
   );

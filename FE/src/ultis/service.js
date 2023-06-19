@@ -1,7 +1,12 @@
 import axios from "axios";
 import { apiURL } from "../Context/constant";
 import { getToken } from "./Common";
-export const serviceFetch = async (options, baseURL = apiURL, bearerToken) => {
+export const serviceFetch = async (
+  options,
+  baseURL = apiURL,
+  bearerToken,
+  getdata = false
+) => {
   const authenticationInfo = getToken();
   const http = axios.create();
   http.interceptors.request.use((config) => {
@@ -50,11 +55,11 @@ export const serviceFetch = async (options, baseURL = apiURL, bearerToken) => {
       Accept: "application/json",
     },
   });
+  if (!!res?.data?.data && !getdata) {
+    return res?.data?.data;
+  }
   if (!!res?.data) {
     return res?.data;
-  }
-  if (!!res?.data?.data) {
-    return res?.data?.data;
   }
   // TODO use table definition to get modal
 

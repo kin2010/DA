@@ -6,7 +6,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { login, useLogin, useLoginService } from "../../hook/HAuth";
 import { mapError } from "../../ultis/alert";
-import { Navigate, redirect, useNavigate } from "react-router-dom";
+import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
 import { getToken, setToken } from "../../ultis/Common";
 import { serviceFetch } from "../../ultis/service";
 import { apiURL } from "../../Context/constant";
@@ -99,6 +99,13 @@ const Login = () => {
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
               <Form.Check type="checkbox" label="Lưu đăng nhập" />
+              <p>
+                Bạn chưa có tài khoản?{" "}
+                <Link to="/register" className="link">
+                  {" "}
+                  Đăng ký ngay
+                </Link>
+              </p>
             </Form.Group>
             <Button type="submit" className="w-100 py-1" variant="primary">
               Submit

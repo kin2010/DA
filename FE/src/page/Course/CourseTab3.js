@@ -13,19 +13,19 @@ import { openNotification } from "../../Notification";
 const CourseTab3 = ({ setStep, step }) => {
   const [fileList, setFileList] = useState([]);
   const courseService = useCourseService();
-  const courseData = courseService.get();
+  const courseId = sessionStorage.getItem("new_course");
   const handeAddLessonSumbit = async (value) => {
     console.log(value);
     const res = await courseService.updateCourse({
-      id: courseData?.data?._id,
+      id: courseId,
       body: value,
     });
-    if (res?.status === 200) {
+    if (!res?.message) {
       openNotification({
         type: "success",
         message: "SAVED",
       });
-      sessionStorage.setItem("new_course", courseData?.data?._id);
+      // sessionStorage.setItem("new_course", courseData?.data?._id);
       setTimeout(() => {
         setStep(step + 1);
       }, 2000);

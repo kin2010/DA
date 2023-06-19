@@ -36,7 +36,7 @@ const AssignmentAdd = ({ open, setOpen, section }) => {
       ...value,
       section: section?._id,
     });
-    if (res?.status === 200) {
+    if (!res?.message) {
       openNotification({
         type: "success",
         message: "Created successfully",

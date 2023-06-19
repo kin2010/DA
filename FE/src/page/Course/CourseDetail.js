@@ -1,326 +1,31 @@
 /* eslint-disable no-script-url */
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useContext } from "react";
 import { getCourse } from "../../hook/LessionHook";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import HeaderAppBar from "../Header/AppBar";
+import DescriptionIcon from "@mui/icons-material/Description";
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import Groups2Icon from "@mui/icons-material/Groups2";
+import { Button, Divider } from "@mui/material";
+import { AppContextProvider } from "../../Context/AppContext";
 
 const CourseDetail = () => {
   const { id } = useParams();
   const { data } = useQuery(["course_detail", id], getCourse);
+  console.log(data);
+  const naviagate = useNavigate();
+  const { cart, setCart } = useContext(AppContextProvider);
+  const handleCourse = () => {
+    const index = cart.findIndex((c) => c._id === data?._id);
+    if (index === -1) {
+      setCart([...cart, data]);
+    }
+    naviagate("/checkout");
+  };
   return (
     <>
-      <header className="header rs-nav">
-        <div className="sticky-header navbar-expand-lg">
-          <div className="menu-bar clearfix">
-            <div className="container clearfix">
-              {/* Header Logo ==== */}
-              <div className="menu-logo">
-                <a href="index.html">
-                  <img src="assets/images/logo.png" alt="" />
-                </a>
-              </div>
-              {/* Mobile Nav Button ==== */}
-              <button
-                className="navbar-toggler collapsed menuicon justify-content-end"
-                type="button"
-                data-toggle="collapse"
-                data-target="#menuDropdown"
-                aria-controls="menuDropdown"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span />
-                <span />
-                <span />
-              </button>
-              {/* Author Nav ==== */}
-              <div className="secondary-menu">
-                <div className="secondary-inner">
-                  <ul>
-                    <li>
-                      <a href="javascript:;" className="btn-link">
-                        <i className="fa fa-facebook" />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="javascript:;" className="btn-link">
-                        <i className="fa fa-google-plus" />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="javascript:;" className="btn-link">
-                        <i className="fa fa-linkedin" />
-                      </a>
-                    </li>
-                    {/* Search Button ==== */}
-                    <li className="search-btn">
-                      <button
-                        id="quik-search-btn"
-                        type="button"
-                        className="btn-link"
-                      >
-                        <i className="fa fa-search" />
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              {/* Search Box ==== */}
-              <div className="nav-search-bar">
-                <form action="#">
-                  <input
-                    name="search"
-                    defaultValue=""
-                    type="text"
-                    className="form-control"
-                    placeholder="Type to search"
-                  />
-                  <span>
-                    <i className="ti-search" />
-                  </span>
-                </form>
-                <span id="search-remove">
-                  <i className="ti-close" />
-                </span>
-              </div>
-              {/* Navigation Menu ==== */}
-              <div
-                className="menu-links navbar-collapse collapse justify-content-start"
-                id="menuDropdown"
-              >
-                <div className="menu-logo">
-                  <a href="index.html">
-                    <img src="assets/images/logo.png" alt="" />
-                  </a>
-                </div>
-                <ul className="nav navbar-nav">
-                  <li className="active">
-                    <a href="javascript:;">
-                      Home <i className="fa fa-chevron-down" />
-                    </a>
-                    <ul className="sub-menu">
-                      <li>
-                        <a href="index.html">Home 1</a>
-                      </li>
-                      <li>
-                        <a href="index-2.html">Home 2</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="javascript:;">
-                      Pages <i className="fa fa-chevron-down" />
-                    </a>
-                    <ul className="sub-menu">
-                      <li>
-                        <a href="javascript:;">
-                          About
-                          <i className="fa fa-angle-right" />
-                        </a>
-                        <ul className="sub-menu">
-                          <li>
-                            <a href="about-1.html">About 1</a>
-                          </li>
-                          <li>
-                            <a href="about-2.html">About 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="javascript:;">
-                          Event
-                          <i className="fa fa-angle-right" />
-                        </a>
-                        <ul className="sub-menu">
-                          <li>
-                            <a href="event.html">Event</a>
-                          </li>
-                          <li>
-                            <a href="events-details.html">Events Details</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="javascript:;">
-                          FAQ's
-                          <i className="fa fa-angle-right" />
-                        </a>
-                        <ul className="sub-menu">
-                          <li>
-                            <a href="faq-1.html">FAQ's 1</a>
-                          </li>
-                          <li>
-                            <a href="faq-2.html">FAQ's 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="javascript:;">
-                          Contact Us
-                          <i className="fa fa-angle-right" />
-                        </a>
-                        <ul className="sub-menu">
-                          <li>
-                            <a href="contact-1.html">Contact Us 1</a>
-                          </li>
-                          <li>
-                            <a href="contact-2.html">Contact Us 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="portfolio.html">Portfolio</a>
-                      </li>
-                      <li>
-                        <a href="profile.html">Profile</a>
-                      </li>
-                      <li>
-                        <a href="membership.html">Membership</a>
-                      </li>
-                      <li>
-                        <a href="error-404.html">404 Page</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="add-mega-menu">
-                    <a href="javascript:;">
-                      Our Courses <i className="fa fa-chevron-down" />
-                    </a>
-                    <ul className="sub-menu add-menu">
-                      <li className="add-menu-left">
-                        <h5 className="menu-adv-title">Our Courses</h5>
-                        <ul>
-                          <li>
-                            <a href="courses.html">Courses </a>
-                          </li>
-                          <li>
-                            <a href="courses-details.html">Courses Details</a>
-                          </li>
-                          <li>
-                            <a href="profile.html">Instructor Profile</a>
-                          </li>
-                          <li>
-                            <a href="event.html">Upcoming Event</a>
-                          </li>
-                          <li>
-                            <a href="membership.html">Membership</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li className="add-menu-right">
-                        <img src="assets/images/adv/adv.jpg" alt="" />
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="javascript:;">
-                      Blog <i className="fa fa-chevron-down" />
-                    </a>
-                    <ul className="sub-menu">
-                      <li>
-                        <a href="blog-classic-grid.html">Blog Classic</a>
-                      </li>
-                      <li>
-                        <a href="blog-classic-sidebar.html">
-                          Blog Classic Sidebar
-                        </a>
-                      </li>
-                      <li>
-                        <a href="blog-list-sidebar.html">Blog List Sidebar</a>
-                      </li>
-                      <li>
-                        <a href="blog-standard-sidebar.html">
-                          Blog Standard Sidebar
-                        </a>
-                      </li>
-                      <li>
-                        <a href="blog-details.html">Blog Details</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="nav-dashboard">
-                    <a href="javascript:;">
-                      Dashboard <i className="fa fa-chevron-down" />
-                    </a>
-                    <ul className="sub-menu">
-                      <li>
-                        <a href="admin/index.html">Dashboard</a>
-                      </li>
-                      <li>
-                        <a href="admin/add-listing.html">Add Listing</a>
-                      </li>
-                      <li>
-                        <a href="admin/bookmark.html">Bookmark</a>
-                      </li>
-                      <li>
-                        <a href="admin/courses.html">Courses</a>
-                      </li>
-                      <li>
-                        <a href="admin/review.html">Review</a>
-                      </li>
-                      <li>
-                        <a href="admin/teacher-profile.html">Teacher Profile</a>
-                      </li>
-                      <li>
-                        <a href="admin/user-profile.html">User Profile</a>
-                      </li>
-                      <li>
-                        <a href="javascript:;">
-                          Calendar
-                          <i className="fa fa-angle-right" />
-                        </a>
-                        <ul className="sub-menu">
-                          <li>
-                            <a href="admin/basic-calendar.html">
-                              Basic Calendar
-                            </a>
-                          </li>
-                          <li>
-                            <a href="admin/list-view-calendar.html">
-                              List View Calendar
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <a href="javascript:;">
-                          Mailbox
-                          <i className="fa fa-angle-right" />
-                        </a>
-                        <ul className="sub-menu">
-                          <li>
-                            <a href="admin/mailbox.html">Mailbox</a>
-                          </li>
-                          <li>
-                            <a href="admin/mailbox-compose.html">Compose</a>
-                          </li>
-                          <li>
-                            <a href="admin/mailbox-read.html">Mail Read</a>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-                <div className="nav-social-link">
-                  <a href="javascript:;">
-                    <i className="fa fa-facebook" />
-                  </a>
-                  <a href="javascript:;">
-                    <i className="fa fa-google-plus" />
-                  </a>
-                  <a href="javascript:;">
-                    <i className="fa fa-linkedin" />
-                  </a>
-                </div>
-              </div>
-              {/* Navigation Menu END ==== */}
-            </div>
-          </div>
-        </div>
-      </header>
-      {/* header END ==== */}
-      {/* Content */}
+      <HeaderAppBar></HeaderAppBar>
       <div className="page-content bg-white">
         {/* inner page banner */}
         <div
@@ -329,7 +34,7 @@ const CourseDetail = () => {
         >
           <div className="container">
             <div className="page-banner-entry">
-              <h1 className="text-white">Courses Details</h1>
+              <h1 className="text-white">{data?.name}</h1>
             </div>
           </div>
         </div>
@@ -338,9 +43,9 @@ const CourseDetail = () => {
           <div className="container">
             <ul className="list-inline">
               <li>
-                <a href="#">Home</a>
+                <a href="#">Trang chủ</a>
               </li>
-              <li>Courses Details</li>
+              <li>Chi tiết khóa học</li>
             </ul>
           </div>
         </div>
@@ -354,13 +59,26 @@ const CourseDetail = () => {
                 <div className="col-lg-3 col-md-4 col-sm-12 m-b30">
                   <div className="course-detail-bx">
                     <div className="course-price">
-                      <del>$190</del>
-                      <h4 className="price">$120</h4>
+                      {data?.discount ? (
+                        <del>{data?.discount}&#x20AB;</del>
+                      ) : (
+                        <></>
+                      )}
+
+                      <h4 className="price">
+                        {data?.price ? <>{data?.price} &#x20AB;</> : "Miễn phí"}
+                      </h4>
                     </div>
                     <div className="course-buy-now text-center">
-                      <a href="#" className="btn radius-xl text-uppercase">
-                        Buy Now This Courses
-                      </a>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          handleCourse();
+                        }}
+                      >
+                        Đăng ký ngay
+                      </Button>
                     </div>
                     <div className="teacher-bx">
                       <div className="teacher-info">
@@ -371,7 +89,7 @@ const CourseDetail = () => {
                           />
                         </div>
                         <div className="teacher-name">
-                          <h5>Hinata Hyuga</h5>
+                          <h5>Giảng viên</h5>
                           <span>Science Teacher</span>
                         </div>
                       </div>
@@ -402,34 +120,6 @@ const CourseDetail = () => {
                         <h5 className="text-primary">Frontend</h5>
                       </div>
                     </div>
-                    <div className="course-info-list scroll-page">
-                      <ul className="navbar">
-                        <li>
-                          <a className="nav-link" href="#overview">
-                            <i className="ti-zip" />
-                            Overview
-                          </a>
-                        </li>
-                        <li>
-                          <a className="nav-link" href="#curriculum">
-                            <i className="ti-bookmark-alt" />
-                            Curriculum
-                          </a>
-                        </li>
-                        <li>
-                          <a className="nav-link" href="#instructor">
-                            <i className="ti-user" />
-                            Instructor
-                          </a>
-                        </li>
-                        <li>
-                          <a className="nav-link" href="#reviews">
-                            <i className="ti-comments" />
-                            Reviews
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
                   </div>
                 </div>
                 <div className="col-lg-9 col-md-8 col-sm-12">
@@ -443,191 +133,188 @@ const CourseDetail = () => {
                       </a>
                     </div>
                     <div className="ttr-post-info">
-                      <div className="ttr-post-title ">
-                        <h2 className="post-title">{data?.course?.name}</h2>
+                      <div className="ttr-post-title mb-3">
+                        <h2 className="post-title text-primary">
+                          {data?.name}
+                        </h2>
                       </div>
                       <div className="ttr-post-text">
-                        <p>
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy text ever since the 1500s,
-                          when an unknown printer took a galley of type and
-                          scrambled it to make a type specimen book.
-                        </p>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: data?.target,
+                          }}
+                        ></p>
                       </div>
                     </div>
                   </div>
                   <div className="courese-overview" id="overview">
-                    <h4>Overview</h4>
+                    <h4>Tổng quan :</h4>
                     <div className="row">
                       <div className="col-md-12 col-lg-4">
                         <ul className="course-features">
                           <li>
-                            <i className="ti-book" />{" "}
-                            <span className="label">Lectures</span>{" "}
-                            <span className="value">8</span>
+                            <i className="ti-book" />
+                            <span className="label">Chương</span>
+                            <span className="value">
+                              {data?.sections?.length}
+                            </span>
+                          </li>
+                          <li>
+                            <i className="ti-book" />
+                            <span className="label">Bài giảng</span>
+                            <span className="value">
+                              {data?.sections?.reduce((a, b) => {
+                                return a + b?.lectures?.length;
+                              }, 0)}
+                            </span>
                           </li>
                           <li>
                             <i className="ti-help-alt" />{" "}
-                            <span className="label">Quizzes</span>{" "}
-                            <span className="value">1</span>
-                          </li>
-                          <li>
-                            <i className="ti-time" />{" "}
-                            <span className="label">Duration</span>{" "}
-                            <span className="value">60 hours</span>
+                            <span className="label">Assessments</span>{" "}
+                            <span className="value">
+                              {data?.sections?.reduce((a, b) => {
+                                return a + b?.assignments?.length;
+                              }, 0)}
+                            </span>
                           </li>
                           <li>
                             <i className="ti-stats-up" />{" "}
-                            <span className="label">Skill level</span>{" "}
-                            <span className="value">Beginner</span>
-                          </li>
-                          <li>
-                            <i className="ti-smallcap" />{" "}
-                            <span className="label">Language</span>{" "}
-                            <span className="value">English</span>
+                            <span className="label">Kĩ năng</span>{" "}
+                            <span className="value">{data?.skill_lever}</span>
                           </li>
                           <li>
                             <i className="ti-user" />{" "}
-                            <span className="label">Students</span>{" "}
-                            <span className="value">32</span>
-                          </li>
-                          <li>
-                            <i className="ti-check-box" />{" "}
-                            <span className="label">Assessments</span>{" "}
-                            <span className="value">Yes</span>
+                            <span className="label">Học viên</span>{" "}
+                            <span className="value">{data?.users?.length}</span>
                           </li>
                         </ul>
                       </div>
                       <div className="col-md-12 col-lg-8">
-                        <h5 className="m-b5">Course Description</h5>
-                        <p>
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry’s standard dummy text ever since the 1500s,
-                          when an unknown printer took a galley of type and
-                          scrambled it to make a type specimen book. It has
-                          survived not only five centuries, but also the leap
-                          into electronic typesetting, remaining essentially
-                          unchanged.
-                        </p>
-                        <h5 className="m-b5">Certification</h5>
-                        <p>
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry’s standard dummy text ever since the 1500s,
-                          when an unknown printer took a galley of type and
-                          scrambled it to make a type specimen book. It has
-                          survived not only five centuries, but also the leap
-                          into electronic typesetting, remaining essentially
-                          unchanged.
-                        </p>
-                        <h5 className="m-b5">Learning Outcomes</h5>
+                        <h5 className="m-b5">Mô tả khóa học</h5>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: data?.description,
+                          }}
+                        ></p>
+                        <h5 className="m-b5">Yêu cầu</h5>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: data?.requirement,
+                          }}
+                        ></p>
+                        <h5 className="m-b5">Kết quả khóa học</h5>
                         <ul className="list-checked primary">
-                          <li>Over 37 lectures and 55.5 hours of content!</li>
-                          <li>
-                            LIVE PROJECT End to End Software Testing Training
-                            Included.
-                          </li>
-                          <li>
-                            Learn Software Testing and Automation basics from a
-                            professional trainer from your own desk.
-                          </li>
-                          <li>
-                            Information packed practical training starting from
-                            basics to advanced testing techniques.
-                          </li>
-                          <li>
-                            Best suitable for beginners to advanced level users
-                            and who learn faster when demonstrated.
-                          </li>
-                          <li>
-                            Course content designed by considering current
-                            software testing technology and the job market.
-                          </li>
-                          <li>
-                            Practical assignments at the end of every session.
-                          </li>
-                          <li>
-                            Practical learning experience with live project work
-                            and examples.cv
-                          </li>
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html: data?.target,
+                            }}
+                          ></p>
                         </ul>
                       </div>
                     </div>
                   </div>
-                  <div className="m-b30" id="curriculum">
-                    <h4>Curriculum</h4>
+                  <div className="m-b30" id="group">
+                    <h4>Group </h4>
                     <ul className="curriculum-list">
-                      <li>
-                        <h5>First Level</h5>
-                        <ul>
-                          <li>
-                            <div className="curriculum-list-box">
-                              <span>Lesson 1.</span> Introduction to UI Design
-                            </div>
-                            <span>120 minutes</span>
+                      {!!data?.groups?.length &&
+                        data?.groups?.map((item) => (
+                          <li key={item?._id}>
+                            <h5>
+                              <Link
+                                className="d-flex align-items-center link"
+                                to={`/group/${item?._id}`}
+                              >
+                                <Groups2Icon
+                                  style={{ fontSize: "30px" }}
+                                  className="me-3"
+                                ></Groups2Icon>
+                                {item?.name}
+                              </Link>
+                            </h5>
+                            <Divider></Divider>
+                            {/* <ul>
+                              {!!item?.data?.length &&
+                                item?.data?.map((lecture) => (
+                                  <li
+                                    key={lecture?.item?._id}
+                                    style={{ cursor: "pointer" }}
+                                  >
+                                    <div className="curriculum-list-box">
+                                      <span>
+                                        {lecture?.type === "lecture" && (
+                                          <DescriptionIcon
+                                            color="info"
+                                            className="me-3"
+                                          ></DescriptionIcon>
+                                        )}
+                                        {lecture?.type === "assignment" && (
+                                          <AssignmentIcon
+                                            color="success"
+                                            className="me-3"
+                                          ></AssignmentIcon>
+                                        )}
+                                      </span>
+
+                                      <Link
+                                        to={`/lecture/${lecture?.item?._id}`}
+                                      >
+                                        {lecture?.item?.name}
+                                      </Link>
+                                    </div>
+                                    <span>60 minutes</span>
+                                  </li>
+                                ))}
+                            </ul> */}
                           </li>
-                          <li>
-                            <div className="curriculum-list-box">
-                              <span>Lesson 2.</span> User Research and Design
-                            </div>
-                            <span>60 minutes</span>
+                        ))}
+                    </ul>
+                  </div>
+                  <div className="m-b30" id="curriculum">
+                    <h4>Đề cương </h4>
+                    <ul className="curriculum-list">
+                      {!!data?.sections_info?.length &&
+                        data?.sections_info?.map((item) => (
+                          <li key={item?.section?._id}>
+                            <h5>{item?.section?.name}</h5>
+                            <ul>
+                              {!!item?.data?.length &&
+                                item?.data?.map((lecture) => (
+                                  <li
+                                    key={lecture?.item?._id}
+                                    style={{ cursor: "pointer" }}
+                                  >
+                                    <div className="curriculum-list-box">
+                                      <span>
+                                        {lecture?.type === "lecture" && (
+                                          <DescriptionIcon
+                                            color="info"
+                                            className="me-3"
+                                          ></DescriptionIcon>
+                                        )}
+                                        {lecture?.type === "assignment" && (
+                                          <AssignmentIcon
+                                            color="success"
+                                            className="me-3"
+                                          ></AssignmentIcon>
+                                        )}
+                                      </span>
+
+                                      <Link
+                                        to={`/lecture/${lecture?.item?._id}`}
+                                      >
+                                        {lecture?.item?.name}
+                                      </Link>
+                                    </div>
+                                    <span>60 minutes</span>
+                                  </li>
+                                ))}
+                            </ul>
                           </li>
-                          <li>
-                            <div className="curriculum-list-box">
-                              <span>Lesson 3.</span> Evaluating User Interfaces
-                              Part 1
-                            </div>
-                            <span>85 minutes</span>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <h5>Second Level</h5>
-                        <ul>
-                          <li>
-                            <div className="curriculum-list-box">
-                              <span>Lesson 1.</span> Prototyping and Design
-                            </div>
-                            <span>110 minutes</span>
-                          </li>
-                          <li>
-                            <div className="curriculum-list-box">
-                              <span>Lesson 2.</span> UI Design Capstone
-                            </div>
-                            <span>120 minutes</span>
-                          </li>
-                          <li>
-                            <div className="curriculum-list-box">
-                              <span>Lesson 3.</span> Evaluating User Interfaces
-                              Part 2
-                            </div>
-                            <span>120 minutes</span>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <h5>Final</h5>
-                        <ul>
-                          <li>
-                            <div className="curriculum-list-box">
-                              <span>Part 1.</span> Final Test
-                            </div>
-                            <span>120 minutes</span>
-                          </li>
-                          <li>
-                            <div className="curriculum-list-box">
-                              <span>Part 2.</span> Online Test
-                            </div>
-                            <span>120 minutes</span>
-                          </li>
-                        </ul>
-                      </li>
+                        ))}
                     </ul>
                   </div>
                   <div className="" id="instructor">
-                    <h4>Instructor</h4>
+                    <h4>Giảng viên</h4>
                     <div className="instructor-bx">
                       <div className="instructor-author">
                         <img src="assets/images/testimonials/pic1.jpg" alt="" />

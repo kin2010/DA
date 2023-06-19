@@ -29,7 +29,7 @@ const Section = ({ propData }) => {
       setShowAssessment(true);
     }
   };
-  console.log(propData);
+
   return (
     <>
       <LectureAdd

@@ -54,6 +54,10 @@ export default class CourseApi {
           select: "",
         },
         {
+          path: "teachers",
+          select: "",
+        },
+        {
           path: "owner",
           select: "",
         },
@@ -112,7 +116,11 @@ export default class CourseApi {
       const coursePopulate: any = await courseData.populate([
         {
           path: "teachers",
-          select: "fullName",
+          select: "",
+        },
+        {
+          path: "groups",
+          select: "",
         },
         {
           path: "owner",
@@ -120,7 +128,7 @@ export default class CourseApi {
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "sections",
@@ -136,7 +144,7 @@ export default class CourseApi {
             },
             {
               path: "baitaps",
-              select: "link status outdate time",
+              select: "",
             },
           ],
         },

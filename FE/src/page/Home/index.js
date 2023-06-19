@@ -1,121 +1,325 @@
-import { Box, Divider, Tab } from "@mui/material";
-import { Container } from "@mui/system";
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/alt-text */
+
 import React from "react";
 import Header from "../Header";
 import "../../index.css";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Course from "../Course";
-import Resultt from "../../component/Result";
+
 import { Col } from "antd";
 import Lotrinh from "../../component/Lotrinh";
-import Comments from "../../component/Comment";
 import Ratee from "../../component/Rating";
 import { Navigate, useNavigate } from "react-router-dom";
+import TabContext from "@mui/lab/TabContext/TabContext";
+import { Carousel, CarouselItem } from "react-bootstrap";
+import UncontrolledExample from "./Slideee";
+import HomeSlide from "./Slideee";
+import CoursePopulate from "./CoursePopulate";
+import { Avatar } from "@mui/material";
+import HeaderAppBar from "../Header/AppBar";
 
-const Home = () => {
+const HomeLayout = () => {
   const [value, setValue] = React.useState("1");
   const navigate = useNavigate();
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  return (
-    <>
-      <div className="cont">
-        <Header></Header>
-        <Container className="cont" style={{ backgroudColor: "#f9f9f9 " }}>
-          <button
-            onClick={() => {
-              navigate("/meeting?room=abcd12345");
-            }}
-          >
-            mtg
-          </button>
-          <h3 className="mt-3">PEN-C TIẾNG ANH - THẦY PHẠM TRỌNG HIẾU</h3>
-          <h1 className="mt-2 short">
-            Luyện thi đại học môn Tiếng Anh hiệu quả và dễ dàng hơn cùng thầy
-            Phạm Trọng Hiếu. Với phương pháp tiếp cận thú vị, khóa học này sẽ
-            giúp các em bớt sợ Tiếng Anh và cảm thấy gần gũi như tiếng Việt, từ
-            đó đạt điểm cao trong bài thi tốt nghiệp THPT. Giáo viên: Phạm Trọng
-            Hiếu
-          </h1>
-          <Col className="d-flex">
-            <Box className="w-75">
-              <Box sx={{ width: "100%", typography: "body1" }}>
-                <TabContext value={value}>
-                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                    <TabList
-                      onChange={handleChange}
-                      aria-label="lab API tabs example"
-                    >
-                      <Tab label="Mô tả khóa học" value="1" />
-                      <Tab label="Đề cương khóa học " value="2" />
-                      <Tab label="Đánh giá khóa học" value="3" />
-                    </TabList>
-                  </Box>
-                  <TabPanel value="1">
-                    <div className="label mt-2 fw-bold">Mô tả khóa học</div>
-                    <div className="label2 mt-2 mb-1 fw-bold">
-                      Mô tả khóa học
-                    </div>
-                    <div className="label2 mt-2 mb-1 fw-bold">
-                      Mô tả khóa học
-                    </div>
-                    <div className="label2 mt-2 mb-1 fw-bold">
-                      Mô tả khóa học
-                    </div>
-                    <Stack className="mt-3" direction="row" spacing={1}>
-                      <Chip
-                        size="medium"
-                        label="Đề cương khóa học "
-                        color="primary"
-                      />
-                    </Stack>
-                    <Divider
-                      className="mt-2"
-                      textAlign="left"
-                      color="#1976d2"
-                    ></Divider>
+  const contentStyle = {
+    height: "160px",
+    color: "#fff",
+    lineHeight: "160px",
+    textAlign: "center",
+    background: "#364d79",
+  };
 
-                    <div className="course">
-                      <Course></Course>
-                    </div>
-                    <div className="comments mt-5">
-                      <Stack className="mt-3" direction="row" spacing={1}>
-                        <Chip
-                          size="medium"
-                          label="Đánh giá khóa học"
-                          color="primary"
-                        />
-                      </Stack>
-                      <Divider
-                        className="mt-5"
-                        textAlign="left"
-                        color="#1976d2"
-                      ></Divider>
-                      <Box className="mt-5">
-                        <Ratee count={142} value={4.6}></Ratee>
-                      </Box>
-                      <Comments></Comments>
-                    </div>
-                  </TabPanel>
-                  <TabPanel value="2">Item Two</TabPanel>
-                  <TabPanel value="3">Item Three</TabPanel>
-                </TabContext>
-              </Box>
-            </Box>
-            <Box className="w-25">
-              <Resultt />
-              <Lotrinh></Lotrinh>
-            </Box>
-          </Col>
-        </Container>
+  return (
+    <div className="cont">
+      <HeaderAppBar></HeaderAppBar>
+      <div>
+        <HomeSlide></HomeSlide>
       </div>
-    </>
+      <div className="content-block">
+        {/* Our Services */}
+        <div className="section-area content-inner service-info-bx">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-4 col-md-4 col-sm-6">
+                <div className="service-bx">
+                  <div className="action-box">
+                    {/* <img src="assets/images/our-services/pic1.jpg" alt /> */}
+                  </div>
+                  <div className="info-bx text-center">
+                    <div className="feature-box-sm radius bg-white">
+                      <i className="fa fa-bank text-primary" />
+                    </div>
+                    <h4>
+                      <a href="#">Giảng viên hàng đầu</a>
+                    </h4>
+                    <a href="#" className="btn radius-xl">
+                      Xem thêm ...
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-4 col-md-4 col-sm-6">
+                <div className="service-bx">
+                  <div className="action-box">
+                    {/* <img src="assets/images/our-services/pic2.jpg" alt /> */}
+                  </div>
+                  <div className="info-bx text-center">
+                    <div className="feature-box-sm radius bg-white">
+                      <i className="fa fa-book text-primary" />
+                    </div>
+                    <h4>
+                      <a href="#">Học trực tuyến</a>
+                    </h4>
+                    <a href="#" className="btn radius-xl">
+                      Xem thêm ...
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-4 col-md-4 col-sm-12">
+                <div className="service-bx m-b0">
+                  <div className="action-box">
+                    {/* <img src="assets/images/our-services/pic3.jpg" alt /> */}
+                  </div>
+                  <div className="info-bx text-center">
+                    <div className="feature-box-sm radius bg-white">
+                      <i className="fa fa-file-text-o text-primary" />
+                    </div>
+                    <h4>
+                      <a href="#">Lộ trình rõ ràng</a>
+                    </h4>
+                    <a href="#" className="btn radius-xl">
+                      Xem thêm ...
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Our Services END */}
+        {/* Popular Courses */}
+        <div className="section-area section-sp2 popular-courses-bx">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12 heading-bx left">
+                <h2 className="title-head">
+                  Khóa học <span>Phổ biến</span>
+                </h2>
+                <p>
+                  Dưới đây là một số khóa học điển hình
+                  <br /> tại hệ thống của chúng tôi
+                </p>
+              </div>
+            </div>
+            <div className="row">
+              <div className="courses-carousel owl-carousel owl-btn-1 col-12 p-lr0">
+                <CoursePopulate></CoursePopulate>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="section-area section-sp2">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12 text-center heading-bx">
+                <h2 className="title-head m-b0">
+                  Sự kiện <span>Sắp đến</span>
+                </h2>
+                <p className="m-b0">Những sự kiến sắp đến chờ bạn tham gia</p>
+              </div>
+            </div>
+            <div className="row">
+              <div className="upcoming-event-carousel owl-carousel owl-btn-center-lr owl-btn-1 col-12 p-lr0  m-b30">
+                <div className="item">
+                  <div className="event-bx">
+                    <div className="action-box">
+                      <img src="assets/images/event/pic4.jpg" alt />
+                    </div>
+                    <div className="info-bx d-flex">
+                      <div>
+                        <div className="event-time">
+                          <div className="event-date">29</div>
+                          <div className="event-month">October</div>
+                        </div>
+                      </div>
+                      <div className="event-info">
+                        <h4 className="event-title">
+                          <a href="#">Education Autumn Tour 2019</a>
+                        </h4>
+                        <ul className="media-post">
+                          <li>
+                            <a href="#">
+                              <i className="fa fa-clock-o" /> 7:00am 8:00am
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#">
+                              <i className="fa fa-map-marker" /> Berlin, Germany
+                            </a>
+                          </li>
+                        </ul>
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industry's standard dummy text ever since the..
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="item">
+                  <div className="event-bx">
+                    <div className="action-box">
+                      <img src="assets/images/event/pic3.jpg" alt />
+                    </div>
+                    <div className="info-bx d-flex">
+                      <div>
+                        <div className="event-time">
+                          <div className="event-date">29</div>
+                          <div className="event-month">October</div>
+                        </div>
+                      </div>
+                      <div className="event-info">
+                        <h4 className="event-title">
+                          <a href="#">Education Autumn Tour 2019</a>
+                        </h4>
+                        <ul className="media-post">
+                          <li>
+                            <a href="#">
+                              <i className="fa fa-clock-o" /> 7:00am 8:00am
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#">
+                              <i className="fa fa-map-marker" /> Berlin, Germany
+                            </a>
+                          </li>
+                        </ul>
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industry's standard dummy text ever since the..
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="item">
+                  <div className="event-bx">
+                    <div className="action-box">
+                      <img src="assets/images/event/pic2.jpg" alt />
+                    </div>
+                    <div className="info-bx d-flex">
+                      <div>
+                        <div className="event-time">
+                          <div className="event-date">29</div>
+                          <div className="event-month">October</div>
+                        </div>
+                      </div>
+                      <div className="event-info">
+                        <h4 className="event-title">
+                          <a href="#">Education Autumn Tour 2019</a>
+                        </h4>
+                        <ul className="media-post">
+                          <li>
+                            <a href="#">
+                              <i className="fa fa-clock-o" /> 7:00am 8:00am
+                            </a>
+                          </li>
+                          <li>
+                            <a href="#">
+                              <i className="fa fa-map-marker" /> Berlin, Germany
+                            </a>
+                          </li>
+                        </ul>
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and
+                          typesetting industry. Lorem Ipsum has been the
+                          industry's standard dummy text ever since the..
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center">
+              <a href="#" className="btn">
+                View All Event
+              </a>
+            </div>
+          </div>
+        </div>
+        {/* Testimonials */}
+        <div
+          className="section-area section-sp2 bg-fix ovbl-dark"
+          style={{
+            "background-image": "url(assets/images/background/bg1.jpg)",
+          }}
+        >
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12 text-white heading-bx left">
+                <h2 className="title-head text-uppercase">
+                  Đánh giá của <span>người dùng</span>
+                </h2>
+                <p>Lắng nge những chia sẻ của học viên về hệ thống</p>
+              </div>
+            </div>
+            <div className="testimonial-carousel owl-carousel owl-btn-1 col-12 p-lr0">
+              <div className="item">
+                <div className="testimonial-bx">
+                  <div className="testimonial-thumb" style={{ width: "unset" }}>
+                    <Avatar alt="zzz" sx={{ width: 56, height: 56 }}>
+                      A
+                    </Avatar>
+                  </div>
+                  <div className="testimonial-info">
+                    <h5 className="name">Nguyễn Văn A</h5>
+                    <p>-Học viên</p>
+                  </div>
+                  <div className="testimonial-content">
+                    <p>
+                      Cảm ơn các thầy cô đã truyền đạt cho em các kiến thức cơ
+                      bản, hơn thế nữa là những mẹo vặt hay giúp em đạt...
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="item">
+                <div className="testimonial-bx">
+                  <div className="testimonial-thumb" style={{ width: "unset" }}>
+                    <Avatar
+                      alt="zzz"
+                      src="/static/images/avatar/1.jpg"
+                      sx={{ width: 56, height: 56 }}
+                    >
+                      B
+                    </Avatar>
+                  </div>
+                  <div className="testimonial-info">
+                    <h5 className="name">Lê Thị B</h5>
+                    <p>-Học viên</p>
+                  </div>
+                  <div className="testimonial-content">
+                    <p>
+                      Tuy em học chỉ mới khoảng mấy tháng cuối năm, đây là
+                      khoảng thời gian có hơi ngắn nhưng em học được rất
+                      nhiều...
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
-
-export default Home;
+export default HomeLayout;

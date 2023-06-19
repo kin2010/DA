@@ -91,7 +91,7 @@ var AuthService = /** @class */ (function () {
         });
     }); };
     AuthService.register = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, email, password, role, fullName, user, r, newUser, res1, error_2;
+        var _b, email, password, role, fullName, user, r, newUser, res1, token, error_2;
         return __generator(_a, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -124,7 +124,8 @@ var AuthService = /** @class */ (function () {
                     return [4 /*yield*/, models_1.User.create(newUser)];
                 case 3:
                     res1 = _c.sent();
-                    res.json(res1).status(http_status_1.default.CREATED).end();
+                    token = jwt_1.default.sign({ _id: res1._id });
+                    res.json({ data: res1, token: token }).status(http_status_1.default.CREATED).end();
                     return [3 /*break*/, 5];
                 case 4:
                     error_2 = _c.sent();

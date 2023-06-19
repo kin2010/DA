@@ -69,77 +69,74 @@ var MeetingApi = /** @class */ (function () {
     _a = MeetingApi;
     MeetingApi.create = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
         var mtg, error_1;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
+        var _b;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 3, , 4]);
+                    _c.trys.push([0, 4, , 5]);
                     return [4 /*yield*/, models_1.Meeting.create(__assign({}, req.body))];
-                case 1: return [4 /*yield*/, (_b.sent()).populate([
+                case 1: return [4 /*yield*/, (_c.sent()).populate([
                         {
                             path: "teacher",
-                            select: "fullName",
+                            select: "",
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "ralseHand",
-                            select: "time user",
+                            select: "",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
                             path: "plusMark",
-                            select: "time user",
+                            select: "",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
                             path: "chat",
-                            select: "user time msg",
+                            select: "",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                     ])];
                 case 2:
-                    mtg = _b.sent();
+                    mtg = _c.sent();
+                    return [4 /*yield*/, models_1.Group.findOneAndUpdate({ _id: (_b = req.body) === null || _b === void 0 ? void 0 : _b.group }, { $push: { meetings: mtg === null || mtg === void 0 ? void 0 : mtg._id } }, { new: true })];
+                case 3:
+                    _c.sent();
                     res
                         .json({
                         meeting: mtg,
-                        message: "Create successfully ",
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_1 = _b.sent();
+                    return [3 /*break*/, 5];
+                case 4:
+                    error_1 = _c.sent();
                     next(error_1);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     }); };
     MeetingApi.getRoom = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var url, mtg, error_2;
+        var id, mtg, mtgRes, error_2;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    url = req.body.url;
-                    if (!url) {
-                        throw new APIError_1.default({
-                            message: "Room not found",
-                            status: 404,
-                        });
-                    }
-                    return [4 /*yield*/, models_1.Meeting.findOne({ url: url })];
+                    _b.trys.push([0, 3, , 4]);
+                    id = req.params.id;
+                    return [4 /*yield*/, models_1.Meeting.findById(id)];
                 case 1:
                     mtg = _b.sent();
                     if (!mtg) {
@@ -148,19 +145,27 @@ var MeetingApi = /** @class */ (function () {
                             status: 404,
                         });
                     }
+                    return [4 /*yield*/, mtg.populate([
+                            {
+                                path: "group",
+                                select: "",
+                            },
+                        ])];
+                case 2:
+                    mtgRes = _b.sent();
                     res
                         .json({
-                        meeting: mtg,
+                        meeting: mtgRes,
                         status: 200,
                     })
                         .status(200)
                         .end();
-                    return [3 /*break*/, 3];
-                case 2:
+                    return [3 /*break*/, 4];
+                case 3:
                     error_2 = _b.sent();
                     next(error_2);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); };
@@ -182,18 +187,18 @@ var MeetingApi = /** @class */ (function () {
                 case 1: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
                         {
                             path: "teacher",
-                            select: "fullName",
+                            select: "",
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "ralseHand",
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -201,7 +206,7 @@ var MeetingApi = /** @class */ (function () {
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -209,7 +214,7 @@ var MeetingApi = /** @class */ (function () {
                             select: "user time msg",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                     ]))];
@@ -450,6 +455,69 @@ var MeetingApi = /** @class */ (function () {
                     next(error_5);
                     return [3 /*break*/, 6];
                 case 6: return [2 /*return*/];
+            }
+        });
+    }); };
+    MeetingApi.getById = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var mtg, mtgres, error_6;
+        return __generator(_a, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, models_1.Meeting.findById(req.params.id)];
+                case 1:
+                    mtg = _b.sent();
+                    if (!mtg) {
+                        throw new APIError_1.default({
+                            status: http_status_1.default.NOT_FOUND,
+                            message: "NOT FOUND",
+                        });
+                    }
+                    return [4 /*yield*/, mtg.populate([
+                            {
+                                path: "group",
+                                select: "",
+                                populate: {
+                                    path: "course",
+                                    select: "",
+                                },
+                            },
+                            {
+                                path: "chat",
+                                select: "",
+                                populate: {
+                                    path: "user",
+                                    select: "",
+                                },
+                            },
+                            {
+                                path: "users",
+                                select: "",
+                            },
+                            {
+                                path: "attendance",
+                                select: "",
+                                populate: {
+                                    path: "user",
+                                    select: "",
+                                },
+                            },
+                        ])];
+                case 2:
+                    mtgres = _b.sent();
+                    res
+                        .json({
+                        data: mtgres,
+                        status: 200,
+                    })
+                        .status(200)
+                        .end();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_6 = _b.sent();
+                    next(error_6);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); };

@@ -5,12 +5,15 @@ import connectToDb from "./configs/database";
 import cors from "cors";
 import errorMiddleware from "./middlewares/error.middleware";
 import route from "./router/index";
-import { Socket } from "socket.io";
-import axios from "axios";
-import configs from "./configs/appConfig";
-import { serviceFetch } from "./utils/fetch";
-import { meetingChat, userExit, userStartMeeting } from "./fuc/meeting";
 
+import {
+  groupChat,
+  meetingChat,
+  userExit,
+  userStartMeeting,
+} from "./fuc/meeting";
+import { Course } from "./models";
+import { Schema } from "mongoose";
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
@@ -23,69 +26,6 @@ const io = require("socket.io")(server, {
 const port = 3333;
 
 const room: any = [];
-const client = [];
-
-// let activeSockets: {
-//   room: string;
-//   id: string;
-// }[] = [];
-
-// io.on("connect", (socket: any) => {
-//   socket.on("joinRoom", (room: string) => {
-//     const existingSocket = activeSockets?.find(
-//       (s) => s.room === room && s.id === socket.id
-//     );
-
-//     if (!existingSocket) {
-//       activeSockets = [...activeSockets, { id: socket.id, room }];
-//       socket.emit(`${room}-update-user-list`, {
-//         users: activeSockets
-//           .filter((s) => s.room === room && s.id !== socket.id)
-//           .map((existingSocket) => existingSocket.id),
-//         current: socket.id,
-//       });
-
-//       socket.broadcast.emit(`${room}-add-user`, {
-//         user: socket.id,
-//       });
-//     }
-
-//     console.log(`Client ${socket.id} joined ${room}`);
-//   });
-
-//   socket.on("call-user", (data: any) => {
-//     socket.to(data.to).emit("call-made", {
-//       offer: data.offer,
-//       socket: socket.id,
-//     });
-//   });
-
-//   socket.on("make-answer", (data: any) => {
-//     socket.to(data.to).emit("answer-made", {
-//       socket: socket.id,
-//       answer: data.answer,
-//     });
-//   });
-
-//   socket.on("'reject-call", (data: any) => {
-//     socket.to(data.from).emit("call-rejected", {
-//       socket: socket.id,
-//     });
-//   });
-
-//   socket.on("disconnect", () => {
-//     const existingSocket = activeSockets.find((sc) => sc.id === socket.id);
-
-//     if (!existingSocket) return;
-
-//     activeSockets = activeSockets.filter((sc) => sc.id !== socket.id);
-
-//     socket.broadcast.emit(`${existingSocket.room}-remove-user`, {
-//       socketId: socket.id,
-//     });
-//     console.log(`Client disconnected: ${socket.id}`);
-//   });
-// });
 
 const getRoomMember = (id: any) => {
   room.forEach((a: any) => {
@@ -122,8 +62,56 @@ app.use((req: any, res: any, next: any) => {
   return next();
 });
 
+const groupOnlines: any = {};
 app.use("/api", route);
+let secret =
+  "sk_test_51LMxCAI6HAK9mOVZ7xKAVLvrxjVYNFzMs76u982XHNRqlpSPsY0gzaTDlJ8UxaiqMR7CarhZauZxCFuvP2S15zM500edPrGS1g";
+const stripe = require("stripe")(secret);
+app.post("/payment", async (req: any, res: any) => {
+  console.log(req?.body);
 
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: req?.body?.items?.map((item: any) => {
+        return {
+          price_data: {
+            currency: "vnd",
+            product_data: {
+              name: item?.name,
+              images: [
+                !!item?.thumbnail?.length
+                  ? item?.thumbnails[0]
+                  : "http://localhost:3000/images/course.jpg",
+              ],
+            },
+            unit_amount: item?.price,
+          },
+          quantity: 1,
+        };
+      }),
+      success_url: req?.body?.success_url || "",
+      cancel_url: req?.body?.cancel_url || "",
+    });
+    const course = req?.body?.courses?.map((c: any) => {
+      return c;
+      return new Schema.Types.ObjectId(c);
+    });
+    await Course.updateMany(
+      {
+        _id: { $in: course },
+      },
+
+      { $addToSet: { users: req?.body?.user } },
+      { new: true }
+    );
+    console.log(11, course, req?.body?.user);
+    res.json({ url: session.url });
+  } catch (e: any) {
+    res.status(500).json({ error: e?.message });
+  }
+});
 const onlineUsers = new Map();
 
 io.on("connect", (socket: any) => {
@@ -131,13 +119,18 @@ io.on("connect", (socket: any) => {
 
   const userId = socket.handshake.query?.userId;
   const roomQuery = socket.handshake.query?.roomUrl;
+  const groupQuery = socket.handshake.query?.group;
+  if (!!groupQuery) {
+    socket.join(groupQuery);
+  }
   try {
     socket.on("subscribe", async (data: any) => {
       //subscribe/join a room
       //  room: room,
       // socketId: socket.id,
-      const mtgRoom = data?.room;
-      const roomInfo = await userStartMeeting(mtgRoom, userId);
+      console.log(99999999999);
+      const meetingId = data?.room;
+      const roomInfo = await userStartMeeting(meetingId, userId);
       socket.join(data.room);
       //join with socker id
       // socket.join(socket.id);
@@ -192,7 +185,7 @@ io.on("connect", (socket: any) => {
     socket.on("chat", async (data: any) => {
       const { room, sender, msg, time } = data;
       const newMsg = await meetingChat({
-        userId: sender,
+        userId: userId,
         message: msg,
         room: room,
         time: time,
@@ -204,12 +197,44 @@ io.on("connect", (socket: any) => {
       });
     });
 
+    socket.on("group_chat", async (data: any) => {
+      const { group, sender, msg, time } = data;
+      const newMsg = await groupChat({
+        userId: userId,
+        msg: msg,
+        group: group,
+        time: time,
+      });
+      console.log("new", newMsg);
+      io.to(group).emit("group_chat", {
+        sender: data.sender,
+        msg: data.msg,
+        newMsg: newMsg,
+      });
+    });
+    socket.on("group_join", async (data: any) => {
+      const { userId: newId, group } = data;
+      const ol = !!groupOnlines[group] ? groupOnlines[group] : [];
+      const newOl = [...ol, newId];
+      groupOnlines[group] = newOl;
+      io.to(group).emit("group_join", {
+        onlines: newOl,
+      });
+    });
+
     socket.on("disconnect", async () => {
       const rs = await userExit(userId, roomQuery);
       // const newOnlines = rs?.meeting?.users || [];
       console.log(rs, "exit");
       socket.to(roomQuery).emit("user_exit", {
         data: rs,
+      });
+      const onlines = groupOnlines[groupQuery] || [];
+      const cp = onlines;
+      const index = onlines.indexOf(userId);
+      cp.splice(index, 1);
+      socket.to(groupQuery).emit("group_exit", {
+        onlines: cp,
       });
       console.log("Client disconnected" + socket.id); // Khi client disconnect thì log ra terminal.
     });

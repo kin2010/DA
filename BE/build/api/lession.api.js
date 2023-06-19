@@ -85,7 +85,6 @@ var LectureApi = /** @class */ (function () {
                 case 0:
                     _b.trys.push([0, 5, , 6]);
                     section = req.body.section;
-                    console.log(section, 3);
                     return [4 /*yield*/, models_1.Section.findById(section)];
                 case 1:
                     ch = _b.sent();
@@ -99,18 +98,18 @@ var LectureApi = /** @class */ (function () {
                 case 2: return [4 /*yield*/, (_b.sent()).populate([
                         {
                             path: "teacher",
-                            select: "fullName",
+                            select: "",
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "ralseHand",
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -118,7 +117,7 @@ var LectureApi = /** @class */ (function () {
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                     ])];
@@ -131,8 +130,7 @@ var LectureApi = /** @class */ (function () {
                     _b.sent();
                     res
                         .json({
-                        lession: lecture,
-                        message: "Create successfully ",
+                        data: lecture,
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
@@ -146,28 +144,28 @@ var LectureApi = /** @class */ (function () {
         });
     }); };
     LectureApi.getById = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var coures, error_2;
+        var lecture, sectionId, section, courseData, error_2;
         var _b;
         return __generator(_a, function (_c) {
             switch (_c.label) {
                 case 0:
-                    _c.trys.push([0, 3, , 4]);
+                    _c.trys.push([0, 6, , 7]);
                     return [4 /*yield*/, models_1.Lecture.findById(req.params.id)];
                 case 1: return [4 /*yield*/, ((_b = (_c.sent())) === null || _b === void 0 ? void 0 : _b.populate([
                         {
                             path: "teacher",
-                            select: "fullName",
+                            select: "",
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "ralseHand",
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -175,24 +173,44 @@ var LectureApi = /** @class */ (function () {
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                     ]))];
                 case 2:
-                    coures = _c.sent();
+                    lecture = _c.sent();
+                    if (!lecture) {
+                        throw new APIError_1.default({
+                            message: "NOT FOUND",
+                            status: http_status_1.default.INTERNAL_SERVER_ERROR,
+                        });
+                    }
+                    sectionId = lecture === null || lecture === void 0 ? void 0 : lecture.section;
+                    return [4 /*yield*/, models_1.Section.findById(sectionId)];
+                case 3:
+                    section = _c.sent();
+                    courseData = void 0;
+                    if (!(section === null || section === void 0 ? void 0 : section.course)) return [3 /*break*/, 5];
+                    return [4 /*yield*/, models_1.Course.findById(section.course)];
+                case 4:
+                    courseData = _c.sent();
+                    _c.label = 5;
+                case 5:
+                    if (lecture) {
+                        lecture.course = courseData;
+                    }
                     res
                         .json({
-                        lession: coures,
+                        data: lecture,
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
-                    return [3 /*break*/, 4];
-                case 3:
+                    return [3 /*break*/, 7];
+                case 6:
                     error_2 = _c.sent();
-                    next();
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    next(error_2);
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     }); };
@@ -223,14 +241,14 @@ var LectureApi = /** @class */ (function () {
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "ralseHand",
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -238,7 +256,7 @@ var LectureApi = /** @class */ (function () {
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                     ]))];
@@ -377,14 +395,14 @@ var LectureApi = /** @class */ (function () {
                                     },
                                     {
                                         path: "users",
-                                        select: "avatar email fullName address phone online",
+                                        select: "",
                                     },
                                     {
                                         path: "ralseHand",
                                         select: "time user",
                                         populate: {
                                             path: "user",
-                                            select: "avatar email fullName address phone online",
+                                            select: "",
                                         },
                                     },
                                     {
@@ -392,7 +410,7 @@ var LectureApi = /** @class */ (function () {
                                         select: "time user",
                                         populate: {
                                             path: "user",
-                                            select: "avatar email fullName address phone online",
+                                            select: "",
                                         },
                                     },
                                 ],
@@ -443,14 +461,14 @@ var LectureApi = /** @class */ (function () {
                                     },
                                     {
                                         path: "users",
-                                        select: "avatar email fullName address phone online",
+                                        select: "",
                                     },
                                     {
                                         path: "ralseHand",
                                         select: "time user",
                                         populate: {
                                             path: "user",
-                                            select: "avatar email fullName address phone online",
+                                            select: "",
                                         },
                                     },
                                     {
@@ -458,7 +476,7 @@ var LectureApi = /** @class */ (function () {
                                         select: "time user",
                                         populate: {
                                             path: "user",
-                                            select: "avatar email fullName address phone online",
+                                            select: "",
                                         },
                                     },
                                 ],

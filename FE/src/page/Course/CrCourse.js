@@ -75,7 +75,7 @@ export default function CrCourse() {
       method: "GET",
       url: "/api/course/" + id,
     });
-    if (res?.status === 200) {
+    if (!res?.message) {
       setCourse(res?.course);
     }
   };

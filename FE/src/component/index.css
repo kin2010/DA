@@ -14,6 +14,9 @@
 }
 .content {
   background-color: rgb(253, 253, 253);
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 10px;
 }
 .MuiBox-root .css-1oflic9 {
   width: auto;

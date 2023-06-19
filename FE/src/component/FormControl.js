@@ -1,9 +1,11 @@
 import { useFormikContext } from "formik";
 import React, { useEffect } from "react";
 import EditorCommon from "./EdittorCommon/EdittorCommon";
+import { InputNumber } from "antd";
 
 const FormControl = ({ name, type, label, children, inputType, ...other }) => {
-  const { values, submitForm, errors, handleChange } = useFormikContext();
+  const { values, submitForm, errors, handleChange, setFieldValue } =
+    useFormikContext();
 
   function addPropsToReactElement(element, propsChildren) {
     if (React.isValidElement(element)) {
@@ -35,7 +37,25 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
     );
   }
 
+  if (type === "input_number") {
+    const handleInputChange = (value) => {
+      setFieldValue(name, value);
+    };
+    return (
+      <div className="mb-3">
+        <label className="col-form-label">{label}</label>
+        <InputNumber
+          style={{ width: "100%", padding: "10px" }}
+          onChange={handleInputChange}
+          {...other}
+        />
+        {errors[name] && <div className="feedback">{errors[name]}</div>}
+      </div>
+    );
+  }
+
   if (!!children) {
+    console.log(children);
     return (
       <>
         <label className="col-form-label">{label}</label>

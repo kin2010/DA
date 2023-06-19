@@ -36,7 +36,7 @@ const LectureAdd = ({ open, setOpen, section }) => {
       ...value,
       section: section?._id,
     });
-    if (res?.status === 200) {
+    if (!res?.message) {
       openNotification({
         type: "success",
         message: "Created successfully",
@@ -107,7 +107,7 @@ const LectureAdd = ({ open, setOpen, section }) => {
           btnName="ATTACHMENTS"
           label="Supports: jpg, jpeg, png, pdf or .zip"
           accept="image/*, .pdf"
-          formName="attachment"
+          formName="attachments"
           multiple
         ></FileUpload>
       </>

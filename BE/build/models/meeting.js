@@ -34,6 +34,14 @@ var meetingSchema = new mongoose_1.Schema({
     name: {
         type: String,
     },
+    createdby: {
+        type: "ObjectId",
+        ref: "User",
+    },
+    group: {
+        type: "ObjectId",
+        ref: "Group",
+    },
     ralseHand: [
         {
             user: {
@@ -64,6 +72,16 @@ var meetingSchema = new mongoose_1.Schema({
             },
             time: { type: Date },
             msg: { type: String },
+        },
+    ],
+    attendance: [
+        {
+            user: {
+                type: "ObjectId",
+                ref: "User",
+            },
+            time: { type: Date },
+            status: { type: String },
         },
     ],
     status: {

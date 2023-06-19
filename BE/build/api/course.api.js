@@ -71,6 +71,10 @@ var CourseApi = /** @class */ (function () {
                             select: "",
                         },
                         {
+                            path: "teachers",
+                            select: "",
+                        },
+                        {
                             path: "owner",
                             select: "",
                         },
@@ -138,7 +142,11 @@ var CourseApi = /** @class */ (function () {
                     return [4 /*yield*/, courseData.populate([
                             {
                                 path: "teachers",
-                                select: "fullName",
+                                select: "",
+                            },
+                            {
+                                path: "groups",
+                                select: "",
                             },
                             {
                                 path: "owner",
@@ -146,7 +154,7 @@ var CourseApi = /** @class */ (function () {
                             },
                             {
                                 path: "users",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                             {
                                 path: "sections",
@@ -162,7 +170,7 @@ var CourseApi = /** @class */ (function () {
                                     },
                                     {
                                         path: "baitaps",
-                                        select: "link status outdate time",
+                                        select: "",
                                     },
                                 ],
                             },

@@ -8,18 +8,20 @@ export const AppContextProvider = createContext();
 export const AppContext = ({ children }) => {
   const [api, contextHolder] = notification.useNotification();
   const [userStream, setUserStream] = useState(null);
-  const dess = (des) => {
-    switch (des) {
-      case "add":
-        return "Create successfully";
-      case "update":
-        return "Update successfully";
-      case "remove":
-        return "Remove successfully";
-      default:
-        return des;
-    }
-  };
+  const [cart, setCart] = useState([]);
+
+  // const dess = (des) => {
+  //   switch (des) {
+  //     case "add":
+  //       return "Create successfully";
+  //     case "update":
+  //       return "Update successfully";
+  //     case "remove":
+  //       return "Remove successfully";
+  //     default:
+  //       return des;
+  //   }
+  // };
   const openNotification = (res, des) => {
     const { message, status } = res;
     api.open({
@@ -43,7 +45,7 @@ export const AppContext = ({ children }) => {
         ),
     });
   };
-  const values = { openNotification, setUserStream, userStream };
+  const values = { openNotification, setUserStream, userStream, cart, setCart };
   return (
     <AppContextProvider.Provider value={values}>
       {contextHolder}

@@ -106,7 +106,7 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
       };
       const res = await courseService.addCourse(data);
       openNotification(res);
-      if (res?.status === 200) {
+      if (!res?.message) {
         setCourse(res?.course);
         navigate("/course/create/" + res?.course?._id);
         if (!!changeTab) {

@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
 import { LectureService } from "../api";
-
 router.route("/").post(LectureService.create);
 router.route("/").put(LectureService.update);
 router.route("/:id").get(LectureService.getById);
