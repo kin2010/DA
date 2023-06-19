@@ -25,8 +25,8 @@ export type { ICategory } from "./category";
 export { default as Section } from "./section";
 export type { ISection } from "./section";
 
-export { default as CategoryGroup } from "./categorygroup";
-export type { ICategoryGroup } from "./categorygroup";
+export { default as CategoryGroup } from "./category_group";
+export type { ICategoryGroup } from "./category_group";
 
 export { default as Assignment } from "./assignments";
 export type { IAssignment } from "./assignments";
