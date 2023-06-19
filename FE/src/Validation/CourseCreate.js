@@ -21,3 +21,9 @@ export const createGroupSchema = Yup.object({
   name: Yup.string().min(3).required(),
   description: Yup.string().required(),
 });
+export const createScheduleSchema = Yup.object({
+  name: Yup.string().min(3).required(),
+  description: Yup.string().required(),
+  start_time: Yup.string().required(),
+  end_time: Yup.string().required(),
+});

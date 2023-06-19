@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as React from "react";
 import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
@@ -62,7 +63,7 @@ export default function SideBarContent() {
           <HomeIcon />
         </ListItemIcon>
         <Link to={"/dashboard/home"}>
-          <ListItemText primary="Dashboard" />
+          <ListItemText primary="Trang chủ" />
         </Link>
       </ListItemButton>
       <ListItemButton>
@@ -70,7 +71,7 @@ export default function SideBarContent() {
           <AutoStoriesIcon />
         </ListItemIcon>{" "}
         <Link to={"/dashboard/course"}>
-          <ListItemText primary="Course" />
+          <ListItemText primary="Quản lí khóa học" />
         </Link>
       </ListItemButton>
       <ListItemButton onClick={handleClick}>

@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   apiURL,
   LOCAL_STORAGE_TOKEN_NAME,
   USER_ROLE,
-} from '../Context/constant';
+} from "../Context/constant";
 export const getBaseURL = () => {
   return axios.create({
     baseURL: apiURL,
@@ -11,7 +11,7 @@ export const getBaseURL = () => {
 };
 
 export const getUser = () => {
-  const userStr = localStorage.getItem('user');
+  const userStr = localStorage.getItem("user");
   if (userStr) return JSON.parse(userStr);
   else return null;
 };
@@ -24,16 +24,17 @@ export const getToken = () => {
 };
 
 export const getTokenType = () => {
-  return localStorage.getItem('type') || null;
+  return localStorage.getItem("type") || null;
 };
 
-export const setUserSession = (token, type) => {
+export const setUserSession = (token, role) => {
   localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, token);
-  localStorage.setItem('type', type);
+  localStorage.setItem(USER_ROLE, role);
 };
 
 export const removeUserSession = () => {
   localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME);
+  localStorage.removeItem(USER_ROLE);
 };
 
 export const getRoleID = () => {

@@ -29,7 +29,7 @@ const Course = () => {
   const navigate = useNavigate();
   return (
     <div className="page-wraper">
-      <Outlet></Outlet>
+      <Outlet />
       <HeaderAppBar></HeaderAppBar>
       <div className="page-content bg-white">
         {/* inner page banner */}

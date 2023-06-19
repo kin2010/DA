@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import HeaderAppBar from "./Header/AppBar";
-import { getToken, setToken } from "../ultis/Common";
+import { getToken, setToken, setUserSession } from "../ultis/Common";
 import { serviceFetch } from "../ultis/service";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -34,7 +34,6 @@ const Register = () => {
   //   form.email,
   //   form.password
   // );
-  const [api, setApi] = useState("");
   const onChangeValue = (e) => {
     setForm({
       ...form,
@@ -51,7 +50,7 @@ const Register = () => {
     console.log(data?.data?.fullName);
     setError(mapError(data));
     if (!!data?.data?.fullName) {
-      setToken(data?.token);
+      setUserSession(data?.token, data?.data?.role);
       openNotification({
         type: "success",
         message: "Đăng kí thành công",
@@ -62,18 +61,6 @@ const Register = () => {
       }, 5000);
     }
   };
-
-  useEffect(() => {
-    const ff = async () => {
-      const dt = await serviceFetch({
-        url: "ddd",
-        method: "GET",
-      });
-      console.log("check", dt);
-      setApi(dt?.message);
-    };
-    ff();
-  }, []);
 
   if (!!getToken() && getToken() !== "undefined") {
     return <Navigate to={"/"} />;
@@ -188,7 +175,7 @@ const Register = () => {
               <Form.Text className="text-muted">Nhập email của bạn</Form.Text>
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>fullName </Form.Label>
+              <Form.Label>Tên đầy đủ : </Form.Label>
               <Form.Control
                 onChange={onChangeValue}
                 type="text"

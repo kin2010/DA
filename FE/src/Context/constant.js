@@ -5,7 +5,7 @@ export const apiURL =
 export const URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : process.env.REACT_API_URL;
+    : process.env.REACT_APP_URL;
 export const LOCAL_STORAGE_TOKEN_NAME = "tokenDoan";
-export const USER_ROLE = "";
+export const USER_ROLE = "USER_ROLE";
 export const ROLE = "ROLE";

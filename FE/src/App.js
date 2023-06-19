@@ -24,6 +24,7 @@ import Register from "./page/Register";
 import Checkout from "./page/Checkout/Checkout";
 import ProtectedRoute from "./ultis/PrivateRoute";
 import AppResult from "./page/Result/ResultComponent";
+import Dashboard from "./Admin/component/Dashboard";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
@@ -79,8 +80,8 @@ function App() {
               <Route path="/group">
                 <Route exact path=":id" element={<GroupDetail />}></Route>
               </Route>
-              <Route path="/course" element={<Course />}>
-                <Route path=":id" element={<CourseDetail />}></Route>
+              <Route exact path="/course" element={<Course />}>
+                <Route exact path=":id" element={<CourseDetail />}></Route>
               </Route>
               {/* <Route path="/course/create" element={<CrCourse />}>
                 <Route path=":id" element={<CrCourse />}></Route>
@@ -88,10 +89,20 @@ function App() {
               <Route path="/lecture">
                 <Route path=":id" element={<LectureDetail />}></Route>
               </Route>
-              <Route path="/dashboard" element={<Admin></Admin>}>
-                <Route path="/dashboard/home" element={<Admin></Admin>}></Route>
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requirementRole={"Admin"}>
+                    <Admin />
+                  </ProtectedRoute>
+                }
+              >
                 <Route
-                  path="/dashboard/course"
+                  path="/admin/home"
+                  element={<Dashboard></Dashboard>}
+                ></Route>
+                <Route
+                  path="/admin/course"
                   element={<AdminCourse></AdminCourse>}
                 ></Route>
               </Route>

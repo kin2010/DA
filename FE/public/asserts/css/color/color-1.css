@@ -1,7 +1,7 @@
 /*===================== 	Premery bg color =====================*/
 :root {
   --primary: #1976d2;
-  --sc-primary: #4d0a91;
+  --sc-primary: #1976d2;
 } /* Hex */
 .bg-primary,
 .btn,
@@ -18,7 +18,7 @@
 .pagination-bx.primary .pagination > li > span,
 button.back-to-top,
 .rev-btn {
-  background-color: #4c1864;
+  background-color: #1976d2;
 } /*Hex color :hover */
 .btn:active,
 .btn:hover,
@@ -78,7 +78,7 @@ h5 a:hover,
 h6 a:hover,
 .btn.outline,
 .btn-link:hover {
-  color: #4c1864;
+  color: #1976d2;
 } /*===================== 	Secondery bg color =====================*/
 .bg-secondry {
   background-color: #2d3239;
@@ -91,7 +91,7 @@ h6 a:hover,
 .ovpr-dark:after,
 .ovpr:after,
 .bg-primary {
-  background-color: #4c1864;
+  background-color: #1976d2;
 }
 .footer-top,
 .footer-bottom {
@@ -163,7 +163,7 @@ button.back-to-top,
 .recent-news-carousel .owl-nav .owl-prev,
 .testimonial-carousel .owl-nav .owl-next,
 .testimonial-carousel .owl-nav .owl-prev {
-  background-color: #f7b205;
+  background-color: #1976d2;
   color: #000;
 }
 .footer_widget ul li a:hover,
@@ -171,7 +171,7 @@ button.back-to-top,
 .header-transparent .secondary-menu .btn-link:hover,
 .header-transparent .menu-links .nav > li:hover > a,
 .header-transparent .menu-links .nav > li.active > a {
-  color: #f7b205;
+  color: #1976d2;
 }
 .course-info-list ul li a.active:hover,
 .course-info-list ul li a:hover,
@@ -186,9 +186,9 @@ button.back-to-top:hover,
 .recent-news-carousel .owl-nav .owl-prev:hover,
 .testimonial-carousel .owl-nav .owl-next:hover,
 .testimonial-carousel .owl-nav .owl-prev:hover {
-  background-color: #4c1864;
+  background-color: #1976d2;
   color: #fff;
 }
 .heading-bx.left .title-head {
-  border-color: #f7b205;
+  border-color: #1976d2;
 }

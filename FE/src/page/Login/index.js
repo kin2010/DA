@@ -1,15 +1,16 @@
-import { Alert, Container } from "@mui/material";
+import { Alert, Button, Container } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { login, useLogin, useLoginService } from "../../hook/HAuth";
 import { mapError } from "../../ultis/alert";
-import { Link, Navigate, redirect, useNavigate } from "react-router-dom";
-import { getToken, setToken } from "../../ultis/Common";
-import { serviceFetch } from "../../ultis/service";
-import { apiURL } from "../../Context/constant";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { getToken, setToken, setUserSession } from "../../ultis/Common";
+import { openNotification } from "../../Notification";
+import { USER_ROLE } from "../../Context/constant";
+import { ROLE_ID } from "../../ultis/PrivateRoute";
+import HeaderAppBar from "../Header/AppBar";
 const Login = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -35,25 +36,29 @@ const Login = () => {
     console.log(data);
     setError(mapError(data));
     if (data?.status === 200) {
-      setToken(data?.token);
-    }
-    setTimeout(() => {
-      navigate("/");
-    }, 5000);
-  };
-
-  useEffect(() => {
-    const ff = async () => {
-      const dt = await serviceFetch({
-        url: "ddd",
-        method: "GET",
+      setUserSession(data?.token, data?.user?.role);
+      openNotification({
+        type: "success",
+        message: "Đăng nhập thành công",
       });
-      console.log("check", dt);
-      setApi(dt?.message);
-      console.log(apiURL);
-    };
-    ff();
-  }, []);
+      setTimeout(() => {
+        switch (data?.user?.role) {
+          case ROLE_ID.ADMIN:
+            navigate("/admin");
+            break;
+          case ROLE_ID.TEACHER:
+            navigate("/dashboard");
+            break;
+          case ROLE_ID.USER:
+            navigate("/");
+            break;
+          default:
+            navigate("/");
+            break;
+        }
+      }, 0);
+    }
+  };
 
   if (!!getToken()) {
     return <Navigate to={"/"} />;
@@ -61,7 +66,7 @@ const Login = () => {
 
   return (
     <div>
-      <Header />
+      <HeaderAppBar />
       <Container>
         <div
           className=" mt-3 text-center"
@@ -107,7 +112,7 @@ const Login = () => {
                 </Link>
               </p>
             </Form.Group>
-            <Button type="submit" className="w-100 py-1" variant="primary">
+            <Button type="submit" className="w-100 py-1" variant="contained">
               Submit
             </Button>
           </Form>

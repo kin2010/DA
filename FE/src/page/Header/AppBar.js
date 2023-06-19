@@ -15,10 +15,15 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Avatar } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { getUserData } from "../../hook/LessionHook";
+import { removeUserSession } from "../../ultis/Common";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import WebIcon from "@mui/icons-material/Web";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -59,12 +64,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function HeaderAppBar() {
+export default function HeaderAppBar({ isAdmin }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
-  const user = queryClient.getQueryData(["user"]);
+  const { data, isLoading } = useQuery(["user"], getUserData, { retry: 0 });
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -76,7 +82,6 @@ export default function HeaderAppBar() {
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
@@ -84,6 +89,12 @@ export default function HeaderAppBar() {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuLogout = (event) => {
+    removeUserSession();
+    navigate("/login");
+    setAnchorEl(null);
   };
 
   const menuId = "primary-search-account-menu";
@@ -103,8 +114,9 @@ export default function HeaderAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Hồ sơ</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Khóa học của tôi</MenuItem>
+      <MenuItem onClick={handleMenuLogout}>Đăng xuất</MenuItem>
     </Menu>
   );
 
@@ -164,23 +176,28 @@ export default function HeaderAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar style={{ padding: "0 60px" }}>
+          {isAdmin && <DashboardIcon />}
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            className="ms-2"
           >
-            <MenuIcon />
+            {isAdmin ? "WEB ADMIN" : <WebIcon />}
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            DATN
-          </Typography>
+          {!isAdmin && (
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: "none", sm: "block" } }}
+            >
+              WEB USER
+            </Typography>
+          )}
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -202,59 +219,63 @@ export default function HeaderAppBar() {
               </Badge>
             <ShoppingCartIcon></ShoppingCartIcon>
             </IconButton> */}
-            {!!user ? (
+            {!isLoading && (
               <>
-                <IconButton
-                  size="large"
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={17} color="error">
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
-                <IconButton
-                  size="large"
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <Badge badgeContent={17} color="error">
-                    <ShoppingCartIcon />
-                  </Badge>
-                </IconButton>
-                <IconButton
-                  size="large"
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-                >
-                  <Avatar
-                    className="ml-3"
-                    sizes="large"
-                    sx={{ width: 42, height: 42 }}
-                  >
-                    {!user?.avatar
-                      ? `${user?.fullName?.slice(0, 1)}`.toUpperCase()
-                      : ""}
-                  </Avatar>
-                </IconButton>
-              </>
-            ) : (
-              <>
-                <Link
-                  to={"/login"}
-                  style={{
-                    fontSize: "23px",
-                    marginBottom: 0,
-                    color: "#fff ",
-                  }}
-                  className="white"
-                >
-                  Login
-                </Link>
+                {!!data?.user ? (
+                  <>
+                    <IconButton
+                      size="large"
+                      aria-label="show 17 new notifications"
+                      color="inherit"
+                    >
+                      <Badge badgeContent={17} color="error">
+                        <NotificationsIcon />
+                      </Badge>
+                    </IconButton>
+                    <IconButton
+                      size="large"
+                      aria-label="show 17 new notifications"
+                      color="inherit"
+                    >
+                      <Badge badgeContent={17} color="error">
+                        <ShoppingCartIcon />
+                      </Badge>
+                    </IconButton>
+                    <IconButton
+                      size="large"
+                      edge="end"
+                      aria-label="account of current user"
+                      aria-controls={menuId}
+                      aria-haspopup="true"
+                      onClick={handleProfileMenuOpen}
+                      color="inherit"
+                    >
+                      <Avatar
+                        className="ml-3"
+                        sizes="large"
+                        sx={{ width: 42, height: 42 }}
+                      >
+                        {!data?.user?.avatar
+                          ? `${data?.user?.fullName?.slice(0, 1)}`.toUpperCase()
+                          : ""}
+                      </Avatar>
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to={"/login"}
+                      style={{
+                        fontSize: "23px",
+                        marginBottom: 0,
+                        color: "#fff ",
+                      }}
+                      className="white"
+                    >
+                      Đăng nhập
+                    </Link>
+                  </>
+                )}
               </>
             )}
           </Box>

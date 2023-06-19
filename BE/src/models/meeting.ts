@@ -4,7 +4,8 @@ export interface IMeeting extends Document {
   url: string;
   teacher: string[];
   users: ObjectId[];
-  start: Date;
+  start_time: string;
+  end_time: string;
   chat: Object[];
   end: Date;
   video: string;
@@ -50,7 +51,10 @@ const meetingSchema = new Schema(
     url: {
       type: String,
     },
-    start: {
+    start_time: {
+      type: String,
+    },
+    end_time: {
       type: String,
     },
     end: {

@@ -15,7 +15,10 @@ var meetingSchema = new mongoose_1.Schema({
     url: {
         type: String,
     },
-    start: {
+    start_time: {
+        type: String,
+    },
+    end_time: {
         type: String,
     },
     end: {

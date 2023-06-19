@@ -13,7 +13,7 @@ export const openNotification = ({ type, message }) => {
     </Button>
   );
   notification[type]({
-    message: "Notification ",
+    message: "Thông báo  ",
     description: message,
     btn: null,
     key,

@@ -125,3 +125,6 @@ a:hover {
   /* top: 167px !important;
   left: 1440px !important; */
 }
+.ant-menu-item {
+  margin-bottom: 20px !important;
+}

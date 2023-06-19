@@ -34,6 +34,8 @@ import ReorderIcon from "@mui/icons-material/Reorder";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import { PRIMARY } from "../../Constant/app";
 import MeetingAdd from "./MeetingAdd";
+import ScheduleMeeting from "../Call/Meeting/ScheduleMetting";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 // import { Comment } from "antd";
 const host =
   process.env.NODE_ENV === "development"
@@ -60,6 +62,7 @@ const GroupDetail = () => {
 
   const [contents, setContents] = useState([]);
   const [openMtg, setOpenMtg] = useState(false);
+  const [openSchedule, setOpenSchedule] = useState(false);
   const handleClick = (event) => {
     setAnchorEl(event.target);
   };
@@ -154,18 +157,11 @@ const GroupDetail = () => {
   };
 
   const handleMeetingNow = async () => {
-    // const params = {
-    //   group: id,
-    //   createdby: userData?.user?._id,
-    // };
-    // const res = await groupServices.addMeeting(params);
-    // console.log(res);
-    // if (res?.meeting?._id) {
-    //   setTimeout(() => {
-    //     window?.open(URL + "/meeting/" + res?.meeting?._id);
-    //   }, 2000);
-    // }
     setOpenMtg(true);
+    handleClose();
+  };
+  const handleScheduleMeeting = async () => {
+    setOpenSchedule(true);
     handleClose();
   };
 
@@ -177,6 +173,12 @@ const GroupDetail = () => {
         open={openMtg}
         setOpen={setOpenMtg}
       ></MeetingAdd>
+      <ScheduleMeeting
+        open={openSchedule}
+        setOpen={setOpenSchedule}
+        group={id}
+        user={userData?.user?._id}
+      ></ScheduleMeeting>
       <HeaderAppBar></HeaderAppBar>
 
       <Row>
@@ -222,7 +224,7 @@ const GroupDetail = () => {
               }}
             >
               <MenuItem onClick={handleMeetingNow}>Meeting ngay</MenuItem>
-              <MenuItem onClick={handleClose}>Lên lịch</MenuItem>
+              <MenuItem onClick={handleScheduleMeeting}>Lên lịch</MenuItem>
             </Menu>
           </div>
           <Row>
@@ -397,17 +399,27 @@ const GroupDetail = () => {
                                     alt="Han Solo"
                                   />
                                 }
-                                content={<p>Đã bắt đầu một buổi họp</p>}
+                                content={
+                                  <p>
+                                    {!!content?.data?.start_time
+                                      ? "Đã lên lịch một cuộc họp"
+                                      : "Đã bắt đầu một cuộc họp"}
+                                  </p>
+                                }
                                 datetime={
                                   <Tooltip
                                     title={format(
-                                      new Date(content?.data?.time),
+                                      new Date(
+                                        content?.data?.createdby?.createdAt
+                                      ),
                                       "yyyy-dd-mm hh:mm"
                                     )}
                                   >
                                     <span>
                                       {format(
-                                        new Date(content?.data?.time),
+                                        new Date(
+                                          content?.data?.createdby?.createdAt
+                                        ),
                                         "yyyy-dd-mm hh:mm"
                                       )}
                                     </span>
@@ -415,24 +427,66 @@ const GroupDetail = () => {
                                 }
                               />
                               <Divider />
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  bottom: "30px",
-                                }}
-                              >
-                                <Button
-                                  variant="contained"
-                                  color="primary"
-                                  onClick={() => {
-                                    window.open(
-                                      URL + "/meeting/" + content?.data?._id
-                                    );
+                              {!!content?.data?.start_time &&
+                              !isAfter(
+                                new Date(),
+                                new Date(content?.data?.end_time)
+                              ) ? (
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    bottom: "30px",
+                                    gap: "0 10px",
+                                  }}
+                                  className="d-flex align-items-center"
+                                >
+                                  <CalendarMonthIcon
+                                    color="primary"
+                                    style={{ fontSize: "23px" }}
+                                  />
+                                  Bắt đầu :
+                                  <strong>
+                                    <span>
+                                      {format(
+                                        new Date(content?.data?.start_time),
+                                        "yyyy-dd-mm hh:mm"
+                                      )}
+                                    </span>
+                                  </strong>
+                                  {!!content?.data?.end_time && (
+                                    <>
+                                      Đến :
+                                      <strong>
+                                        <span>
+                                          {format(
+                                            new Date(content?.data?.end_time),
+                                            "yyyy-dd-mm hh:mm"
+                                          )}
+                                        </span>
+                                      </strong>
+                                    </>
+                                  )}
+                                </div>
+                              ) : (
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    bottom: "30px",
                                   }}
                                 >
-                                  Tham gia
-                                </Button>
-                              </div>
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => {
+                                      window.open(
+                                        URL + "/meeting/" + content?.data?._id
+                                      );
+                                    }}
+                                  >
+                                    Tham gia
+                                  </Button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
