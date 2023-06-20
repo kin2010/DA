@@ -20,9 +20,11 @@ import { Avatar } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { getUserData } from "../../hook/LessionHook";
-import { removeUserSession } from "../../ultis/Common";
+import { getRoleID, removeUserSession } from "../../ultis/Common";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import WebIcon from "@mui/icons-material/Web";
+import { USER_ROLE } from "../../Context/constant";
+import { ROLE_ID } from "../../ultis/PrivateRoute";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -207,6 +209,22 @@ export default function HeaderAppBar({ isAdmin }) {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ display: { xs: "none", sm: "block" } }}
+          >
+            <Link
+              style={{
+                color: "white!important",
+              }}
+              className="white"
+              to="/course"
+            >
+              Tất cả khóa học
+            </Link>
+          </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {/* <IconButton
@@ -223,15 +241,17 @@ export default function HeaderAppBar({ isAdmin }) {
               <>
                 {!!data?.user ? (
                   <>
-                    <IconButton
-                      size="large"
-                      aria-label="show 17 new notifications"
-                      color="inherit"
-                    >
-                      <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
-                      </Badge>
-                    </IconButton>
+                    {getRoleID() === ROLE_ID.TEACHER && (
+                      <IconButton
+                        size="large"
+                        aria-label="show 17 new notifications"
+                        color="inherit"
+                      >
+                        <Badge badgeContent={17} color="error">
+                          <NotificationsIcon />
+                        </Badge>
+                      </IconButton>
+                    )}
                     <IconButton
                       size="large"
                       aria-label="show 17 new notifications"

@@ -29,7 +29,14 @@ const CoursePopulate = () => {
             <div className="item">
               <div className="cours-bx">
                 <div className="action-box">
-                  <img src="../images/pic6.jpg" alt="" />
+                  <img
+                    src={
+                      !!course?.thumbnail?.length
+                        ? course?.thumbnail[0]
+                        : "../images/course.jpg"
+                    }
+                    alt=""
+                  />
                   <a href="#" className="btn">
                     Read More
                   </a>

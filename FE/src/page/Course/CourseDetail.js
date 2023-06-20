@@ -170,7 +170,7 @@ const CourseDetail = () => {
                           </li>
                           <li>
                             <i className="ti-help-alt" />{" "}
-                            <span className="label">Assessments</span>{" "}
+                            <span className="label">Nhiệm vụ / Bài tập</span>{" "}
                             <span className="value">
                               {data?.sections?.reduce((a, b) => {
                                 return a + b?.assignments?.length;
