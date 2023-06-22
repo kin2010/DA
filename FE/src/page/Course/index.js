@@ -1,16 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chapter from "../../component/Chapter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCategories, getAllCourse } from "../../hook/LessionHook";
-import { Button, Pagination } from "@mui/material";
+import {
+  Button,
+  InputAdornment,
+  Pagination,
+  Rating,
+  TextField,
+} from "@mui/material";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import HeaderAppBar from "../Header/AppBar";
-
+import { Divider, Empty, Select } from "antd";
+import "antd/dist/antd.css";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
+import CloseIcon from "@mui/icons-material/Close";
+import CourseComment from "./CourseComment";
+import { getCourseRating } from "../../ultis/course";
 const Course = () => {
   const [page, setPage] = useState(1);
   const [queryparams, setQueryparams] = useState({
     limit: 9,
     skip: 9 * (page - 1),
+    text: "",
   });
   const queryClient = useQueryClient();
   const { data } = useQuery(["courses", queryparams], getAllCourse);
@@ -20,13 +33,37 @@ const Course = () => {
     setQueryparams({
       limit: 9,
       skip: 9 * (page - 1),
+      text: "",
+      category: "",
     });
     window?.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
+  const interval = useRef();
+  const [search, searchSearch] = useState("");
   const navigate = useNavigate();
+  const handleChange = (e) => {
+    searchSearch(e?.target?.value);
+  };
+
+  useEffect(() => {
+    if (queryparams?.text !== search) {
+      interval.current = setInterval(() => {
+        setQueryparams({
+          ...queryparams,
+          text: search,
+        });
+      }, 1000);
+    } else {
+      clearInterval(interval.current);
+    }
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, [queryparams, search]);
+
   return (
     <div className="page-wraper">
       <Outlet />
@@ -65,19 +102,59 @@ const Course = () => {
                   <div className="widget courses-search-bx placeani">
                     <div className="form-group">
                       <div className="input-group">
-                        <label>Tìm kiếm</label>
+                        {/* <label>Tìm kiếm</label>
                         <input
                           name="dzName"
                           type="text"
                           required
                           className="form-control"
-                        />
+                        /> */}
                       </div>
                     </div>
                   </div>
                   <div className="widget widget_archive">
                     <h5 className="widget-title style-1">Tất cả khóa học</h5>
-                    <ul>
+                    <Divider />
+                    <TextField
+                      id="input-with-icon-textfield"
+                      label="Tìm kiếm"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <ManageSearchIcon color="primary" />
+                          </InputAdornment>
+                        ),
+                      }}
+                      variant="standard"
+                      type="search"
+                      className="mb-3"
+                      onChange={handleChange}
+                    />
+                    <h5>Thể loại :</h5>
+                    {!!queryparams.category && (
+                      <div>
+                        <p>
+                          {categories
+                            ?.reduce((a, b) => {
+                              return [...a, ...b?.categories];
+                            }, [])
+                            ?.find((c) => c?._id === queryparams.category)
+                            ?.name || ""}
+                          <span
+                            onClick={() => {
+                              setQueryparams({
+                                ...queryparams,
+                                category: "",
+                              });
+                            }}
+                          >
+                            <CloseIcon color="primary"></CloseIcon>
+                          </span>
+                        </p>
+                      </div>
+                    )}
+
+                    <ul className="mt-5">
                       {!!categories?.length &&
                         categories?.map((data) => (
                           <li key={data?._id?._id}>
@@ -93,6 +170,12 @@ const Course = () => {
                                 key={category?._id}
                                 value={category?._id}
                                 style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setQueryparams({
+                                    ...queryparams,
+                                    category: category?._id,
+                                  });
+                                }}
                               >
                                 {category?.name}
                               </li>
@@ -101,67 +184,10 @@ const Course = () => {
                         ))}
                     </ul>
                   </div>
-
-                  {/* <div className="widget recent-posts-entry widget-courses">
-                    <h5 className="widget-title style-1">Recent Courses</h5>
-                    <div className="widget-post-bx">
-                      <div className="widget-post clearfix">
-                        <div className="ttr-post-media">
-                          <img
-                            src="assets/images/blog/recent-blog/pic1.jpg"
-                            width={200}
-                            height={143}
-                            alt=""
-                          />
-                        </div>
-                        <div className="ttr-post-info">
-                          <div className="ttr-post-header">
-                            <h6 className="post-title">
-                              <a href="#">Introduction EduChamp</a>
-                            </h6>
-                          </div>
-                          <div className="ttr-post-meta">
-                            <ul>
-                              <li className="price">
-                                <del>$190</del>
-                                <h5>$120</h5>
-                              </li>
-                              <li className="review">03 Review</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="widget-post clearfix">
-                        <div className="ttr-post-media">
-                          <img
-                            src="assets/images/blog/recent-blog/pic3.jpg"
-                            width={200}
-                            height={160}
-                            alt=""
-                          />
-                        </div>
-                        <div className="ttr-post-info">
-                          <div className="ttr-post-header">
-                            <h6 className="post-title">
-                              <a href="#">English For Tommorow</a>
-                            </h6>
-                          </div>
-                          <div className="ttr-post-meta">
-                            <ul>
-                              <li className="price">
-                                <h5 className="free">Free</h5>
-                              </li>
-                              <li className="review">07 Review</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
                 <div className="col-lg-9 col-md-8 col-sm-12">
                   <div className="row">
-                    {!!data?.courses?.length &&
+                    {!!data?.courses?.length ? (
                       data?.courses?.map((course) => (
                         <div
                           className="col-md-6 col-lg-4 col-sm-6 m-b30"
@@ -180,13 +206,13 @@ const Course = () => {
                               <Button
                                 color="primary"
                                 variant="contained"
-                                href="#"
                                 className="btn"
                                 onClick={() =>
                                   navigate(`/course/${course?._id}`)
                                 }
+                                style={{ color: "white!important" }}
                               >
-                                Read More
+                                Xem ngay
                               </Button>
                             </div>
                             <div className="info-bx text-center">
@@ -194,41 +220,57 @@ const Course = () => {
                                 <Link to={`/course/${course?._id}`}>
                                   {course?.name}
                                 </Link>
-                                {/* <a href={`course/${course?._id}`}>
-                                  {course?.name}
-                                </a> */}
                               </h5>
-                              <span>Programming</span>
+                              <span> {course?.category?.name}</span>
                             </div>
                             <div className="cours-more-info">
                               <div className="review">
-                                <span>3 Review</span>
+                                <span>
+                                  {!!course?.comments?.length
+                                    ? course?.comments?.length
+                                    : 0}{" "}
+                                  Đánh giá
+                                </span>
                                 <ul className="cours-star">
-                                  <li className="active">
-                                    <i className="fa fa-star" />
-                                  </li>
-                                  <li className="active">
-                                    <i className="fa fa-star" />
-                                  </li>
-                                  <li className="active">
-                                    <i className="fa fa-star" />
-                                  </li>
-                                  <li>
-                                    <i className="fa fa-star" />
-                                  </li>
-                                  <li>
-                                    <i className="fa fa-star" />
-                                  </li>
+                                  <Rating
+                                    size="medium"
+                                    color="primary"
+                                    value={getCourseRating(
+                                      course?.comments || []
+                                    )}
+                                    readOnly
+                                  />
                                 </ul>
                               </div>
                               <div className="price">
-                                <del>$190</del>
-                                <h5>{course?.price}</h5>
+                                {course?.discount ? (
+                                  <del>
+                                    {!!course?.discount
+                                      ? (
+                                          course?.price - course?.discount
+                                        )?.toLocaleString("en-US")
+                                      : 0}
+                                    &#x20AB;
+                                  </del>
+                                ) : (
+                                  <></>
+                                )}
+                                <h5>
+                                  {!!course?.price
+                                    ? course?.price?.toLocaleString("en-US")
+                                    : "Miễn phí"}
+                                  {!!course?.price && <> &#x20AB;</>}
+                                </h5>
                               </div>
                             </div>
                           </div>
                         </div>
-                      ))}
+                      ))
+                    ) : (
+                      <div className="mb-5" style={{ marginTop: "200px" }}>
+                        <Empty />
+                      </div>
+                    )}
 
                     <div className="col-lg-12 m-b20">
                       <div className="pagination-bx rounded-sm gray clearfix">

@@ -26,6 +26,13 @@ import FormControl from "../../component/FormControl";
 import { Button, ButtonBase, InputLabel, Select } from "@mui/material";
 import Dropdown from "../../component/Dropdown";
 import { Select as SeclectAntd } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { format } from "date-fns";
+export const TIME_FORMAT = "yyyy-MM-dd";
 const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
   const { openNotification } = React.useContext(AppContextProvider);
   const [open, setOpen] = useState(false);
@@ -37,6 +44,10 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
   const { data } = useQuery(["categories"], getAllCategories);
   const courseService = useCourseService();
   const courseData = courseService.get();
+  const [date, setDate] = useState({
+    start: dayjs(new Date()),
+    end: dayjs(new Date()),
+  });
 
   useEffect(() => {
     if (!!courseData) {
@@ -48,17 +59,21 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
         requirement: courseData?.requirement,
         category: courseData?.category,
       });
+      setDate({
+        start: dayjs(courseData?.start),
+        end: dayjs(courseData?.end),
+      });
     }
   }, [courseData]);
 
   const categoryChange = (e) => {
-    console.log(e.target?.value);
     setFieldValue("category", e.target?.value || "");
   };
 
-  const SkillChange = (value) => {
-    setFieldValue("skill_lever", value || "");
-  };
+  useEffect(() => {
+    setFieldValue("start", format(new Date(date.start), TIME_FORMAT));
+    setFieldValue("end", format(new Date(date.end), TIME_FORMAT));
+  }, [date]);
 
   return (
     <div className="widget-inner">
@@ -66,7 +81,7 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
         <div className="row">
           <div className="col-12">
             <div className="ml-auto">
-              <h3>1. Thông tin cơ bản</h3>
+              <h3 className="text-primary">1. Thông tin cơ bản</h3>
             </div>
           </div>
           <div className="form-group col-12">
@@ -84,7 +99,7 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
           <div className="seperator" />
           <div className="col-12 m-t20">
             <div className="ml-auto m-b5">
-              <h3>2. Mô tả khóa học</h3>
+              <h3 className="text-primary">2. Mô tả khóa học</h3>
             </div>
           </div>
           <div className="form-group col-12">
@@ -94,27 +109,25 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
               type={"editor"}
             ></FormControl>
           </div>
-          <div className="form-group col-6">
+          <div className="form-group col-12">
             <FormControl
               label="Mục tiêu khóa học *"
               name="target"
               type={"editor"}
-            >
-              <textarea className="form-control" />
-            </FormControl>
+            ></FormControl>
           </div>
-          <div className="form-group col-6">
-            {/* <FormControl label="Requirements*" name="requirement">
-              <textarea className="form-control" />
-            </FormControl> */}
-            <label className="col-form-label">Yêu cầu khóa học*</label>
-            <div>
-              <EditorCommon name="requirement"></EditorCommon>
-            </div>
+          <div className="form-group col-12">
+            <FormControl
+              name="requirement"
+              label="Yêu cầu khóa học *"
+              type={"editor"}
+            ></FormControl>
           </div>
           <div className="col-12 m-t20">
             <div className="ml-auto">
-              <h3 className="m-form__section">3. Add Item</h3>
+              <h3 className="m-form__section text-primary">
+                3. Thể loại và thời gian
+              </h3>
             </div>
           </div>
           <div className="col-12">
@@ -123,10 +136,8 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
                 <tr className="list-item">
                   <td>
                     <div className="row">
-                      <div className="col-md-6">
-                        <label className="col-form-label">
-                          Course Category
-                        </label>
+                      <div className="col-md-12">
+                        <label className="col-form-label">Thể loại</label>
                         <div>
                           <Select
                             style={{ width: "100%", background: "white" }}
@@ -171,31 +182,38 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
                           </Select>
                         </div>
                       </div>
-                      <div className="col-md-6">
-                        <label className="col-form-label">Skill Level</label>
-                        <div>
-                          <SeclectAntd
-                            style={{ width: "100%", background: "white" }}
-                            mode="tags"
-                            onChange={SkillChange}
-                            value={values["skill_level"]}
-                            placeholder="Skill Lever"
-                            options={[
-                              {
-                                value: "Beginner",
-                                label: "Beginner",
-                              },
-                              {
-                                value: "Intermediate",
-                                label: "Intermediate",
-                              },
-                              {
-                                value: "Expect",
-                                label: "Expect",
-                              },
-                            ]}
-                          ></SeclectAntd>
-                        </div>
+                      <div className="col-md-12">
+                        <label className="col-form-label">
+                          Thời gian bắt đầu và kết thúc khóa học *
+                        </label>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer
+                            components={["DatePicker", "DatePicker"]}
+                          >
+                            <DatePicker
+                              label="Thời gian bắt đầu"
+                              value={dayjs(date.start)}
+                              defaultValue={dayjs(date.start)}
+                              sx={{
+                                backgroundColor: "white",
+                              }}
+                              onChange={(newValue) =>
+                                setDate({ ...date, start: newValue })
+                              }
+                            />
+                            <DatePicker
+                              label="Thời gian kết thúc"
+                              value={dayjs(date.end)}
+                              defaultValue={dayjs(date.end)}
+                              onChange={(newValue) =>
+                                setDate({ ...date, end: newValue })
+                              }
+                              sx={{
+                                backgroundColor: "white",
+                              }}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
                       </div>
                     </div>
                   </td>
@@ -205,7 +223,7 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
           </div>
           <div className="col-12 mt-5">
             <Button variant="contained" color="primary" type="submit">
-              Save changes
+              Lưu thay đổi
             </Button>
             <Button
               className="ms-3"

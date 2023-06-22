@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import APIError from "../utils/APIError";
 import { Query, Params, Request } from "../configs/types";
 import { Category, CategoryGroup, Role } from "../models";
+import mongoose, { Mongoose } from "mongoose";
 
 export type IRole = {
   roleName: string;
@@ -143,6 +144,32 @@ export default class RoleService {
       const categorys = await CategoryGroup.find({});
 
       res.json({ data: categorys, status: 200 }).end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  static deleteDocument = async (
+    req: Request<Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { type, id } = req.query;
+      console.log(req.query);
+      let rs: any;
+      switch (type) {
+        case "category":
+          rs = await Category.deleteOne({ _id: id });
+          break;
+        case "category-group":
+          rs = await CategoryGroup.deleteOne({ _id: id });
+          break;
+
+        default:
+          break;
+      }
+
+      res.json({ data: rs, status: 200 }).end();
     } catch (error) {
       next(error);
     }

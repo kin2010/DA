@@ -24,6 +24,7 @@ export interface ICourse extends Document {
   discount: number;
   groups: string[];
   admin_comment: string;
+  comments: string[];
 }
 
 const courseSchema = new Schema(
@@ -54,6 +55,12 @@ const courseSchema = new Schema(
       {
         type: "ObjectId",
         ref: "Group",
+      },
+    ],
+    comments: [
+      {
+        type: "ObjectId",
+        ref: "Comment",
       },
     ],
     category: {

@@ -1,7 +1,7 @@
 import { NextFunction, RequestHandler, Response } from "express";
 import httpStatus from "http-status";
 import { Query, Params, Request } from "../configs/types";
-import { Chapter, Course, User } from "../models";
+import { Chapter, Comment, Course, User } from "../models";
 import APIError from "../utils/APIError";
 import { pageParams } from ".";
 export type IRequestCreateCourse = {
@@ -38,6 +38,12 @@ export type IUpdate = {
 export type IGetByRole = {
   role?: string;
   courseId?: string;
+};
+export type IComment = {
+  course: string;
+  rating: number;
+  comment: string;
+  user: string;
 };
 export default class CourseApi {
   static create = async (
@@ -129,6 +135,16 @@ export default class CourseApi {
         {
           path: "users",
           select: "",
+        },
+        {
+          path: "comments",
+          select: "",
+          populate: [
+            {
+              path: "user",
+              select: "",
+            },
+          ],
         },
         {
           path: "sections",
@@ -310,9 +326,10 @@ export default class CourseApi {
     next: NextFunction
   ) => {
     try {
-      const { limit, skip } = req.query;
-      const count = await Course.find({});
-      const courses = await Course.find({})
+      const { limit, skip, text, category } = req.query;
+      const search = !!category ? { category: category } : {};
+      console.log(search);
+      const courses = await Course.find(search)
         .limit(parseInt(limit as string))
         .skip(parseInt(skip as string))
         .sort({ createdAt: -1 })
@@ -328,6 +345,16 @@ export default class CourseApi {
           {
             path: "category",
             select: "",
+          },
+          {
+            path: "comments",
+            select: "",
+            populate: [
+              {
+                path: "user",
+                select: "",
+              },
+            ],
           },
           {
             path: "sections",
@@ -352,11 +379,42 @@ export default class CourseApi {
             select: "",
           },
         ]);
+      let rs = courses;
+      if (!!text) {
+        rs = rs?.filter((item) => {
+          return !!item?.name
+            ?.toUpperCase()
+            ?.includes((text as string)?.toUpperCase());
+        });
+      }
       res
         .json({
-          courses: courses,
+          courses: rs,
           status: 200,
-          count: count?.length,
+          count: rs?.length,
+        })
+        .status(httpStatus.OK);
+    } catch (error) {
+      next(error);
+    }
+  };
+  static postComment = async (
+    req: Request<IComment, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { course, user, ...other } = req.body;
+      const comment = await Comment.create(req.body);
+      await Course.findByIdAndUpdate(course, {
+        $push: {
+          comments: comment?._id,
+        },
+      });
+      res
+        .json({
+          data: comment,
+          status: 200,
         })
         .status(httpStatus.OK);
     } catch (error) {

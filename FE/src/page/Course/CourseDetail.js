@@ -1,19 +1,31 @@
 /* eslint-disable no-script-url */
-import { useQuery } from "@tanstack/react-query";
-import React, { useContext } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useContext, useMemo, useState } from "react";
 import { getCourse } from "../../hook/LessionHook";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import HeaderAppBar from "../Header/AppBar";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Groups2Icon from "@mui/icons-material/Groups2";
-import { Button, Divider } from "@mui/material";
+import { Avatar, Button, Divider, Rating } from "@mui/material";
 import { AppContextProvider } from "../../Context/AppContext";
-
+import CourseComment from "./CourseComment";
+import { Col, Form, Row } from "react-bootstrap";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Typography from "@mui/material/Typography";
+import { postComment } from "../../hook/LessionHook";
+import { Empty } from "antd";
+import { openNotification } from "../../Notification";
 const CourseDetail = () => {
   const { id } = useParams();
   const { data } = useQuery(["course_detail", id], getCourse);
-  console.log(data);
+  const onChangeForm = (e) => {
+    setFormvalue({ ...formValue, [e.target.name]: e.target.value });
+  };
+  const { data: user } = useQuery(["user"]);
   const naviagate = useNavigate();
   const { cart, setCart } = useContext(AppContextProvider);
   const handleCourse = () => {
@@ -23,6 +35,49 @@ const CourseDetail = () => {
     }
     naviagate("/checkout");
   };
+  const queryClient = useQueryClient();
+  const [formValue, setFormvalue] = useState({
+    comment: "",
+    rating: 0,
+  });
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const res = await postComment({
+      rating: formValue?.rating,
+      comment: formValue?.comment,
+      course: id,
+      user: user?.user?._id,
+    });
+    if (res?._id) {
+      queryClient.invalidateQueries(["course_detail", id]);
+      openNotification({
+        type: "success",
+        message: "Cảm ơn vì đánh giá khóa học",
+      });
+    }
+  };
+
+  const ratingCount = useMemo(() => {
+    const countByrating =
+      data?.comments?.reduce((acc, obj) => {
+        const rating = obj.rating;
+        acc[rating] = (acc[rating] || 0) + 1;
+        return acc;
+      }, {}) || {};
+    return countByrating;
+  }, [data?.comments]);
+
+  const ratingAverage = useMemo(() => {
+    const countByrating =
+      data?.comments?.reduce((acc, obj) => {
+        return acc + (!!obj?.rating ? parseInt(obj?.rating) : 0);
+      }, 0) || 0;
+    return !!data?.comments?.length
+      ? countByrating / data?.comments?.length
+      : 0;
+  }, [data?.comments]);
+
   return (
     <>
       <HeaderAppBar></HeaderAppBar>
@@ -60,13 +115,24 @@ const CourseDetail = () => {
                   <div className="course-detail-bx">
                     <div className="course-price">
                       {data?.discount ? (
-                        <del>{data?.discount}&#x20AB;</del>
+                        <del>
+                          {!!data?.discount
+                            ? (data?.price - data?.discount)?.toLocaleString(
+                                "en-US"
+                              )
+                            : 0}
+                          &#x20AB;
+                        </del>
                       ) : (
                         <></>
                       )}
 
-                      <h4 className="price">
-                        {data?.price ? <>{data?.price} &#x20AB;</> : "Miễn phí"}
+                      <h4 className="ms-1 price">
+                        {data?.price ? (
+                          <>{data?.price?.toLocaleString("en-US")} &#x20AB;</>
+                        ) : (
+                          "Miễn phí"
+                        )}
                       </h4>
                     </div>
                     <div className="course-buy-now text-center">
@@ -90,34 +156,18 @@ const CourseDetail = () => {
                         </div>
                         <div className="teacher-name">
                           <h5>Giảng viên</h5>
-                          <span>Science Teacher</span>
+                          <span>{data?.owner?.fullName}</span>
                         </div>
                       </div>
                     </div>
                     <div className="cours-more-info">
                       <div className="review">
-                        <span>3 Review</span>
-                        <ul className="cours-star">
-                          <li className="active">
-                            <i className="fa fa-star" />
-                          </li>
-                          <li className="active">
-                            <i className="fa fa-star" />
-                          </li>
-                          <li className="active">
-                            <i className="fa fa-star" />
-                          </li>
-                          <li>
-                            <i className="fa fa-star" />
-                          </li>
-                          <li>
-                            <i className="fa fa-star" />
-                          </li>
-                        </ul>
+                        <span>{!!data?.comments?.length || 0} Đánh giá</span>
+                        <Rating value={ratingAverage} />
                       </div>
                       <div className="price categories">
-                        <span>Categories</span>
-                        <h5 className="text-primary">Frontend</h5>
+                        <span>Thể loại</span>
+                        <h5 className="text-primary">{data?.category?.name}</h5>
                       </div>
                     </div>
                   </div>
@@ -320,8 +370,8 @@ const CourseDetail = () => {
                         <img src="assets/images/testimonials/pic1.jpg" alt="" />
                       </div>
                       <div className="instructor-info">
-                        <h6>Giảng viên 1 </h6>
-                        <span>Professor</span>
+                        <h6>{data?.owner?.fullName}</h6>
+                        <span>{data?.owner?.email}</span>
                         <ul className="list-inline m-tb10">
                           <li>
                             <a href="#" className="btn sharp-sm facebook">
@@ -356,95 +406,54 @@ const CourseDetail = () => {
                     </div>
                   </div>
                   <div className="" id="reviews">
-                    <h4>Reviews</h4>
+                    <h4>Đánh giá</h4>
                     <div className="review-bx">
                       <div className="all-review">
-                        <h2 className="rating-type">3</h2>
-                        <ul className="cours-star">
-                          <li className="active">
-                            <i className="fa fa-star" />
-                          </li>
-                          <li className="active">
-                            <i className="fa fa-star" />
-                          </li>
-                          <li className="active">
-                            <i className="fa fa-star" />
-                          </li>
-                          <li>
-                            <i className="fa fa-star" />
-                          </li>
-                          <li>
-                            <i className="fa fa-star" />
-                          </li>
-                        </ul>
-                        <span>3 Rating</span>
+                        <h2
+                          className="rating-type text-primary"
+                          style={{
+                            fontWeight: 800,
+                          }}
+                        >
+                          {data?.comments?.length || 0}
+                        </h2>
+                        <p>
+                          <Rating readOnly value={ratingAverage} size="large" />
+                        </p>
+                        <span> {data?.comments?.length || 0} đánh giá</span>
                       </div>
                       <div className="review-bar">
-                        <div className="bar-bx">
-                          <div className="side">
-                            <div>5 star</div>
-                          </div>
-                          <div className="middle">
-                            <div className="bar-container">
-                              <div className="bar-5" style={{ width: "90%" }} />
+                        {[5, 4, 3, 2, 1]?.map((i) => (
+                          <div className="bar-bx" key={"process" + i}>
+                            <div className="side">
+                              <div>{i} sao</div>
+                            </div>
+                            <div className="middle">
+                              <div className="bar-container">
+                                <div
+                                  className="bar-5"
+                                  style={{
+                                    width: `${
+                                      !!data?.comments?.length &&
+                                      !!ratingCount[i]
+                                        ? (ratingCount[i] * 100) /
+                                          data?.comments?.length
+                                        : 0
+                                    }%`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <div
+                              className="side right font-bold"
+                              style={{
+                                fontWeight: 700,
+                              }}
+                            >
+                              <div>{ratingCount[i] || 0}</div>
                             </div>
                           </div>
-                          <div className="side right">
-                            <div>150</div>
-                          </div>
-                        </div>
-                        <div className="bar-bx">
-                          <div className="side">
-                            <div>4 star</div>
-                          </div>
-                          <div className="middle">
-                            <div className="bar-container">
-                              <div className="bar-5" style={{ width: "70%" }} />
-                            </div>
-                          </div>
-                          <div className="side right">
-                            <div>140</div>
-                          </div>
-                        </div>
-                        <div className="bar-bx">
-                          <div className="side">
-                            <div>3 star</div>
-                          </div>
-                          <div className="middle">
-                            <div className="bar-container">
-                              <div className="bar-5" style={{ width: "50%" }} />
-                            </div>
-                          </div>
-                          <div className="side right">
-                            <div>120</div>
-                          </div>
-                        </div>
-                        <div className="bar-bx">
-                          <div className="side">
-                            <div>2 star</div>
-                          </div>
-                          <div className="middle">
-                            <div className="bar-container">
-                              <div className="bar-5" style={{ width: "40%" }} />
-                            </div>
-                          </div>
-                          <div className="side right">
-                            <div>110</div>
-                          </div>
-                        </div>
-                        <div className="bar-bx">
-                          <div className="side">
-                            <div>1 star</div>
-                          </div>
-                          <div className="middle">
-                            <div className="bar-container">
-                              <div className="bar-5" style={{ width: "20%" }} />
-                            </div>
-                          </div>
-                          <div className="side right">
-                            <div>80</div>
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -453,6 +462,125 @@ const CourseDetail = () => {
             </div>
           </div>
         </div>
+        <Row
+          id="tab3"
+          className="pt-5 p-3 pb-5 cmt mt-5"
+          style={{ backgroundColor: "#e9eef5", borderRadius: "25px" }}
+        >
+          <hr />
+          <Col>
+            <Row>
+              <div className="h2 mb-5 text-primary">Đánh giá</div>{" "}
+            </Row>
+
+            <Row className="p-3">
+              <List
+                sx={{
+                  width: "100%",
+                  maxHeight: "500px",
+                  overflowY: "auto",
+                  bgcolor: "background.paper",
+                }}
+              >
+                {!!data?.comments?.length ? (
+                  data?.comments?.map((comment) => (
+                    <div key={comment?._id}>
+                      <ListItem alignItems="flex-start">
+                        <ListItemAvatar>
+                          <Avatar
+                            alt="Travis Howard"
+                            src={comment?.user?.avatar || "../images/user.png"}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={[
+                            <p> {comment?.user?.fullName}</p>,
+                            <Rating
+                              name="read-only"
+                              value={comment?.rating}
+                              readOnly
+                              color="#1976d2"
+                            />,
+                          ]}
+                          secondary={
+                            <React.Fragment>
+                              <Typography
+                                sx={{ display: "inline" }}
+                                component="span"
+                                variant="body2"
+                                color="text.primary"
+                              >
+                                {comment?.comment}
+                              </Typography>
+                            </React.Fragment>
+                          }
+                        />
+                      </ListItem>
+                      <Divider variant="inset" component="li" />
+                    </div>
+                  ))
+                ) : (
+                  <Empty />
+                )}
+              </List>
+            </Row>
+          </Col>
+
+          <Col className="">
+            <Row>
+              {" "}
+              <div className="h2 mb-5 text-primary">Đánh giá khóa học này</div>
+            </Row>
+            <Row>
+              <Form onSubmit={submitHandler} className="w-100">
+                <Form.Group className="mb-3" controlId="custom4">
+                  <Form.Label className="text-primary h5">
+                    Xếp hạng đánh giá
+                  </Form.Label>
+                  <Form.Control
+                    onChange={onChangeForm}
+                    name="rating"
+                    form="add"
+                    as="select"
+                    placeholder="Rating"
+                    value={formValue.rating}
+                    className="w-100"
+                    required
+                  >
+                    <option value="">Chọn sao...</option>
+                    <option value="1">1- Rất Tệ</option>
+                    <option value="2">2- Tệ</option>
+                    <option value="3">3- Khá Tốt</option>
+                    <option value="4">4- Rất tốt</option>
+                    <option value="5">5- Xuất sắc</option>
+                  </Form.Control>
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="custom5">
+                  <Form.Label className="text-primary h5">Bình luận</Form.Label>
+                  <Form.Control
+                    required
+                    as="textarea"
+                    rows={3}
+                    name="comment"
+                    value={formValue.comment}
+                    onChange={onChangeForm}
+                    placeholder="Nhap Comment"
+                  />
+                </Form.Group>
+
+                <Button
+                  className="w-100"
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                >
+                  Gởi
+                </Button>
+              </Form>
+            </Row>
+          </Col>
+        </Row>
+
         {/* contact area END */}
       </div>
       {/* Content END*/}

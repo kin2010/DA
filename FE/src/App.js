@@ -28,6 +28,7 @@ import Dashboard from "./Admin/component/Dashboard";
 import ManagerCourse from "./Admin/component/ManageCourse/ManageCourse";
 import ManagerOrder from "./Admin/component/ManagerOrder/ManagerOrder";
 import ManagerCategory from "./Admin/component/ManagerCategory/ManagerCategory";
+import Profile from "./page/Profile/Profile";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
@@ -73,10 +74,15 @@ function App() {
                   }
                 ></Route>
               </Route>
-              {/* <Route exact path="/c" element={<Ca />}></Route>
-              <Route path="/peer" element={<PeerCall />}>
-                <Route exact path="/peer" element={<Meeting />}></Route>
-              </Route> */}
+              <Route
+                exact
+                path="/teacher"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route path="/group">
                 <Route exact path=":id" element={<GroupDetail />}></Route>
               </Route>

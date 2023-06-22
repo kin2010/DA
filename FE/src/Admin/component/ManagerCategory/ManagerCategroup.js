@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Col,
@@ -5,20 +6,25 @@ import {
   Empty,
   Input,
   Pagination,
+  Popconfirm,
   Row,
+  Select,
   Space,
   Table,
 } from "antd";
 import { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  addCategory,
+  addCategoryGroup,
   adminGetAllCategory,
   adminGetAllCategoryGroup,
+  deleteDocument,
   getAllOrder,
 } from "../../../hook/LessionHook";
 import { format } from "date-fns";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, Typography } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Dialog from "@mui/material/Dialog";
@@ -28,8 +34,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 import IconBreadcrumbs from "../BreadCrumb";
+import { Formik } from "formik";
+import { createAssignmentSchema } from "../../../Validation/CourseCreate";
+import FormControl from "../../../component/FormControl";
+import { openNotification } from "../../../Notification";
 const ManageCategoryGroup = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [queryparams, setQueryparams] = useState({
     // limit: 10,
@@ -211,133 +222,102 @@ const ManageCategoryGroup = () => {
       sortDirections: ["descend", "ascend"],
       render: (order) => (
         <>
-          {/* <span
-            className="me-2"
-            onClick={() => {
-              setSelectedOrder(order);
-              setOpen(true);
-            }}
+          <Popconfirm
+            title="Xác nhận"
+            description="Bạn chắc chắn muốn xóa ?"
+            onConfirm={() => handleRemove(order?._id)}
+            onOpenChange={() => console.log("open change")}
           >
-            <RemoveRedEyeIcon color="primary" />
-          </span> */}
-          <span>
-            <DeleteIcon color="error" />
-          </span>
+            <span>
+              <DeleteIcon color="error" />
+            </span>
+          </Popconfirm>
         </>
       ),
     },
   ];
+
+  const handleSubmit = async (value) => {
+    console.log(value);
+    const res = await addCategoryGroup({
+      ...value,
+    });
+
+    if (res?._id) {
+      openNotification({
+        type: "success",
+        message: "Thêm thành công",
+      });
+      queryClient.invalidateQueries(["admin_category_group", queryparams]);
+    }
+    handleClose();
+  };
+
+  const handleRemove = async (id) => {
+    const res = await deleteDocument({
+      id: id,
+      type: "category-group",
+    });
+    if (res?.deletedCount === 1) {
+      openNotification({
+        type: "success",
+        message: "Xóa thành công",
+      });
+      setTimeout(() => {
+        queryClient.invalidateQueries(["admin_category_group", queryparams]);
+      }, 2000);
+    }
+  };
   return (
     <>
-      <Dialog
-        maxWidth={1000}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+      <Formik
+        initialValues={{
+          name: "",
+        }}
+        validationSchema={createAssignmentSchema}
+        onSubmit={(value) => handleSubmit(value)}
       >
-        <DialogTitle id="alert-dialog-title">{"Chi tiết hóa đơn"}</DialogTitle>
-        <DialogContent>
-          <strong> Người đặt :</strong>
-          {!!selectedOrder && (
-            <>
-              <Row>
-                <Col xs={6}>
-                  <div className="d-flex align-items-center mt-2">
-                    <Avatar
-                      alt="User"
-                      src={selectedOrder?.user?.avatar}
-                      //   sx={{ width: 90, height: 90 }}
-                    />
-                    <h6 className="ms-5">{selectedOrder?.user?.fullName}</h6>
-                  </div>
-                </Col>
-              </Row>
-              <div className="mt-2">
-                <strong>Tổng thanh toán : </strong>
-                {selectedOrder?.total || 0}₫{" "}
-              </div>
-              <div className="mt-2">
-                <strong> Ngày mua : </strong>
-                {format(new Date(selectedOrder?.createdAt), "yyyy-MM-dd hh:mm")}
-              </div>
-            </>
-          )}
-          <Divider />
-          <div>
-            {!!selectedOrder?.courses?.length ? (
-              selectedOrder?.courses?.map((cart) => (
-                <div key={cart?._id}>
-                  <div className="card-courses-list bookmarks-bx">
-                    <div
-                      className="card-courses-media"
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        minWidth: "60px",
-                      }}
-                    >
-                      <img
-                        src={cart?.thumbnai || "../images/course.jpg"}
-                        alt=""
-                      />
-                    </div>
-                    <div className="card-courses-full-dec">
-                      <div className="card-courses-title">
-                        <h4 className="m-b5">{cart?.name}</h4>
-                      </div>
-                      <div className="card-courses-list-bx">
-                        <ul className="card-courses-view">
-                          <li className="card-courses-categories">
-                            <h5>Thể loại</h5>
-                            <h4>{cart?.category}</h4>
-                          </li>
-                          <li className="card-courses-review">
-                            <h5>3 Review</h5>
-                            <ul className="cours-star">
-                              <li className="active">
-                                <i className="fa fa-star" />
-                              </li>
-                              <li className="active">
-                                <i className="fa fa-star" />
-                              </li>
-                              <li className="active">
-                                <i className="fa fa-star" />
-                              </li>
-                              <li>
-                                <i className="fa fa-star" />
-                              </li>
-                              <li>
-                                <i className="fa fa-star" />
-                              </li>
-                            </ul>
-                          </li>
-                          <li className="card-courses-price">
-                            <del>{cart?.discount || 0}₫</del>
-                            {cart?.price && (
-                              <h5 className="text-primary m-b0">
-                                {cart?.price}₫
-                              </h5>
-                            )}
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <Empty></Empty>
-            )}
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleClose} autoFocus>
-            Thoát
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <h4> Quản lí nhóm thể loại</h4>
+        {(props) => (
+          <Dialog
+            maxWidth={1000}
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Thêm nhóm thể loại"}
+            </DialogTitle>
+            <form onSubmit={props.handleSubmit}>
+              <DialogContent>
+                <strong> Người đặt :</strong>
+                <FormControl label={"Tên thể loại"} name={"name"}></FormControl>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="outlined" onClick={handleClose} autoFocus>
+                  Thoát
+                </Button>
+                <Button variant="contained" type="submit" autoFocus>
+                  Thêm
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+        )}
+      </Formik>
+      <Typography variant="h5" className="mb-5" color="primary">
+        Quản lí thể loại
+      </Typography>
+      <Button
+        className="mb-3"
+        variant="contained"
+        onClick={() => {
+          setOpen(true);
+        }}
+        autoFocus
+      >
+        Thêm
+      </Button>
       <Table
         columns={columns}
         dataSource={data}

@@ -25,7 +25,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import WebIcon from "@mui/icons-material/Web";
 import { USER_ROLE } from "../../Context/constant";
 import { ROLE_ID } from "../../ultis/PrivateRoute";
-
+import Person3Icon from "@mui/icons-material/Person3";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -227,16 +227,6 @@ export default function HeaderAppBar({ isAdmin }) {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            {/* <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
-            >
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            <ShoppingCartIcon></ShoppingCartIcon>
-            </IconButton> */}
             {!isLoading && (
               <>
                 {!!data?.user ? (
@@ -247,9 +237,16 @@ export default function HeaderAppBar({ isAdmin }) {
                         aria-label="show 17 new notifications"
                         color="inherit"
                       >
-                        <Badge badgeContent={17} color="error">
-                          <NotificationsIcon />
-                        </Badge>
+                        <Person3Icon />
+                        <Link
+                          to="/teacher"
+                          style={{
+                            fontSize: "20px",
+                          }}
+                          className="white"
+                        >
+                          Trang giáo viên
+                        </Link>
                       </IconButton>
                     )}
                     <IconButton

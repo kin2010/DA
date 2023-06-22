@@ -97,6 +97,7 @@ body {
 }
 a {
   color: #616161 !important;
+  text-decoration: none !important;
 }
 a:hover {
   color: #1890ff !important;
@@ -121,10 +122,18 @@ a:hover {
 .ant-comment {
   background-color: unset !important;
 }
-.MuiPopover-paper {
-  /* top: 167px !important;
-  left: 1440px !important; */
-}
 .ant-menu-item {
   margin-bottom: 20px !important;
+}
+.ant-divider {
+  border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+.css-1hju3x6-MuiPaper-root-MuiDialog-paper {
+  min-width: 600px;
+}
+.css-ryrseu-MuiRating-root {
+  color: #1890ff !important;
+}
+.css-dqr9h-MuiRating-label {
+  color: #1890ff !important;
 }

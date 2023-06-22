@@ -36,3 +36,6 @@ export type { IGroup } from "./group";
 
 export { default as Order } from "./order";
 export type { IOrder } from "./order";
+
+export { default as Comment } from "./comment";
+export type { IComment } from "./comment";

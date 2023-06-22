@@ -502,3 +502,60 @@ export const adminGetAllCategoryGroup = async ({ queryKey }) => {
   });
   return data;
 };
+
+export const addCategory = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/category",
+    method: "POST",
+    data: body,
+  });
+  return data;
+};
+
+export const addCategoryGroup = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/categorygroup",
+    method: "POST",
+    data: body,
+  });
+  return data;
+};
+
+export const deleteDocument = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/delete",
+    method: "DELETE",
+    params: body,
+  });
+  return data;
+};
+
+export const postComment = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/course/comment",
+    method: "POST",
+    data: body,
+  });
+  return data;
+};
+
+// export const useCategoryGroupService=()=>{
+//   const addCateGroupMutation = useMutation(updateGroup, {
+//     onSuccess: (data) => {
+//       if (!data?.message) {
+//         queryClient.invalidateQueries(["course", id]);
+//       }
+//     },
+//     onError: (error) => {
+//       console.log(error);
+//     },
+//   });
+
+//   return {
+//     // addCourse: async (body) => {
+//     //   return addCourseMutation.mutateAsync({ ...body });
+//     // },
+//     updateCourse: async (body) => {
+//       return await updatedCourseMutation.mutateAsync({ ...body });
+//     }}
+// }

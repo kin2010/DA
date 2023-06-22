@@ -1,10 +1,10 @@
 import * as Yup from "yup";
 
 export const courseCreateSchema = Yup.object({
-  name: Yup.string().min(3).required(),
-  target: Yup.string().required(),
-  requirement: Yup.string().required(),
-  description: Yup.string().required(),
+  name: Yup.string().min(3).required("Tên khóa học không được để trống"),
+  target: Yup.string().required("Nhập mục tiêu khóa học"),
+  requirement: Yup.string().required("Nhập yêu cầu khóa học"),
+  description: Yup.string().required("Nhập mô tả"),
 });
 
 export const createLectureSchema = Yup.object({
@@ -26,4 +26,9 @@ export const createScheduleSchema = Yup.object({
   description: Yup.string().required(),
   start_time: Yup.string().required(),
   end_time: Yup.string().required(),
+});
+
+export const createCategorySchema = Yup.object({
+  name: Yup.string().min(3).required(),
+  group: Yup.string().min(3).required(),
 });

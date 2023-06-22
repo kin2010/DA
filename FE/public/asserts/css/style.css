@@ -2045,7 +2045,6 @@ button.back-to-top {
 }
 .cours-more-info .review span {
   font-size: 12px;
-  color: #3c3c3c;
 }
 .cours-more-info .price del {
   font-size: 12px;
@@ -3001,7 +3000,8 @@ button.back-to-top {
 }
 .course-cr .col-form-label {
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 600;
+  margin-top: 20px;
 }
 .course-cr {
   padding: 30px;

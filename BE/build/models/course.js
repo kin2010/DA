@@ -30,6 +30,12 @@ var courseSchema = new mongoose_1.Schema({
             ref: "Group",
         },
     ],
+    comments: [
+        {
+            type: "ObjectId",
+            ref: "Comment",
+        },
+    ],
     category: {
         type: "ObjectId",
         ref: "Category",

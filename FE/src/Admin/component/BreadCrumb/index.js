@@ -11,7 +11,7 @@ function handleClick(event) {
   console.info("You clicked a breadcrumb.");
 }
 
-export default function IconBreadcrumbs() {
+export default function IconBreadcrumbs({ t1, t2, l1, l2 }) {
   return (
     <div className="db-breadcrumb">
       <div role="presentation" onClick={handleClick}>
@@ -20,19 +20,19 @@ export default function IconBreadcrumbs() {
             underline="hover"
             sx={{ display: "flex", alignItems: "center" }}
             color="inherit"
-            href="/"
+            href={l1 || "/"}
           >
             <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            Admin
+            {t1 || "Admin"}
           </Link>
           <Link
             underline="hover"
             sx={{ display: "flex", alignItems: "center" }}
             color="inherit"
-            href="/material-ui/getting-started/installation/"
+            href={l2 || "#"}
           >
             <WhatshotIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            Trang chủ
+            {t2 || "Trang chủ"}
           </Link>
         </Breadcrumbs>
       </div>

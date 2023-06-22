@@ -226,6 +226,41 @@ var RoleService = /** @class */ (function () {
             }
         });
     }); };
+    RoleService.deleteDocument = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, type, id, rs, _c, error_7;
+        return __generator(_a, function (_d) {
+            switch (_d.label) {
+                case 0:
+                    _d.trys.push([0, 7, , 8]);
+                    _b = req.query, type = _b.type, id = _b.id;
+                    console.log(req.query);
+                    rs = void 0;
+                    _c = type;
+                    switch (_c) {
+                        case "category": return [3 /*break*/, 1];
+                        case "category-group": return [3 /*break*/, 3];
+                    }
+                    return [3 /*break*/, 5];
+                case 1: return [4 /*yield*/, models_1.Category.deleteOne({ _id: id })];
+                case 2:
+                    rs = _d.sent();
+                    return [3 /*break*/, 6];
+                case 3: return [4 /*yield*/, models_1.CategoryGroup.deleteOne({ _id: id })];
+                case 4:
+                    rs = _d.sent();
+                    return [3 /*break*/, 6];
+                case 5: return [3 /*break*/, 6];
+                case 6:
+                    res.json({ data: rs, status: 200 }).end();
+                    return [3 /*break*/, 8];
+                case 7:
+                    error_7 = _d.sent();
+                    next(error_7);
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
+            }
+        });
+    }); };
     return RoleService;
 }());
 exports.default = RoleService;

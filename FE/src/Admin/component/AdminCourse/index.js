@@ -89,7 +89,6 @@ export default function AdminCourse() {
   };
 
   const onSubmit = async (value) => {
-    console.log(22, courseData);
     if (!!courseData?.data?._id) {
       const res = await courseService.updateCourse({
         id: courseData?.data?._id,
@@ -132,11 +131,15 @@ export default function AdminCourse() {
 
   return (
     <>
-      <HeaderAppBar />
+      {/* <HeaderAppBar /> */}
       <Container>
         <main className="ttr-wrapper">
           <div className="container-fluid">
-            <IconBreadcrumbs></IconBreadcrumbs>
+            <IconBreadcrumbs
+              t1="Giảng viên"
+              t2="Tạo khóa học"
+              l1="/teacher"
+            ></IconBreadcrumbs>
             <div className="row">
               <div className="col-lg-12 m-b30">
                 <div className="widget-box">

@@ -46,6 +46,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -155,6 +166,16 @@ var CourseApi = /** @class */ (function () {
                             {
                                 path: "users",
                                 select: "",
+                            },
+                            {
+                                path: "comments",
+                                select: "",
+                                populate: [
+                                    {
+                                        path: "user",
+                                        select: "",
+                                    },
+                                ],
                             },
                             {
                                 path: "sections",
@@ -348,16 +369,15 @@ var CourseApi = /** @class */ (function () {
         });
     }); };
     CourseApi.allCourse = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, limit, skip, count, courses, error_5;
+        var _b, limit, skip, text_1, category, search, courses, rs, error_5;
         return __generator(_a, function (_c) {
             switch (_c.label) {
                 case 0:
-                    _c.trys.push([0, 3, , 4]);
-                    _b = req.query, limit = _b.limit, skip = _b.skip;
-                    return [4 /*yield*/, models_1.Course.find({})];
-                case 1:
-                    count = _c.sent();
-                    return [4 /*yield*/, models_1.Course.find({})
+                    _c.trys.push([0, 2, , 3]);
+                    _b = req.query, limit = _b.limit, skip = _b.skip, text_1 = _b.text, category = _b.category;
+                    search = !!category ? { category: category } : {};
+                    console.log(search);
+                    return [4 /*yield*/, models_1.Course.find(search)
                             .limit(parseInt(limit))
                             .skip(parseInt(skip))
                             .sort({ createdAt: -1 })
@@ -373,6 +393,16 @@ var CourseApi = /** @class */ (function () {
                             {
                                 path: "category",
                                 select: "",
+                            },
+                            {
+                                path: "comments",
+                                select: "",
+                                populate: [
+                                    {
+                                        path: "user",
+                                        select: "",
+                                    },
+                                ],
                             },
                             {
                                 path: "sections",
@@ -397,19 +427,58 @@ var CourseApi = /** @class */ (function () {
                                 select: "",
                             },
                         ])];
-                case 2:
+                case 1:
                     courses = _c.sent();
+                    rs = courses;
+                    if (!!text_1) {
+                        rs = rs === null || rs === void 0 ? void 0 : rs.filter(function (item) {
+                            var _b, _c;
+                            return !!((_c = (_b = item === null || item === void 0 ? void 0 : item.name) === null || _b === void 0 ? void 0 : _b.toUpperCase()) === null || _c === void 0 ? void 0 : _c.includes(text_1 === null || text_1 === void 0 ? void 0 : text_1.toUpperCase()));
+                        });
+                    }
                     res
                         .json({
-                        courses: courses,
+                        courses: rs,
                         status: 200,
-                        count: count === null || count === void 0 ? void 0 : count.length,
+                        count: rs === null || rs === void 0 ? void 0 : rs.length,
+                    })
+                        .status(http_status_1.default.OK);
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_5 = _c.sent();
+                    next(error_5);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+    CourseApi.postComment = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, course, user, other, comment, error_6;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 3, , 4]);
+                    _b = req.body, course = _b.course, user = _b.user, other = __rest(_b, ["course", "user"]);
+                    return [4 /*yield*/, models_1.Comment.create(req.body)];
+                case 1:
+                    comment = _c.sent();
+                    return [4 /*yield*/, models_1.Course.findByIdAndUpdate(course, {
+                            $push: {
+                                comments: comment === null || comment === void 0 ? void 0 : comment._id,
+                            },
+                        })];
+                case 2:
+                    _c.sent();
+                    res
+                        .json({
+                        data: comment,
+                        status: 200,
                     })
                         .status(http_status_1.default.OK);
                     return [3 /*break*/, 4];
                 case 3:
-                    error_5 = _c.sent();
-                    next(error_5);
+                    error_6 = _c.sent();
+                    next(error_6);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

@@ -123,7 +123,7 @@ const HomeLayout = () => {
             </div>
           </div>
         </div>
-        <div className="section-area section-sp2">
+        {/* <div className="section-area section-sp2">
           <div className="container">
             <div className="row">
               <div className="col-md-12 text-center heading-bx">
@@ -254,7 +254,7 @@ const HomeLayout = () => {
               </a>
             </div>
           </div>
-        </div>
+        </div> */}
         {/* Testimonials */}
         <div
           className="section-area section-sp2 bg-fix ovbl-dark"
