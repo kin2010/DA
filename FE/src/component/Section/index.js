@@ -5,42 +5,91 @@ import ReorderIcon from "@mui/icons-material/Reorder";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import { Empty } from "antd";
+import { Empty, Popconfirm } from "antd";
 import SectionAdd from "./SectionAdd";
 import LectureAdd from "../Lecture/Lecture";
 import AssignmentAdd from "../Assigment/AssignmentAdd";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import { openNotification } from "../../Notification";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCourseService } from "../../hook/LessionHook";
 const Section = ({ propData }) => {
+  const queryClient = useQueryClient();
+  const courseService = useCourseService();
   const [showEdit, setShowEdit] = useState(false);
   const [showLecture, setShowLecture] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [showAssessment, setShowAssessment] = useState(false);
+  const [lectureUpdateId, setLectureUpdateId] = useState();
+  const [assignmentUpdateId, setAssignmentUpdateId] = useState();
+  const [isEdit, setIsEdit] = useState(false);
+  const [isEditAssigment, setIsEditassignment] = useState(false);
   const edit = () => {
     setShowEdit(!showEdit);
   };
 
-  const remove = () => {};
-
   const handleShow = (tab) => {
     if (tab === "1") {
+      setIsEdit(false);
       setShowLecture(true);
     } else if (tab === "3") {
+      setIsEdit(false);
       setShowAssessment(true);
     }
   };
-
+  const remove = async (id) => {
+    const res = await courseService.deleteGroupMutation({
+      id: id,
+      type: "section",
+    });
+    if (res?.deletedCount === 1) {
+      openNotification({
+        type: "success",
+        message: "Xóa thành công",
+      });
+    }
+  };
+  const removeLecture = async (type, id) => {
+    console.log(type, id);
+    const res = await courseService.deleteGroupMutation({
+      id: id,
+      type: type,
+    });
+    if (res?.deletedCount === 1) {
+      openNotification({
+        type: "success",
+        message: "Xóa thành công",
+      });
+    }
+  };
+  const editLecture = (type, id) => {
+    if (type === "lecture") {
+      setShowLecture(true);
+      setLectureUpdateId(id);
+      setIsEdit(true);
+    }
+    if (type === "assignment") {
+      setShowAssessment(true);
+      setAssignmentUpdateId(id);
+      setIsEditassignment(true);
+    }
+  };
   return (
     <>
       <LectureAdd
         section={propData?.section}
         open={showLecture}
         setOpen={setShowLecture}
+        isEdit={isEdit}
+        lectureUpdateId={lectureUpdateId}
       />
       <AssignmentAdd
         section={propData?.section}
         open={showAssessment}
         setOpen={setShowAssessment}
+        isEdit={isEditAssigment}
+        assignmentUpdateId={assignmentUpdateId}
       />
       <div>
         <div
@@ -68,7 +117,16 @@ const Section = ({ propData }) => {
               style={{ gap: "0 10px", marginLeft: "auto" }}
             >
               <EditNoteIcon onClick={edit} color="primary"></EditNoteIcon>
-              <DeleteSweepIcon onClick={remove} color="error"></DeleteSweepIcon>
+              <Popconfirm
+                title="Xác nhận"
+                description="Bạn chắc chắn muốn xóa ?"
+                onConfirm={() => remove(propData?.section?._id)}
+                onOpenChange={() => console.log("open change")}
+              >
+                <span>
+                  <DeleteSweepIcon color="error"></DeleteSweepIcon>
+                </span>
+              </Popconfirm>
             </div>
           </div>
           <Divider></Divider>
@@ -110,13 +168,23 @@ const Section = ({ propData }) => {
                       style={{ gap: "0 10px" }}
                     >
                       <EditNoteIcon
-                        onClick={edit}
+                        onClick={() =>
+                          editLecture(value?.type, value?.item?._id)
+                        }
                         color="primary"
                       ></EditNoteIcon>
-                      <DeleteSweepIcon
-                        onClick={remove}
-                        color="error"
-                      ></DeleteSweepIcon>
+                      <Popconfirm
+                        title="Xác nhận"
+                        description="Bạn chắc chắn muốn xóa ?"
+                        onConfirm={() =>
+                          removeLecture(value?.type, value?.item?._id)
+                        }
+                        onOpenChange={() => console.log("open change")}
+                      >
+                        <span>
+                          <DeleteSweepIcon color="error"></DeleteSweepIcon>
+                        </span>
+                      </Popconfirm>
                     </div>
                   </div>
                 ))}

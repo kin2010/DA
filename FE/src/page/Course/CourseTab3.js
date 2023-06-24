@@ -9,11 +9,15 @@ import FileUpload from "../../component/FileUpload/FileUpload";
 import { Formik } from "formik";
 import { useCourseService } from "../../hook/LessionHook";
 import { openNotification } from "../../Notification";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CourseTab3 = ({ setStep, step }) => {
   const [fileList, setFileList] = useState([]);
   const courseService = useCourseService();
   const courseId = sessionStorage.getItem("new_course");
+  const queryClient = useQueryClient();
+  const data = courseService.get();
+  console.log(data, 23323);
   const handeAddLessonSumbit = async (value) => {
     console.log(value);
     const res = await courseService.updateCourse({
@@ -74,7 +78,6 @@ const CourseTab3 = ({ setStep, step }) => {
                   ></FileUpload>
                 </div>
               </div>
-              <div className="form-group col-6"></div>
             </div>
             <div className="col-12 mt-5">
               <Button variant="contained" color="primary" type="submit">

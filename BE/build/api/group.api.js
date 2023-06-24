@@ -120,15 +120,17 @@ var GroupApi = /** @class */ (function () {
         });
     }); };
     GroupApi.update = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, id, other, out, chapter, error_2;
-        return __generator(_a, function (_c) {
-            switch (_c.label) {
+        var id, other, out, chapter, error_2;
+        return __generator(_a, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _c.trys.push([0, 4, , 5]);
-                    _b = req.body, id = _b.id, other = __rest(_b, ["id"]);
+                    _b.trys.push([0, 4, , 5]);
+                    id = req.params.id;
+                    other = __rest(req.body, []);
+                    console.log(req.body, 22);
                     return [4 /*yield*/, models_1.Group.findById(id)];
                 case 1:
-                    out = _c.sent();
+                    out = _b.sent();
                     if (!out) {
                         throw new APIError_1.default({
                             message: "Not found",
@@ -138,9 +140,9 @@ var GroupApi = /** @class */ (function () {
                     return [4 /*yield*/, models_1.Group.findByIdAndUpdate(id, __assign({}, other), {
                             new: true,
                         })];
-                case 2: return [4 /*yield*/, _c.sent()];
+                case 2: return [4 /*yield*/, _b.sent()];
                 case 3:
-                    chapter = _c.sent();
+                    chapter = _b.sent();
                     res
                         .json({
                         data: chapter,
@@ -149,7 +151,7 @@ var GroupApi = /** @class */ (function () {
                         .status(http_status_1.default.OK);
                     return [3 /*break*/, 5];
                 case 4:
-                    error_2 = _c.sent();
+                    error_2 = _b.sent();
                     next(error_2);
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];

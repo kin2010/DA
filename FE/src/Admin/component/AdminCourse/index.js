@@ -30,7 +30,7 @@ const steps = ["CƠ BẢN", "ĐỀ CƯƠNG", "MEDIA", "GIÁ", "PUBLISH"];
 
 export const COURSE_CREATE_QUERY = ["new_course"];
 
-export default function AdminCourse() {
+export default function AdminCourse({ edit }) {
   const [step, setStep] = useState(0);
   const [completed, setCompleted] = React.useState({});
   const [course, setCourse] = useState({});
@@ -89,9 +89,10 @@ export default function AdminCourse() {
   };
 
   const onSubmit = async (value) => {
-    if (!!courseData?.data?._id) {
+    console.log(!!courseData?._id, 55, courseData);
+    if (!!courseData?._id) {
       const res = await courseService.updateCourse({
-        id: courseData?.data?._id,
+        id: courseData?._id,
         body: value,
       });
       if (!res?.message) {
@@ -110,7 +111,11 @@ export default function AdminCourse() {
         });
       }
     } else {
-      const res = await addCourse({ ...value, owner: userData?.user?._id });
+      const res = await addCourse({
+        ...value,
+        owner: userData?.user?._id,
+        status: "draft",
+      });
       if (!res?.message) {
         openNotification({
           type: "success",
@@ -137,7 +142,7 @@ export default function AdminCourse() {
           <div className="container-fluid">
             <IconBreadcrumbs
               t1="Giảng viên"
-              t2="Tạo khóa học"
+              t2={edit ? "Chỉnh sửa khóa học" : "Tạo khóa học"}
               l1="/teacher"
             ></IconBreadcrumbs>
             <div className="row">

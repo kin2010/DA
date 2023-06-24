@@ -90,6 +90,16 @@ export const updateLecture = async (body) => {
   });
   return data;
 };
+export const updateAssignment = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/assignment",
+    method: "PUT",
+    data: {
+      ...body,
+    },
+  });
+  return data;
+};
 export const getLectureById = async ({ queryKey }) => {
   const data = await serviceFetch({
     url: apiURL + "/api/lesson/" + queryKey[1],
@@ -154,7 +164,7 @@ export const addGroup = async (body) => {
 
 export const updateSection = async (body) => {
   const data = await serviceFetch({
-    url: apiURL + "/api/section/" + body?.id,
+    url: apiURL + "/api/lesson/section/" + body?.id,
     method: "PUT",
     data: {
       ...body?.body,
@@ -165,7 +175,7 @@ export const updateSection = async (body) => {
 
 export const updateGroup = async (body) => {
   const data = await serviceFetch({
-    url: apiURL + "/api/section/" + body?.id,
+    url: apiURL + "/api/group/" + body?.id,
     method: "PUT",
     data: {
       ...body?.body,
@@ -173,6 +183,17 @@ export const updateGroup = async (body) => {
   });
   return data;
 };
+
+// export const removeGroup = async (body) => {
+//   const data = await serviceFetch({
+//     url: apiURL + "/api/group/" + body?.id,
+//     method: "PUT",
+//     data: {
+//       ...body?.body,
+//     },
+//   });
+//   return data;
+// };
 
 export const getGroupById = async ({ queryKey }) => {
   const data = await serviceFetch({
@@ -336,6 +357,37 @@ export const useCourseService = () => {
     },
   });
 
+  const updateLectureMutation = useMutation(updateLecture, {
+    onSuccess: (data) => {
+      if (!data?.message) {
+        queryClient.invalidateQueries(["course", id]);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const updateAssigmentMutation = useMutation(updateAssignment, {
+    onSuccess: (data) => {
+      if (!data?.message) {
+        queryClient.invalidateQueries(["course", id]);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const deleteGroupMutation = useMutation(deleteDocument, {
+    onSuccess: (data) => {
+      if (!data?.message) {
+        queryClient.invalidateQueries(["course", id]);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   return {
     // addCourse: async (body) => {
     //   return addCourseMutation.mutateAsync({ ...body });
@@ -360,6 +412,15 @@ export const useCourseService = () => {
     },
     updateGroup: async (body) => {
       return await updateGroupMutation.mutateAsync({ ...body });
+    },
+    updateLecture: async (body) => {
+      return await updateLectureMutation.mutateAsync({ ...body });
+    },
+    deleteGroupMutation: async (body) => {
+      return await deleteGroupMutation.mutateAsync({ ...body });
+    },
+    updateAssignment: async (body) => {
+      return await updateAssigmentMutation.mutateAsync({ ...body });
     },
     get: (id) => {
       return data;
@@ -533,6 +594,15 @@ export const deleteDocument = async (body) => {
 export const postComment = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/course/comment",
+    method: "POST",
+    data: body,
+  });
+  return data;
+};
+
+export const updateUser = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/" + body?.id,
     method: "POST",
     data: body,
   });

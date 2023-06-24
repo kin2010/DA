@@ -130,10 +130,19 @@ a:hover {
 }
 .css-1hju3x6-MuiPaper-root-MuiDialog-paper {
   min-width: 600px;
+  max-width: 80vw;
 }
 .css-ryrseu-MuiRating-root {
   color: #1890ff !important;
 }
 .css-dqr9h-MuiRating-label {
   color: #1890ff !important;
+}
+.css-1oqqzyl-MuiContainer-root {
+  max-width: 80% !important;
+}
+.antd-wrapper > div {
+  max-width: 1000px;
+  width: 1000px !important;
+  padding: 0 80x;
 }

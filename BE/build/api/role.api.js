@@ -231,7 +231,7 @@ var RoleService = /** @class */ (function () {
         return __generator(_a, function (_d) {
             switch (_d.label) {
                 case 0:
-                    _d.trys.push([0, 7, , 8]);
+                    _d.trys.push([0, 17, , 18]);
                     _b = req.query, type = _b.type, id = _b.id;
                     console.log(req.query);
                     rs = void 0;
@@ -239,25 +239,50 @@ var RoleService = /** @class */ (function () {
                     switch (_c) {
                         case "category": return [3 /*break*/, 1];
                         case "category-group": return [3 /*break*/, 3];
+                        case "group": return [3 /*break*/, 5];
+                        case "section": return [3 /*break*/, 7];
+                        case "lecture": return [3 /*break*/, 9];
+                        case "assignment": return [3 /*break*/, 11];
+                        case "course": return [3 /*break*/, 13];
                     }
-                    return [3 /*break*/, 5];
+                    return [3 /*break*/, 15];
                 case 1: return [4 /*yield*/, models_1.Category.deleteOne({ _id: id })];
                 case 2:
                     rs = _d.sent();
-                    return [3 /*break*/, 6];
+                    return [3 /*break*/, 16];
                 case 3: return [4 /*yield*/, models_1.CategoryGroup.deleteOne({ _id: id })];
                 case 4:
                     rs = _d.sent();
-                    return [3 /*break*/, 6];
-                case 5: return [3 /*break*/, 6];
+                    return [3 /*break*/, 16];
+                case 5: return [4 /*yield*/, models_1.Group.deleteOne({ _id: id })];
                 case 6:
+                    rs = _d.sent();
+                    return [3 /*break*/, 16];
+                case 7: return [4 /*yield*/, models_1.Section.deleteOne({ _id: id })];
+                case 8:
+                    rs = _d.sent();
+                    return [3 /*break*/, 16];
+                case 9: return [4 /*yield*/, models_1.Lecture.deleteOne({ _id: id })];
+                case 10:
+                    rs = _d.sent();
+                    return [3 /*break*/, 16];
+                case 11: return [4 /*yield*/, models_1.Assignment.deleteOne({ _id: id })];
+                case 12:
+                    rs = _d.sent();
+                    return [3 /*break*/, 16];
+                case 13: return [4 /*yield*/, models_1.Course.deleteOne({ _id: id })];
+                case 14:
+                    rs = _d.sent();
+                    return [3 /*break*/, 16];
+                case 15: return [3 /*break*/, 16];
+                case 16:
                     res.json({ data: rs, status: 200 }).end();
-                    return [3 /*break*/, 8];
-                case 7:
+                    return [3 /*break*/, 18];
+                case 17:
                     error_7 = _d.sent();
                     next(error_7);
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+                    return [3 /*break*/, 18];
+                case 18: return [2 /*return*/];
             }
         });
     }); };

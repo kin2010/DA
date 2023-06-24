@@ -18,6 +18,7 @@ export type IRequestBodyRegister = {
 };
 export type IRequestGetUser = {
   token: string;
+  id: string;
 };
 
 export default class AuthService {
@@ -129,6 +130,25 @@ export default class AuthService {
       }
 
       res.json({ user: user.show() }).status(httpStatus.OK).end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  static update = async (
+    req: Request<IRequestGetUser, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findByIdAndUpdate(
+        id,
+        {
+          ...req.body,
+        },
+        { new: true }
+      );
+      res.json({ user: user }).status(httpStatus.OK).end();
     } catch (error) {
       next(error);
     }

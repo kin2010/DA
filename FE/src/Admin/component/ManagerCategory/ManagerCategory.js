@@ -271,7 +271,6 @@ const ManagerCategory = () => {
     const res = await addCategory({
       ...value,
     });
-    console.log(4444, res);
     if (res?._id) {
       openNotification({
         type: "success",

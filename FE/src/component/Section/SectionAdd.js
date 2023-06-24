@@ -21,12 +21,9 @@ const SectionAdd = ({ open, setOpen, section }) => {
     setOpen(false);
   };
 
-  const handeAddSectionSumbit = async (e, value) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("upda");
+  const handeAddSectionSumbit = async (value) => {
     const params = {
-      id: section?._ic,
+      id: section?._id,
       body: {
         ...value,
       },
@@ -35,12 +32,12 @@ const SectionAdd = ({ open, setOpen, section }) => {
     if (!res?.message) {
       openNotification({
         type: "success",
-        message: "Created successfully",
+        message: "Cập nhật",
       });
     } else {
       openNotification({
         type: "error",
-        message: "Creation failed",
+        message: "Lỗi",
       });
     }
     setOpen(false);
@@ -55,13 +52,15 @@ const SectionAdd = ({ open, setOpen, section }) => {
   return (
     <Formik
       initialValues={{ name: section?.name }}
-      onSubmit={(e, value) => handeAddSectionSumbit(e, value)}
+      onSubmit={(value) => handeAddSectionSumbit(value)}
       validationSchema={createLectureSchema}
     >
       {(props) => (
         <form
           onSubmit={(e) => {
-            e?.preventDefault();
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(e);
             props.handleSubmit();
           }}
           className="mb-3"
@@ -82,7 +81,7 @@ const SectionAdd = ({ open, setOpen, section }) => {
               variant="contained"
               type="submit"
             >
-              Update section
+              Cập nhật
             </Button>
           </div>
         </form>

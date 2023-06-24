@@ -13,27 +13,17 @@ import FormControl from "../../component/FormControl";
 import { Divider } from "antd";
 
 const GroupAdd = ({ open, setOpen, group }) => {
-  const handleOk = () => {
-    setTimeout(() => {
-      setOpen(false);
-    }, 3000);
-  };
   const courseService = useCourseService();
   const courseId = sessionStorage.getItem("new_course");
-  const handleCancel = () => {
-    setOpen(false);
-  };
 
-  const handleUpdate = async (e, value) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("upda");
+  const handleUpdate = async (value) => {
     const params = {
       id: group?._id,
       body: {
         ...value,
       },
     };
+    console.log("upda", params);
     const res = await courseService.updateGroup(params);
     if (!res?.message) {
       openNotification({
@@ -49,44 +39,34 @@ const GroupAdd = ({ open, setOpen, group }) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (!!group) {
-      //
-    }
-    console.log(group, 22);
-  }, [group]);
-
   return (
     <Formik
       initialValues={{ name: group?.name, description: group?.description }}
-      onSubmit={(e, value) => handleUpdate(e, value)}
+      onSubmit={(value) => {
+        handleUpdate(value);
+      }}
       validationSchema={createGroupSchema}
     >
       {(props) => (
         <form
+          className="mb-3"
           onSubmit={(e) => {
-            e?.preventDefault();
-            e?.stopPropagation();
+            e.preventDefault();
+            e.stopPropagation();
             props.handleSubmit();
           }}
-          className="mb-3"
         >
-          <FormControl name="name" label={"Group Name*"}></FormControl>
+          <FormControl name="name" label={"Tên group*"}></FormControl>
           <div className="mt-3 d-flex justify-content-start">
             <FormControl
               name="description"
               type={"editor"}
-              label={"Description*"}
+              label={"Mô tả*"}
             ></FormControl>
 
             <Divider></Divider>
           </div>
-          <Button
-            size="small"
-            //   className="ms-2"
-            variant="contained"
-            type="submit"
-          >
+          <Button size="small" variant="contained" type="submit">
             Update Group
           </Button>
         </form>

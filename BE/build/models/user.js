@@ -41,6 +41,9 @@ var UserSchema = new mongoose_1.Schema({
     schedule: {
         type: Date,
     },
+    information: {
+        type: String,
+    },
     avatar: {
         type: String,
     },

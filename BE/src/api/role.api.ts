@@ -2,7 +2,16 @@ import { NextFunction, Response } from "express";
 import httpStatus from "http-status";
 import APIError from "../utils/APIError";
 import { Query, Params, Request } from "../configs/types";
-import { Category, CategoryGroup, Role } from "../models";
+import {
+  Assignment,
+  Category,
+  CategoryGroup,
+  Course,
+  Group,
+  Lecture,
+  Role,
+  Section,
+} from "../models";
 import mongoose, { Mongoose } from "mongoose";
 
 export type IRole = {
@@ -163,6 +172,21 @@ export default class RoleService {
           break;
         case "category-group":
           rs = await CategoryGroup.deleteOne({ _id: id });
+          break;
+        case "group":
+          rs = await Group.deleteOne({ _id: id });
+          break;
+        case "section":
+          rs = await Section.deleteOne({ _id: id });
+          break;
+        case "lecture":
+          rs = await Lecture.deleteOne({ _id: id });
+          break;
+        case "assignment":
+          rs = await Assignment.deleteOne({ _id: id });
+          break;
+        case "course":
+          rs = await Course.deleteOne({ _id: id });
           break;
 
         default:

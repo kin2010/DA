@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormControl from "../../component/FormControl";
 import { InputNumber, Switch } from "antd";
 import { Formik, useFormikContext } from "formik";
@@ -10,6 +10,9 @@ const CourseTab4 = ({ setStep, step }) => {
   const courseService = useCourseService();
   const courseId = sessionStorage.getItem("new_course");
   const [disabled, setDisabled] = useState(false);
+  const courseData = courseService.get();
+  const { handleSubmit, setFieldValue, setValues, values } = useFormikContext();
+  const [data, setData] = useState();
   const handeAddLessonSumbit = async (value) => {
     console.log(value);
     const res = await courseService.updateCourse({
@@ -34,8 +37,15 @@ const CourseTab4 = ({ setStep, step }) => {
   };
 
   const SWitchPrice = () => {
-    const { setFieldValue } = useFormikContext();
-
+    const { setFieldValue, setValues } = useFormikContext();
+    useEffect(() => {
+      if (!!courseData) {
+        setValues({
+          price: courseData?.price,
+          discount: courseData?.discount,
+        });
+      }
+    }, [courseData]);
     const onChange = (value) => {
       setDisabled(value);
       if (!!value) {

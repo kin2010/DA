@@ -1,4 +1,4 @@
-import { Divider, Empty } from "antd";
+import { Divider, Empty, Popconfirm } from "antd";
 import React, { useState } from "react";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -7,15 +7,32 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import { Typography } from "@mui/material";
 import GroupAdd from "./GroupAdd";
+import { deleteDocument, useCourseService } from "../../hook/LessionHook";
+import { openNotification } from "../../Notification";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Group = ({ propData }) => {
   const [showEdit, setShowEdit] = useState(false);
-
+  const queryClient = useQueryClient();
   const edit = () => {
     setShowEdit(!showEdit);
   };
-
-  const remove = () => {};
+  const courseService = useCourseService();
+  const remove = async (id) => {
+    const res = await courseService.deleteGroupMutation({
+      id: id,
+      type: "group",
+    });
+    if (res?.deletedCount === 1) {
+      openNotification({
+        type: "success",
+        message: "Xóa thành công",
+      });
+      setTimeout(() => {
+        queryClient.invalidateQueries(["admin_category"]);
+      }, 2000);
+    }
+  };
   return (
     <div>
       <div
@@ -43,7 +60,16 @@ const Group = ({ propData }) => {
             style={{ gap: "0 10px", marginLeft: "auto" }}
           >
             <EditNoteIcon onClick={edit} color="primary"></EditNoteIcon>
-            <DeleteSweepIcon onClick={remove} color="error"></DeleteSweepIcon>
+            <Popconfirm
+              title="Xác nhận"
+              description="Bạn chắc chắn muốn xóa ?"
+              onConfirm={() => remove(propData?._id)}
+              onOpenChange={() => console.log("open change")}
+            >
+              <span>
+                <DeleteSweepIcon color="error"></DeleteSweepIcon>
+              </span>
+            </Popconfirm>
           </div>
         </div>
         <Divider></Divider>

@@ -45,8 +45,10 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
       <div className="mb-3">
         <label className="col-form-label">{label}</label>
         <InputNumber
+          type="number"
           style={{ width: "100%", padding: "10px" }}
           onChange={handleInputChange}
+          value={values[name] || 0}
           {...other}
         />
         {errors[name] && <div className="feedback">{errors[name]}</div>}
@@ -55,7 +57,6 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
   }
 
   if (!!children) {
-    console.log(children);
     return (
       <>
         <label className="col-form-label">{label}</label>

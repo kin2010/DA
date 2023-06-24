@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { createLectureSchema } from "../../Validation/CourseCreate";
@@ -6,6 +6,7 @@ import { openNotification } from "../../Notification";
 import {
   addLecture,
   addSection,
+  getLectureById,
   useCourseService,
 } from "../../hook/LessionHook";
 import FormControl from "../FormControl";
@@ -16,39 +17,72 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import FileUpload from "../FileUpload/FileUpload";
 import { getYoutubeId } from "../../ultis/func";
 import { useQueryClient } from "@tanstack/react-query";
+import { Player } from "video-react";
 
-const LectureAdd = ({ open, setOpen, section }) => {
+const LectureAdd = ({ open, setOpen, section, isEdit, lectureUpdateId }) => {
   const courseService = useCourseService();
-
+  const [data, setData] = useState();
   const handleOk = () => {
     setTimeout(() => {
       setOpen(false);
     }, 3000);
   };
-
+  const courseData = courseService.get();
   const handleCancel = () => {
     setOpen(false);
   };
 
-  const handeAddLessonSumbit = async (value) => {
-    console.log(value);
-    const res = await courseService.addLecture({
-      ...value,
-      section: section?._id,
-    });
-    if (!res?.message) {
-      openNotification({
-        type: "success",
-        message: "Created successfully",
-      });
-      // qye;
+  useEffect(() => {
+    if (!!isEdit && !!lectureUpdateId) {
+      init();
     } else {
-      openNotification({
-        type: "error",
-        message: res?.message,
-      });
+      setData(null);
     }
-    setOpen(false);
+  }, [section, isEdit, lectureUpdateId]);
+
+  const init = async () => {
+    const lecture = section?.lectures?.find(
+      (lecture) => lecture?._id === lectureUpdateId
+    );
+    setData(lecture);
+  };
+
+  const handeAddLessonSumbit = async (value) => {
+    if (!isEdit) {
+      const res = await courseService.addLecture({
+        ...value,
+        section: section?._id,
+      });
+      if (!res?.message) {
+        openNotification({
+          type: "success",
+          message: "Tạo thành công",
+        });
+      } else {
+        openNotification({
+          type: "error",
+          message: res?.message,
+        });
+      }
+      setOpen(false);
+    } else {
+      const res = await courseService.updateLecture({
+        ...value,
+        id: data?._id,
+      });
+      if (!res?.message) {
+        openNotification({
+          type: "success",
+          message: "Cập nhật",
+        });
+      } else {
+        openNotification({
+          type: "error",
+          message: res?.message,
+        });
+      }
+      setOpen(false);
+    }
   };
 
   const onChange = (key) => {
@@ -56,6 +90,16 @@ const LectureAdd = ({ open, setOpen, section }) => {
   };
 
   const Tab1 = () => {
+    const { setFieldValue, resetForm } = useFormikContext();
+
+    useEffect(() => {
+      if (!!data) {
+        setFieldValue("name", data?.name);
+        setFieldValue("description", data?.description || "");
+      } else {
+        // resetForm();
+      }
+    }, [data]);
     return (
       <>
         <FormControl name="name" label="Tên bài giảng*"></FormControl>
@@ -68,10 +112,27 @@ const LectureAdd = ({ open, setOpen, section }) => {
     );
   };
   const Tab2 = () => {
-    const { values } = useFormikContext();
+    const { values, setFieldValue } = useFormikContext();
+
+    useEffect(() => {
+      if (!!data) {
+        setFieldValue("video", !!data?.video ? data?.video[0] : []);
+        setFieldValue("youtube_url", data?.youtube_url || "");
+        console.log("cjameg");
+      }
+    }, [data]);
 
     return (
       <>
+        <label className="col-form-label">Video hiện tại :</label>
+        {isEdit && !!data?.video?.length && (
+          <Player
+            className="mt-3"
+            playsInline
+            poster="/assets/poster.png"
+            src={data?.video[0]}
+          />
+        )}
         <label className="col-form-label">Chọn video bài giảng :</label>
         <FileUpload
           btnName="Chọn video"
@@ -174,7 +235,7 @@ const LectureAdd = ({ open, setOpen, section }) => {
                   key="submit"
                   type="submit"
                 >
-                  Thêm bài giảng
+                  {isEdit ? "Cập nhật" : "Thêm bài giảng"}
                 </Button>
               </div>
             </div>

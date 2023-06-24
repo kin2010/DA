@@ -4,6 +4,7 @@ import { Query, Params, Request } from "../configs/types";
 import { Course, Lecture, Section } from "../models";
 import Chapter from "../models/chapter";
 import APIError from "../utils/APIError";
+import { request } from "http";
 export type IRequestLecture = {
   id: string;
   name: string;
@@ -39,6 +40,7 @@ export type Ichapter = {
   lessions: string[];
   baitaps: string[];
   mota: string;
+  id: string;
 };
 export type Tget = {
   id: string;
@@ -228,28 +230,22 @@ export default class LectureApi {
     next: NextFunction
   ) => {
     try {
-      const { idChapter, ...other } = req.body;
-      const out = await Section.findById(idChapter);
+      const { id } = req.params;
+      console.log(id);
+      const out = await Section.findById(id);
       if (!out) {
         throw new APIError({
           message: "Not found",
           status: httpStatus.NOT_FOUND,
         });
       }
-      const chapter = await (
-        await Section.findByIdAndUpdate(
-          idChapter,
-          { ...other },
-          {
-            new: true,
-          }
-        )
-      )?.populate([
+      const chapter = await Section.findByIdAndUpdate(
+        id,
+        { ...req.body },
         {
-          path: "lessions",
-          select: "teacher mota",
-        },
-      ]);
+          new: true,
+        }
+      );
       res
         .json({
           chapter: chapter,
@@ -257,7 +253,7 @@ export default class LectureApi {
         })
         .status(httpStatus.OK);
     } catch (error) {
-      next();
+      next(error);
     }
   };
   static addChapter = async (

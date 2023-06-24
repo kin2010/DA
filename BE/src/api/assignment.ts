@@ -129,6 +129,7 @@ export default class AssignmentService {
   ) => {
     try {
       const { id, ...other } = req.body;
+      console.log(req.body, 141414);
       const out = await Assignment.findById(id);
       if (!out) {
         throw new APIError({

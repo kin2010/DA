@@ -369,14 +369,27 @@ var CourseApi = /** @class */ (function () {
         });
     }); };
     CourseApi.allCourse = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, limit, skip, text_1, category, search, courses, rs, error_5;
+        var currentDate, currentDateString, _b, limit, skip, text_1, category, owner, status_1, end_date, search, courses, rs, error_5;
         return __generator(_a, function (_c) {
             switch (_c.label) {
                 case 0:
                     _c.trys.push([0, 2, , 3]);
-                    _b = req.query, limit = _b.limit, skip = _b.skip, text_1 = _b.text, category = _b.category;
+                    currentDate = new Date();
+                    currentDateString = currentDate.toISOString().split("T")[0];
+                    _b = req.query, limit = _b.limit, skip = _b.skip, text_1 = _b.text, category = _b.category, owner = _b.owner, status_1 = _b.status, end_date = _b.end_date;
                     search = !!category ? { category: category } : {};
-                    console.log(search);
+                    if (owner) {
+                        search.owner = owner;
+                    }
+                    if (owner) {
+                        search.owner = owner;
+                    }
+                    if (status_1) {
+                        search.status = status_1;
+                    }
+                    if (end_date) {
+                        search = __assign(__assign({}, search), { end: { $gt: currentDateString } });
+                    }
                     return [4 /*yield*/, models_1.Course.find(search)
                             .limit(parseInt(limit))
                             .skip(parseInt(skip))

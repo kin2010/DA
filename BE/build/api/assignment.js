@@ -228,6 +228,7 @@ var AssignmentService = /** @class */ (function () {
                 case 0:
                     _c.trys.push([0, 3, , 4]);
                     _b = req.body, id = _b.id, other = __rest(_b, ["id"]);
+                    console.log(req.body, 141414);
                     return [4 /*yield*/, models_1.Assignment.findById(id)];
                 case 1:
                     out = _c.sent();

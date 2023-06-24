@@ -13,6 +13,7 @@ const CourseTab5 = () => {
       id: courseData?._id,
       body: {
         publish: true,
+        status: "pending",
       },
     });
     if (!res?.message) {

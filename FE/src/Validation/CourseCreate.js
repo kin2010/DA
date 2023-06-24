@@ -18,8 +18,8 @@ export const createAssignmentSchema = Yup.object({
   name: Yup.string().min(3).required(),
 });
 export const createGroupSchema = Yup.object({
-  name: Yup.string().min(3).required(),
-  description: Yup.string().required(),
+  name: Yup.string().min(3).required("Nhập tên group"),
+  description: Yup.string().required("Nhập mô tả"),
 });
 export const createScheduleSchema = Yup.object({
   name: Yup.string().min(3).required(),

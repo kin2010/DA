@@ -278,45 +278,39 @@ var LectureApi = /** @class */ (function () {
         });
     }); };
     LectureApi.updateChapter = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, idChapter, other, out, chapter, error_4;
-        var _c;
-        return __generator(_a, function (_d) {
-            switch (_d.label) {
+        var id, out, chapter, error_4;
+        return __generator(_a, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _d.trys.push([0, 4, , 5]);
-                    _b = req.body, idChapter = _b.idChapter, other = __rest(_b, ["idChapter"]);
-                    return [4 /*yield*/, models_1.Section.findById(idChapter)];
+                    _b.trys.push([0, 3, , 4]);
+                    id = req.params.id;
+                    console.log(id);
+                    return [4 /*yield*/, models_1.Section.findById(id)];
                 case 1:
-                    out = _d.sent();
+                    out = _b.sent();
                     if (!out) {
                         throw new APIError_1.default({
                             message: "Not found",
                             status: http_status_1.default.NOT_FOUND,
                         });
                     }
-                    return [4 /*yield*/, models_1.Section.findByIdAndUpdate(idChapter, __assign({}, other), {
+                    return [4 /*yield*/, models_1.Section.findByIdAndUpdate(id, __assign({}, req.body), {
                             new: true,
                         })];
-                case 2: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
-                        {
-                            path: "lessions",
-                            select: "teacher mota",
-                        },
-                    ]))];
-                case 3:
-                    chapter = _d.sent();
+                case 2:
+                    chapter = _b.sent();
                     res
                         .json({
                         chapter: chapter,
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
-                    return [3 /*break*/, 5];
-                case 4:
-                    error_4 = _d.sent();
-                    next();
-                    return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_4 = _b.sent();
+                    next(error_4);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); };

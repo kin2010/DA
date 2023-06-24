@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, useFormik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import {
@@ -17,8 +17,16 @@ import { DatePicker, Space } from "antd";
 import EditorCommon from "../EdittorCommon/EdittorCommon";
 import FileUpload from "../FileUpload/FileUpload";
 const { RangePicker } = DatePicker;
-const AssignmentAdd = ({ open, setOpen, section }) => {
+const AssignmentAdd = ({
+  open,
+  setOpen,
+  section,
+  isEdit,
+  assignmentUpdateId,
+}) => {
   const [fileList, setFileList] = useState([]);
+  const [data, setData] = useState();
+
   const courseService = useCourseService();
   const handleOk = () => {
     setTimeout(() => {
@@ -29,25 +37,57 @@ const AssignmentAdd = ({ open, setOpen, section }) => {
   const handleCancel = () => {
     setOpen(false);
   };
-
-  const handeAddSectionSumbit = async (value) => {
-    console.log(value);
-    const res = await courseService.addAssignment({
-      ...value,
-      section: section?._id,
-    });
-    if (!res?.message) {
-      openNotification({
-        type: "success",
-        message: "Created successfully",
-      });
+  useEffect(() => {
+    if (!!isEdit && !!assignmentUpdateId) {
+      init();
     } else {
-      openNotification({
-        type: "error",
-        message: res?.message,
-      });
+      setData(null);
     }
-    setOpen(false);
+  }, [section, isEdit, assignmentUpdateId]);
+
+  const init = async () => {
+    const lecture = section?.assignments?.find(
+      (lecture) => lecture?._id === assignmentUpdateId
+    );
+    setData(lecture);
+  };
+  const handeAddSectionSumbit = async (value) => {
+    if (!isEdit) {
+      console.log(value);
+      const res = await courseService.addAssignment({
+        ...value,
+        section: section?._id,
+      });
+      if (!res?.message) {
+        openNotification({
+          type: "success",
+          message: "Created successfully",
+        });
+      } else {
+        openNotification({
+          type: "error",
+          message: res?.message,
+        });
+      }
+      setOpen(false);
+    } else {
+      const res = await courseService.updateAssignment({
+        ...value,
+        id: data?._id,
+      });
+      if (!res?.message) {
+        openNotification({
+          type: "success",
+          message: "Cập nhật",
+        });
+      } else {
+        openNotification({
+          type: "error",
+          message: res?.message,
+        });
+      }
+      setOpen(false);
+    }
   };
 
   const RangeTimePicker = () => {
@@ -94,7 +134,7 @@ const AssignmentAdd = ({ open, setOpen, section }) => {
                   <EditorCommon></EditorCommon>
                 </FormControl>
                 <br></br>
-                <label className="col-form-label ">Thời gian*</label>
+                {/* <label className="col-form-label ">Thời gian*</label>
                 <br></br>
                 <RangeTimePicker />
                 <br></br>
@@ -104,7 +144,7 @@ const AssignmentAdd = ({ open, setOpen, section }) => {
                     inputType={"number"}
                     label={"Tổng số điểm:*"}
                   ></FormControl>
-                </div>
+                </div> */}
 
                 <FileUpload
                   btnName={"Đính kèm"}
@@ -113,23 +153,6 @@ const AssignmentAdd = ({ open, setOpen, section }) => {
                   accept="image/*,.pdf,.zip"
                   multiple
                 ></FileUpload>
-                {/* <Upload
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    listType="picture"
-                    defaultFileList={[...fileList]}
-                    multiple
-                  >
-                    <Button variant="outlined" icon={<UploadOutlined />}>
-                      <AddBoxIcon
-                        style={{ fontSize: "18px", marginRight: "10px" }}
-                      ></AddBoxIcon>
-                      ATTACHMENTS
-                    </Button>
-                  </Upload>
-                  <label className="col-form-label">
-                    Supports: jpg, jpeg, png, pdf or .zip
-                  </label> */}
-
                 <div className="d-flex justify-content-end">
                   <Button
                     size="small"

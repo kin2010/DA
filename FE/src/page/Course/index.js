@@ -24,6 +24,8 @@ const Course = () => {
     limit: 9,
     skip: 9 * (page - 1),
     text: "",
+    status: "published",
+    end_date: "true",
   });
   const queryClient = useQueryClient();
   const { data } = useQuery(["courses", queryparams], getAllCourse);
@@ -31,6 +33,7 @@ const Course = () => {
   const handlePaginationChange = (e, page) => {
     setPage(page);
     setQueryparams({
+      ...queryparams,
       limit: 9,
       skip: 9 * (page - 1),
       text: "",

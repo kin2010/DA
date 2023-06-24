@@ -41,6 +41,45 @@ const Phanhoi = ({ setAdminComment, adminComment }) => {
     />
   );
 };
+
+export const getStatus = (status) => {
+  let color = "";
+  let label = "";
+  switch (status) {
+    case "pending":
+      color = "primary";
+      label = "Chờ xác nhận";
+
+      break;
+    case "published":
+      color = "success";
+      label = "Đã xác nhận";
+
+      break;
+    case "closed":
+      color = "warning";
+      label = "Đã kết thúc";
+
+      break;
+    case "decline":
+      color = "error";
+      label = "Không chấp thuận";
+
+      break;
+    case "draft":
+      color = "warning";
+      label = "Đang nháp ";
+
+      break;
+
+    default:
+      color = "primary";
+      label = "Chờ xác nhận";
+      break;
+  }
+  return { label, color };
+};
+
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 const ManagerCourse = () => {
   const [page, setPage] = useState(1);
@@ -142,39 +181,6 @@ const ManagerCourse = () => {
         message: res?.message,
       });
     }
-  };
-
-  const getStatus = (status) => {
-    let color = "";
-    let label = "";
-    switch (status) {
-      case "pending":
-        color = "primary";
-        label = "Chờ xác nhận";
-
-        break;
-      case "published":
-        color = "success";
-        label = "Đã xác nhận";
-
-        break;
-      case "end":
-        color = "warning";
-        label = "Đã kết thúc";
-
-        break;
-      case "decline":
-        color = "error";
-        label = "Không chấp thuận";
-
-        break;
-
-      default:
-        color = "primary";
-        label = "Chờ xác nhận";
-        break;
-    }
-    return { label, color };
   };
 
   const diglogContent = useMemo(() => {

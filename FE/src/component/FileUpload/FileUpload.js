@@ -32,6 +32,20 @@ const FileUpload = ({ formName, btnName, label, thumbnail, ...props }) => {
     );
   }, []);
 
+  // useEffect(() => {
+  //   if (!!values[formName]?.length) {
+  //     console.log(22, values[formName]);
+  //     setFileList([
+  //       {
+  //         uid: "-1",
+  //         name: values[formName][0],
+  //         status: "done",
+  //         url: values[formName][0],
+  //       },
+  //     ]);
+  //   }
+  // }, [values[formName]]);
+
   const handleChange = async ({ file, fileList }) => {
     if (fileList.length > 0) {
       if (fileList?.every((file) => file?.status === "done")) {
@@ -103,9 +117,11 @@ const FileUpload = ({ formName, btnName, label, thumbnail, ...props }) => {
         listType="picture"
         defaultFileList={[...fileList]}
         itemRender={(originNode, file, currFileList, actions) => {
-          if (file?.type?.includes("video")) {
+          if (file?.type?.includes("video") || file.url?.includes("webm")) {
             const reader = new FileReader();
-            const url = URL.createObjectURL(file.originFileObj);
+            const url = !!file.originFileObj
+              ? URL.createObjectURL(file.originFileObj)
+              : file.url;
             return (
               <Player
                 className="mt-3"

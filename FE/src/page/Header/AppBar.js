@@ -271,11 +271,15 @@ export default function HeaderAppBar({ isAdmin }) {
                         className="ml-3"
                         sizes="large"
                         sx={{ width: 42, height: 42 }}
-                      >
-                        {!data?.user?.avatar
-                          ? `${data?.user?.fullName?.slice(0, 1)}`.toUpperCase()
-                          : ""}
-                      </Avatar>
+                        src={
+                          !data?.user?.avatar
+                            ? `${data?.user?.fullName?.slice(
+                                0,
+                                1
+                              )}`.toUpperCase()
+                            : data?.user?.avatar
+                        }
+                      ></Avatar>
                     </IconButton>
                   </>
                 ) : (

@@ -14,6 +14,7 @@ export interface IUser extends Document {
   online: boolean;
   schedule: Date;
   show: () => TUserShow;
+  information: string;
 }
 export type TUserShow = Omit<IUser, "password">;
 export const GENDER = {
@@ -55,6 +56,9 @@ const UserSchema = new Schema(
     },
     schedule: {
       type: Date,
+    },
+    information: {
+      type: String,
     },
     avatar: {
       type: String,

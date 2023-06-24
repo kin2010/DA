@@ -147,58 +147,56 @@ const CourseTab2 = ({ setStep }) => {
         )}
       </Formik>
       <div className="widget-inner">
-        <form className={"edit-profile m-b30"} onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-12">
-              <div className="ml-auto">
-                <h3>Group học tập</h3>
-              </div>
+        <div className="row">
+          <div className="col-12">
+            <div className="ml-auto">
+              <h3>Group học tập</h3>
             </div>
-            <div className="col-12 mt-3">
-              <div
-                className="d-flex align-items-center mb-5 col-12"
-                style={{
-                  width: "100%",
-                  padding: "10px ",
-                  border: "0.5px solid #12121220",
-                  background: "white",
-                }}
-              >
-                <ViewListIcon className="me-4" color="primary" />
-                <Typography>Group</Typography>
-                <Button
-                  variant="contained"
-                  className="ms-auto"
-                  color="primary"
-                  onClick={addNewGroup}
-                >
-                  New Group
-                </Button>
-              </div>
-              <div className="col-12  ">
-                {!!courseData?.groups?.length ? (
-                  courseData?.groups?.map((data) => (
-                    <div key={data?._id} className="mt-5">
-                      <Group propData={data}></Group>
-                    </div>
-                  ))
-                ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      border: "0.5px solid #12121220",
-                      background: "white",
-                      padding: "15px",
-                    }}
-                  >
-                    <Empty />
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="form-group col-6"></div>
           </div>
-        </form>
+          <div className="col-12 mt-3">
+            <div
+              className="d-flex align-items-center mb-5 col-12"
+              style={{
+                width: "100%",
+                padding: "10px ",
+                border: "0.5px solid #12121220",
+                background: "white",
+              }}
+            >
+              <ViewListIcon className="me-4" color="primary" />
+              <Typography>Group</Typography>
+              <Button
+                variant="contained"
+                className="ms-auto"
+                color="primary"
+                onClick={addNewGroup}
+              >
+                Thêm Group
+              </Button>
+            </div>
+            <div className="col-12  ">
+              {!!courseData?.groups?.length ? (
+                courseData?.groups?.map((data) => (
+                  <div key={data?._id} className="mt-5">
+                    <Group propData={data}></Group>
+                  </div>
+                ))
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    border: "0.5px solid #12121220",
+                    background: "white",
+                    padding: "15px",
+                  }}
+                >
+                  <Empty />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="form-group col-6"></div>
+        </div>
       </div>
       <Formik
         initialValues={{ name: "" }}
@@ -232,7 +230,7 @@ const CourseTab2 = ({ setStep }) => {
                   key="submit"
                   type="submit"
                 >
-                  Thêm học phần
+                  Thêm chương học
                 </Button>
               </div>
             </form>
@@ -240,58 +238,56 @@ const CourseTab2 = ({ setStep }) => {
         )}
       </Formik>
       <div className="widget-inner">
-        <form className={"edit-profile m-b30"} onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-12">
-              <div className="ml-auto">
-                <h3>Đề cương khóa học</h3>
-              </div>
+        <div className="row">
+          <div className="col-12">
+            <div className="ml-auto">
+              <h3>Đề cương khóa học</h3>
             </div>
-            <div className="col-12 mt-3">
-              <div
-                className="d-flex align-items-center mb-5 col-12"
-                style={{
-                  width: "100%",
-                  padding: "10px ",
-                  border: "0.5px solid #12121220",
-                  background: "white",
-                }}
-              >
-                <ViewListIcon className="me-4" color="primary" />
-                <Typography>Đề cương</Typography>
-                <Button
-                  variant="contained"
-                  className="ms-auto"
-                  color="primary"
-                  onClick={addNewSection}
-                >
-                  Thêm học phần
-                </Button>
-              </div>
-              <div className="col-12  ">
-                {!!courseData?.sections_info?.length ? (
-                  courseData?.sections_info?.map((data) => (
-                    <div key={data?.section?._id} className="mt-5">
-                      <Section propData={data}></Section>
-                    </div>
-                  ))
-                ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      border: "0.5px solid #12121220",
-                      background: "white",
-                      padding: "15px",
-                    }}
-                  >
-                    <Empty />
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="form-group col-6"></div>
           </div>
-        </form>
+          <div className="col-12 mt-3">
+            <div
+              className="d-flex align-items-center mb-5 col-12"
+              style={{
+                width: "100%",
+                padding: "10px ",
+                border: "0.5px solid #12121220",
+                background: "white",
+              }}
+            >
+              <ViewListIcon className="me-4" color="primary" />
+              <Typography>Đề cương</Typography>
+              <Button
+                variant="contained"
+                className="ms-auto"
+                color="primary"
+                onClick={addNewSection}
+              >
+                Thêm chương học
+              </Button>
+            </div>
+            <div className="col-12  ">
+              {!!courseData?.sections_info?.length ? (
+                courseData?.sections_info?.map((data) => (
+                  <div key={data?.section?._id} className="mt-5">
+                    <Section propData={data}></Section>
+                  </div>
+                ))
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    border: "0.5px solid #12121220",
+                    background: "white",
+                    padding: "15px",
+                  }}
+                >
+                  <Empty />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="form-group col-6"></div>
+        </div>
       </div>
     </>
   );

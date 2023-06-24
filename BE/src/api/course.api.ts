@@ -326,9 +326,23 @@ export default class CourseApi {
     next: NextFunction
   ) => {
     try {
-      const { limit, skip, text, category } = req.query;
-      const search = !!category ? { category: category } : {};
-      console.log(search);
+      const currentDate = new Date();
+      const currentDateString = currentDate.toISOString().split("T")[0];
+      const { limit, skip, text, category, owner, status, end_date } =
+        req.query;
+      let search: any = !!category ? { category: category } : {};
+      if (owner) {
+        search.owner = owner;
+      }
+      if (owner) {
+        search.owner = owner;
+      }
+      if (status) {
+        search.status = status;
+      }
+      if (end_date) {
+        search = { ...search, end: { $gt: currentDateString } };
+      }
       const courses = await Course.find(search)
         .limit(parseInt(limit as string))
         .skip(parseInt(skip as string))

@@ -55,7 +55,9 @@ export default class GroupApi {
     next: NextFunction
   ) => {
     try {
-      const { id, ...other } = req.body;
+      const { id } = req.params;
+      const { ...other } = req.body;
+      console.log(req.body, 22);
       const out = await Group.findById(id);
       if (!out) {
         throw new APIError({

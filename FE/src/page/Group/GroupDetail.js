@@ -408,20 +408,22 @@ const GroupDetail = () => {
                                 }
                                 datetime={
                                   <Tooltip
-                                    title={format(
-                                      new Date(
-                                        content?.data?.createdby?.createdAt
-                                      ),
-                                      "yyyy-dd-mm hh:mm"
-                                    )}
+                                    title={
+                                      !!content?.data?.createdAt
+                                        ? format(
+                                            new Date(content?.data?.createdAt),
+                                            "yyyy-dd-mm hh:mm"
+                                          )
+                                        : new Date().getDay()
+                                    }
                                   >
                                     <span>
-                                      {format(
-                                        new Date(
-                                          content?.data?.createdby?.createdAt
-                                        ),
-                                        "yyyy-dd-mm hh:mm"
-                                      )}
+                                      {!!content?.data?.createdAt
+                                        ? format(
+                                            new Date(content?.data?.createdAt),
+                                            "yyyy-dd-mm hh:mm"
+                                          )
+                                        : new Date().getDay()}
                                     </span>
                                   </Tooltip>
                                 }
