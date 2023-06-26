@@ -32,3 +32,11 @@ export const createCategorySchema = Yup.object({
   name: Yup.string().min(3).required(),
   group: Yup.string().min(3).required(),
 });
+
+export const updatePasswordSchema = Yup.object({
+  new_password: Yup.string().min(3).required("Không được để trống"),
+  confirm_password: Yup.string().oneOf(
+    [Yup.ref("new_password"), null],
+    "Phải giống password nhập ở trên"
+  ),
+});

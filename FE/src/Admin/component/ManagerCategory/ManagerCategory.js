@@ -244,15 +244,6 @@ const ManagerCategory = () => {
       sortDirections: ["descend", "ascend"],
       render: (order) => (
         <>
-          {/* <span
-            className="me-2"
-            onClick={() => {
-              setSelectedOrder(order);
-              setOpen(true);
-            }}
-          >
-            <RemoveRedEyeIcon color="primary" />
-          </span> */}
           <Popconfirm
             title="Xác nhận"
             description="Bạn chắc chắn muốn xóa ?"

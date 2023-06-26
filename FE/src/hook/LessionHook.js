@@ -609,6 +609,15 @@ export const updateUser = async (body) => {
   return data;
 };
 
+export const changePass = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/" + body?.id,
+    method: "PUT",
+    data: body,
+  });
+  return data;
+};
+
 // export const useCategoryGroupService=()=>{
 //   const addCateGroupMutation = useMutation(updateGroup, {
 //     onSuccess: (data) => {

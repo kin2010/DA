@@ -207,6 +207,39 @@ var AuthService = /** @class */ (function () {
             }
         });
     }); };
+    AuthService.changePassword = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, currentPassword, newPassword, id, user, Update, error_5;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 3, , 4]);
+                    _b = req.body, currentPassword = _b.currentPassword, newPassword = _b.newPassword;
+                    id = req.params.id;
+                    return [4 /*yield*/, models_1.User.findById(id)];
+                case 1:
+                    user = _c.sent();
+                    console.log(user === null || user === void 0 ? void 0 : user.password, currentPassword);
+                    if ((user === null || user === void 0 ? void 0 : user.password) !== currentPassword) {
+                        throw new APIError_1.default({
+                            message: "Mật khẩu hiện tại không đúng",
+                            status: 500,
+                        });
+                    }
+                    return [4 /*yield*/, user.update({
+                            password: newPassword,
+                        }, { new: true })];
+                case 2:
+                    Update = _c.sent();
+                    res.json({ user: Update }).status(http_status_1.default.OK).end();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_5 = _c.sent();
+                    next(error_5);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); };
     return AuthService;
 }());
 exports.default = AuthService;

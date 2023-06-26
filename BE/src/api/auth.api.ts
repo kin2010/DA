@@ -153,4 +153,38 @@ export default class AuthService {
       next(error);
     }
   };
+  static changePassword = async (
+    req: Request<
+      {
+        currentPassword: string;
+        newPassword: string;
+      },
+      Query,
+      Params
+    >,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const { id } = req.params;
+      const user = await User.findById(id);
+      console.log(user?.password, currentPassword);
+      if (user?.password !== currentPassword) {
+        throw new APIError({
+          message: "Mật khẩu hiện tại không đúng",
+          status: 500,
+        });
+      }
+      const Update = await user.update(
+        {
+          password: newPassword,
+        },
+        { new: true }
+      );
+      res.json({ user: Update }).status(httpStatus.OK).end();
+    } catch (error) {
+      next(error);
+    }
+  };
 }
