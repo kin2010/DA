@@ -198,20 +198,20 @@ const CourseDetail = () => {
                     </div>
                   </div>
                   <div className="courese-overview" id="overview">
-                    <h4>Tổng quan :</h4>
+                    <h4 className="text-primary">Tổng quan :</h4>
                     <div className="row">
                       <div className="col-md-12 col-lg-4">
                         <ul className="course-features">
                           <li>
                             <i className="ti-book" />
-                            <span className="label">Chương</span>
+                            <span className="label">Số chương</span>
                             <span className="value">
                               {data?.sections?.length}
                             </span>
                           </li>
                           <li>
                             <i className="ti-book" />
-                            <span className="label">Bài giảng</span>
+                            <span className="label">Số bài giảng</span>
                             <span className="value">
                               {data?.sections?.reduce((a, b) => {
                                 return a + b?.lectures?.length;
@@ -228,31 +228,26 @@ const CourseDetail = () => {
                             </span>
                           </li>
                           <li>
-                            <i className="ti-stats-up" />{" "}
-                            <span className="label">Kĩ năng</span>{" "}
-                            <span className="value">{data?.skill_lever}</span>
-                          </li>
-                          <li>
                             <i className="ti-user" />{" "}
-                            <span className="label">Học viên</span>{" "}
+                            <span className="label">Số học viên</span>{" "}
                             <span className="value">{data?.users?.length}</span>
                           </li>
                         </ul>
                       </div>
                       <div className="col-md-12 col-lg-8">
-                        <h5 className="m-b5">Mô tả khóa học</h5>
+                        <h5 className="m-b5 text-primary">Mô tả khóa học</h5>
                         <p
                           dangerouslySetInnerHTML={{
                             __html: data?.description,
                           }}
                         ></p>
-                        <h5 className="m-b5">Yêu cầu</h5>
+                        <h5 className="m-b5 text-primary">Yêu cầu</h5>
                         <p
                           dangerouslySetInnerHTML={{
                             __html: data?.requirement,
                           }}
                         ></p>
-                        <h5 className="m-b5">Kết quả khóa học</h5>
+                        <h5 className="m-b5 text-primary">Kết quả khóa học</h5>
                         <ul className="list-checked primary">
                           <p
                             dangerouslySetInnerHTML={{
@@ -282,39 +277,6 @@ const CourseDetail = () => {
                               </Link>
                             </h5>
                             <Divider></Divider>
-                            {/* <ul>
-                              {!!item?.data?.length &&
-                                item?.data?.map((lecture) => (
-                                  <li
-                                    key={lecture?.item?._id}
-                                    style={{ cursor: "pointer" }}
-                                  >
-                                    <div className="curriculum-list-box">
-                                      <span>
-                                        {lecture?.type === "lecture" && (
-                                          <DescriptionIcon
-                                            color="info"
-                                            className="me-3"
-                                          ></DescriptionIcon>
-                                        )}
-                                        {lecture?.type === "assignment" && (
-                                          <AssignmentIcon
-                                            color="success"
-                                            className="me-3"
-                                          ></AssignmentIcon>
-                                        )}
-                                      </span>
-
-                                      <Link
-                                        to={`/lecture/${lecture?.item?._id}`}
-                                      >
-                                        {lecture?.item?.name}
-                                      </Link>
-                                    </div>
-                                    <span>60 minutes</span>
-                                  </li>
-                                ))}
-                            </ul> */}
                           </li>
                         ))}
                     </ul>
