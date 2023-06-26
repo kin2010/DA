@@ -378,7 +378,7 @@ var MeetingApi = /** @class */ (function () {
                 case 0:
                     _d.trys.push([0, 5, , 6]);
                     _b = req.body, room = _b.room, userId = _b.userId, message = _b.message, time = _b.time;
-                    return [4 /*yield*/, models_1.Meeting.findOne({ url: room })];
+                    return [4 /*yield*/, models_1.Meeting.findById(room)];
                 case 1:
                     r = _d.sent();
                     if (!r) {
@@ -405,22 +405,22 @@ var MeetingApi = /** @class */ (function () {
                             msg: message,
                         },
                     ], false);
-                    return [4 /*yield*/, models_1.Meeting.findOneAndUpdate({ url: room }, { chat: newChats }, { new: true })];
+                    return [4 /*yield*/, models_1.Meeting.findByIdAndUpdate(room, { chat: newChats }, { new: true })];
                 case 3: return [4 /*yield*/, ((_c = (_d.sent())) === null || _c === void 0 ? void 0 : _c.populate([
                         {
                             path: "teacher",
-                            select: "fullName",
+                            select: "",
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "ralseHand",
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -428,7 +428,7 @@ var MeetingApi = /** @class */ (function () {
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -436,7 +436,7 @@ var MeetingApi = /** @class */ (function () {
                             select: "user time msg",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                     ]))];

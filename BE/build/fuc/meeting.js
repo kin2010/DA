@@ -41,15 +41,15 @@ var models_1 = require("../models");
 var fetch_1 = require("../utils/fetch");
 var userStartMeeting = function (room, user) { return __awaiter(void 0, void 0, void 0, function () {
     var isRoomExist, newRoom, member, set, newuser, meeting;
-    var _a, _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+    var _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0: return [4 /*yield*/, (0, fetch_1.serviceFetch)({
                     url: "api/meeting/" + room,
                     method: "GET",
                 })];
             case 1:
-                isRoomExist = _c.sent();
+                isRoomExist = _d.sent();
                 if (!((isRoomExist === null || isRoomExist === void 0 ? void 0 : isRoomExist.status) !== 200)) return [3 /*break*/, 3];
                 return [4 /*yield*/, (0, fetch_1.serviceFetch)({
                         url: "api/meeting",
@@ -66,14 +66,14 @@ var userStartMeeting = function (room, user) { return __awaiter(void 0, void 0, 
                         },
                     })];
             case 2:
-                newRoom = _c.sent();
+                newRoom = _d.sent();
                 return [2 /*return*/, newRoom];
             case 3:
                 member = (_a = isRoomExist === null || isRoomExist === void 0 ? void 0 : isRoomExist.meeting) === null || _a === void 0 ? void 0 : _a.users;
                 set = new Set(member);
                 set.add(user);
                 newuser = Array.from(set);
-                return [4 /*yield*/, models_1.Meeting.findByIdAndUpdate((_b = isRoomExist === null || isRoomExist === void 0 ? void 0 : isRoomExist.meeting) === null || _b === void 0 ? void 0 : _b._id, {
+                return [4 /*yield*/, ((_c = models_1.Meeting.findByIdAndUpdate((_b = isRoomExist === null || isRoomExist === void 0 ? void 0 : isRoomExist.meeting) === null || _b === void 0 ? void 0 : _b._id, {
                         $push: {
                             attendance: {
                                 user: user,
@@ -84,9 +84,24 @@ var userStartMeeting = function (room, user) { return __awaiter(void 0, void 0, 
                         $addToSet: {
                             users: user,
                         },
-                    }, { new: true })];
+                    }, { new: true })) === null || _c === void 0 ? void 0 : _c.populate([
+                        {
+                            path: "attendance",
+                            select: "",
+                            populate: [
+                                {
+                                    path: "user",
+                                    select: "",
+                                },
+                            ],
+                        },
+                        {
+                            path: "users",
+                            select: "",
+                        },
+                    ]))];
             case 4:
-                meeting = _c.sent();
+                meeting = _d.sent();
                 return [2 /*return*/, { meeting: meeting }];
         }
     });
@@ -131,6 +146,7 @@ var meetingChat = function (body) { return __awaiter(void 0, void 0, void 0, fun
                     })];
             case 1:
                 rs = _b.sent();
+                console.log(rs, 232314);
                 if ((rs === null || rs === void 0 ? void 0 : rs.status) === 200) {
                     return [2 /*return*/, (_a = rs === null || rs === void 0 ? void 0 : rs.msg) === null || _a === void 0 ? void 0 : _a.chat];
                 }

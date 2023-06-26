@@ -717,7 +717,6 @@ const Stream = (props) => {
     };
     getAndSetUserStream();
     adjustVideoElemSize();
-    console.log(99999999999999999999999999, user, user?._id);
     socket.on("connect", () => {
       socket.emit("subscribe", {
         room: room,

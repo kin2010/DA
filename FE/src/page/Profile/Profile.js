@@ -6,6 +6,7 @@ import { getUserData } from "../../hook/LessionHook";
 import AdminCourse from "../../Admin/component/AdminCourse";
 import TeacherCourse from "./TeacherCourse";
 import UserInfo from "./UserInfo";
+import ChangePassword from "./ChangePass";
 
 const Profile = () => {
   const { data } = useQuery(["user"], getUserData);
@@ -82,6 +83,72 @@ const Profile = () => {
                     {value === 0 && <AdminCourse />}
                     {value === 2 && <TeacherCourse />}
                     {value === 4 && <UserInfo />}
+                    {value === 6 && <ChangePassword />}
+                    {/* {value === 6 && (
+                      <>
+                        <div className="p-3" id="change-password">
+                          <div className="profile-head">
+                            <h3>Đổi mật khẩu</h3>
+                          </div>
+                          <form className="edit-profile">
+                            <div className="">
+                              <div className="form-group row">
+                                <div className="col-12 col-sm-8 col-md-8 col-lg-9 ml-auto">
+                                  <h3>Password</h3>
+                                </div>
+                              </div>
+                              <div className="form-group row">
+                                <label className="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">
+                                  Current Password
+                                </label>
+                                <div className="col-12 col-sm-8 col-md-8 col-lg-7">
+                                  <input
+                                    className="form-control"
+                                    type="password"
+                                    defaultValue=""
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-group row">
+                                <label className="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">
+                                  New Password
+                                </label>
+                                <div className="col-12 col-sm-8 col-md-8 col-lg-7">
+                                  <input
+                                    className="form-control"
+                                    type="password"
+                                    defaultValue=""
+                                  />
+                                </div>
+                              </div>
+                              <div className="form-group row">
+                                <label className="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">
+                                  Re Type New Password
+                                </label>
+                                <div className="col-12 col-sm-8 col-md-8 col-lg-7">
+                                  <input
+                                    className="form-control"
+                                    type="password"
+                                    defaultValue=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-12 col-sm-4 col-md-4 col-lg-3"></div>
+                              <div className="col-12 col-sm-8 col-md-8 col-lg-7">
+                                <button type="reset" className="btn">
+                                  Save changes
+                                </button>
+                                <button type="reset" className="btn-secondry">
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      </>
+                    )} */}
                     {/* <div className=" " id="courses">
                       <div className="profile-head">
                         <h3>My Courses</h3>

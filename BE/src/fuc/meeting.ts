@@ -51,7 +51,22 @@ export const userStartMeeting = async (room: any, user: string) => {
         },
       },
       { new: true }
-    );
+    )?.populate([
+      {
+        path: "attendance",
+        select: "",
+        populate: [
+          {
+            path: "user",
+            select: "",
+          },
+        ],
+      },
+      {
+        path: "users",
+        select: "",
+      },
+    ]);
     return { meeting: meeting };
   }
   // name status: join leave
@@ -83,6 +98,7 @@ export const meetingChat = async (body: MeetingChatType) => {
       time: time || new Date(),
     },
   });
+  console.log(rs, 232314);
   if (rs?.status === 200) {
     return rs?.msg?.chat;
   }

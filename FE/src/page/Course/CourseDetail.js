@@ -355,7 +355,7 @@ const CourseDetail = () => {
                                         {lecture?.item?.name}
                                       </Link>
                                     </div>
-                                    <span>60 minutes</span>
+                                    {/* <span>60 minutes</span> */}
                                   </li>
                                 ))}
                             </ul>

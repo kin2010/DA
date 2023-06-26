@@ -18,6 +18,7 @@ import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import CloseIcon from "@mui/icons-material/Close";
 import CourseComment from "./CourseComment";
 import { getCourseRating } from "../../ultis/course";
+import DateRangeIcon from "@mui/icons-material/DateRange";
 const Course = () => {
   const [page, setPage] = useState(1);
   const [queryparams, setQueryparams] = useState({
@@ -226,6 +227,23 @@ const Course = () => {
                               </h5>
                               <span> {course?.category?.name}</span>
                             </div>
+                            <div
+                              className=""
+                              style={{
+                                padding: "0 15px 15px 15px",
+                                fontSize: "10px",
+                              }}
+                            >
+                              {/* <DateRangeIcon color="primary" /> */}
+                              <div className="">
+                                Khai giảng:
+                                <strong> {course?.start}</strong>
+                              </div>
+                              <div className="">
+                                Kết thúc:
+                                <strong> {course?.end}</strong>
+                              </div>
+                            </div>
                             <div className="cours-more-info">
                               <div className="review">
                                 <span>
@@ -296,7 +314,7 @@ const Course = () => {
       </div>
       {/* Content END*/}
       {/* Footer ==== */}
-      <footer>
+      {/* <footer>
         <div className="footer-top">
           <div className="pt-exebar">
             <div className="container">
@@ -514,7 +532,7 @@ const Course = () => {
             </div>
           </div>
         </div>
-      </footer>
+      </footer> */}
       {/* Footer END ==== */}
       <button className="back-to-top fa fa-chevron-up" />
     </div>

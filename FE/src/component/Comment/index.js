@@ -1,6 +1,9 @@
-import { Avatar, Button, Comment, Divider, Form, Input, List } from "antd";
+import { useQuery } from "@tanstack/react-query";
+import { Avatar, Comment, Divider, Form, Input, List } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
+import { getUserData } from "../../hook/LessionHook";
+import { Button } from "@mui/material";
 const { TextArea } = Input;
 const ExampleComment = ({ children }) => (
   <Comment
@@ -20,13 +23,13 @@ const ExampleComment = ({ children }) => (
 const CommentComponent = () => (
   <>
     <Divider></Divider>
-    <p>8 Bình luận</p>
-    <ExampleComment>
+
+    {/* <ExampleComment>
       <ExampleComment>
         <ExampleComment />
         <ExampleComment />
       </ExampleComment>
-    </ExampleComment>
+    </ExampleComment> */}
     <CommentAdd></CommentAdd>
   </>
 );
@@ -50,13 +53,15 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
         loading={submitting}
         onClick={onSubmit}
         type="primary"
+        variant="contained"
       >
-        Add Comment
+        Thêm bình luận
       </Button>
     </Form.Item>
   </>
 );
 const CommentAdd = () => {
+  const { data } = useQuery(["user"], getUserData);
   const [comments, setComments] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [value, setValue] = useState("");
@@ -69,10 +74,12 @@ const CommentAdd = () => {
       setComments([
         ...comments,
         {
-          author: "Han Solo",
-          avatar: "https://joeschmoe.io/api/v1/random",
+          author: data?.user?.fullNae,
+          avatar: !!data?.user?.avatar
+            ? data?.user?.avatar
+            : "https://joeschmoe.io/api/v1/random",
           content: <p>{value}</p>,
-          datetime: moment("2016-11-22").fromNow(),
+          datetime: moment(new Date()).fromNow(),
         },
       ]);
     }, 1000);
@@ -82,10 +89,18 @@ const CommentAdd = () => {
   };
   return (
     <>
+      <p>{comments?.length || 0} Bình luận</p>
       {comments.length > 0 && <CommentList comments={comments} />}
       <Comment
         avatar={
-          <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+          <Avatar
+            src={
+              !!data?.user?.avatar
+                ? data?.user?.avatar
+                : "https://joeschmoe.io/api/v1/random"
+            }
+            alt="Han Solo"
+          />
         }
         content={
           <Editor

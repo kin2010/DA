@@ -308,7 +308,7 @@ export default class MeetingApi {
   ) => {
     try {
       const { room, userId, message, time } = req.body;
-      const r = await Meeting.findOne({ url: room });
+      const r = await Meeting.findById(room);
       if (!r) {
         throw new APIError({
           status: httpStatus.NOT_FOUND,
@@ -333,26 +333,22 @@ export default class MeetingApi {
         },
       ];
       const rs = await (
-        await Meeting.findOneAndUpdate(
-          { url: room },
-          { chat: newChats },
-          { new: true }
-        )
+        await Meeting.findByIdAndUpdate(room, { chat: newChats }, { new: true })
       )?.populate([
         {
           path: "teacher",
-          select: "fullName",
+          select: "",
         },
         {
           path: "users",
-          select: "avatar email fullName address phone online",
+          select: "",
         },
         {
           path: "ralseHand",
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
@@ -360,7 +356,7 @@ export default class MeetingApi {
           select: "time user",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
         {
@@ -368,7 +364,7 @@ export default class MeetingApi {
           select: "user time msg",
           populate: {
             path: "user",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
         },
       ]);

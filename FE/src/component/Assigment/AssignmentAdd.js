@@ -150,7 +150,7 @@ const AssignmentAdd = ({
                   btnName={"Đính kèm"}
                   formName={"attachments"}
                   label={"hỗ trợ: jpg, jpeg, png, pdf or .zip"}
-                  accept="image/*,.pdf,.zip"
+                  accept="image/*,.pdf,.zip,.txt"
                   multiple
                 ></FileUpload>
                 <div className="d-flex justify-content-end">

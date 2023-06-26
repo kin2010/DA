@@ -105,7 +105,7 @@ const LectureDetail = () => {
                                             {lecture?.item?.name}
                                           </Link>
                                         </div>
-                                        <span>60 minutes</span>
+                                        {/* <span>60 minutes</span> */}
                                       </li>
                                     ))}
                                 </ul>
@@ -207,7 +207,7 @@ const LectureDetail = () => {
                 </div>
 
                 <div className="col-lg-4 col-xl-4">
-                  {!data?.youtube?.length && (
+                  {!data?.video?.length && (
                     <div className="m-b30" id="curriculum">
                       <h4>Đề cương </h4>
                       <ul className="curriculum-list">
@@ -244,7 +244,7 @@ const LectureDetail = () => {
                                           {lecture?.item?.name}
                                         </Link>
                                       </div>
-                                      <span>60 minutes</span>
+                                      {/* <span>60 minutes</span> */}
                                     </li>
                                   ))}
                               </ul>

@@ -45,7 +45,7 @@ const items = [
         getItem("Quản lí khóa học", "2", <AutoStoriesIcon />),
         getItem("Quản lí đơn khóa học", "3", <CardGiftcardIcon />),
         getItem("Quản lí thể loại", "4", <AccountBoxIcon />),
-        getItem("Quản lí giảng viên", "5", <AccountBoxIcon />),
+        // getItem("Quản lí giảng viên", "5", <AccountBoxIcon />),
         getItem("Quản lí người dùng", "6", <PeopleAltIcon />),
         // getItem("Quản lí tố cáo", "7", <FlagCircleIcon />),
       ],
