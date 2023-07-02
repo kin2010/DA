@@ -168,6 +168,10 @@ var CourseApi = /** @class */ (function () {
                                 select: "",
                             },
                             {
+                                path: "category",
+                                select: "",
+                            },
+                            {
                                 path: "comments",
                                 select: "",
                                 populate: [

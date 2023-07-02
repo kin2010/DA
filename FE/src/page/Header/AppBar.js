@@ -176,7 +176,7 @@ export default function HeaderAppBar({ isAdmin }) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar style={{ padding: "0 60px" }}>
           {isAdmin && <DashboardIcon />}
           <IconButton
@@ -249,7 +249,7 @@ export default function HeaderAppBar({ isAdmin }) {
                         </Link>
                       </IconButton>
                     )}
-                    <IconButton
+                    {/* <IconButton
                       size="large"
                       aria-label="show 17 new notifications"
                       color="inherit"
@@ -257,7 +257,7 @@ export default function HeaderAppBar({ isAdmin }) {
                       <Badge badgeContent={17} color="error">
                         <ShoppingCartIcon />
                       </Badge>
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton
                       size="large"
                       edge="end"

@@ -9,6 +9,7 @@ const CoursePopulate = () => {
   const [queryparams, setQueryparams] = useState({
     limit: 9,
     skip: 0,
+    // status: "published",
   });
   const { data } = useQuery(["courses", queryparams], getAllCourse);
 

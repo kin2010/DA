@@ -13,7 +13,15 @@ import {
 } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 // or 'antd/dist/antd.less'
-import { Button, Divider, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Divider,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import "../../component/index.css";
 import HeaderAppBar from "../Header/AppBar";
 import { Container } from "react-bootstrap";
@@ -24,7 +32,7 @@ import {
   useGroupService,
 } from "../../hook/LessionHook";
 import socketIOClient from "socket.io-client";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import EditorCommon from "../../component/EdittorCommon/EdittorCommon";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -47,7 +55,7 @@ const { TextArea } = Input;
 const GroupDetail = () => {
   const { id } = useParams();
   const groupServive = useGroupService();
-  const { data } = useQuery(["group_detail", id], getGroupById);
+  const { data, isLoading } = useQuery(["group_detail", id], getGroupById);
   const queryClient = useQueryClient();
   const { data: userData } = useQuery(["user"], getUserData);
   const [users, setUsers] = useState([]);
@@ -59,7 +67,7 @@ const GroupDetail = () => {
   const open = Boolean(anchorEl);
   const groupServices = useGroupService();
   const [meetings, setMeetings] = useState([]);
-
+  const navigate = useNavigate();
   const [contents, setContents] = useState([]);
   const [openMtg, setOpenMtg] = useState(false);
   const [openSchedule, setOpenSchedule] = useState(false);
@@ -164,6 +172,42 @@ const GroupDetail = () => {
     setOpenSchedule(true);
     handleClose();
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <HeaderAppBar />
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={true}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </>
+    );
+  }
+
+  if (
+    !(data?.course?.users || [])?.find(
+      (item) => userData?.user?._id === item?._id
+    )
+  ) {
+    return (
+      <>
+        <HeaderAppBar /> {data?.user?._id}
+        <Result
+          status="404"
+          title="404"
+          subTitle="Bạn không có quyền để tham gia Group này"
+          extra={
+            <Button onClick={() => navigate("/")} type="primary">
+              Trang chủ
+            </Button>
+          }
+        />
+      </>
+    );
+  }
 
   return (
     <>

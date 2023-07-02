@@ -137,6 +137,10 @@ export default class CourseApi {
           select: "",
         },
         {
+          path: "category",
+          select: "",
+        },
+        {
           path: "comments",
           select: "",
           populate: [

@@ -39,7 +39,7 @@ const AppResult = () => {
           className="mt-4"
           status="success"
           title={[
-            <p>Tổng thanh toán :{data?.total}</p>,
+            <p>Tổng thanh toán :{data?.total?.toLocaleString("en-US")} VND</p>,
             <p>
               Trạng thái :{!!data?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
             </p>,

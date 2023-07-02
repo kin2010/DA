@@ -7,7 +7,7 @@ import HeaderAppBar from "../Header/AppBar";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import Groups2Icon from "@mui/icons-material/Groups2";
-import { Avatar, Button, Divider, Rating } from "@mui/material";
+import { Avatar, Button, Container, Divider, Rating } from "@mui/material";
 import { AppContextProvider } from "../../Context/AppContext";
 import CourseComment from "./CourseComment";
 import { Col, Form, Row } from "react-bootstrap";
@@ -19,6 +19,7 @@ import Typography from "@mui/material/Typography";
 import { postComment } from "../../hook/LessionHook";
 import { Empty } from "antd";
 import { openNotification } from "../../Notification";
+import { format } from "date-fns";
 const CourseDetail = () => {
   const { id } = useParams();
   const { data } = useQuery(["course_detail", id], getCourse);
@@ -78,6 +79,14 @@ const CourseDetail = () => {
       : 0;
   }, [data?.comments]);
 
+  const isShowReview = useMemo(() => {
+    if (data?._id) {
+      const ids = data?.users?.map((user) => user?._id);
+      return ids?.includes(user?.user?._id);
+    }
+    return false;
+  }, [data]);
+
   return (
     <>
       <HeaderAppBar></HeaderAppBar>
@@ -104,73 +113,76 @@ const CourseDetail = () => {
             </ul>
           </div>
         </div>
-        {/* Breadcrumb row END */}
-        {/* inner page banner END */}
         <div className="content-block">
-          {/* About Us */}
           <div className="section-area section-sp1">
             <div className="container">
               <div className="row d-flex flex-row-reverse">
                 <div className="col-lg-3 col-md-4 col-sm-12 m-b30">
-                  <div className="course-detail-bx">
-                    <div className="course-price">
-                      {data?.discount ? (
-                        <del>
-                          {!!data?.discount
-                            ? (data?.price - data?.discount)?.toLocaleString(
-                                "en-US"
-                              )
-                            : 0}
-                          &#x20AB;
-                        </del>
-                      ) : (
-                        <></>
-                      )}
-
-                      <h4 className="ms-1 price">
-                        {data?.price ? (
-                          <>{data?.price?.toLocaleString("en-US")} &#x20AB;</>
+                  {!(data?.users || [])
+                    ?.map((user) => user?._id)
+                    ?.includes(user?.user?._id) && (
+                    <div className="course-detail-bx">
+                      <div className="course-price">
+                        {data?.discount ? (
+                          <del>
+                            {!!data?.discount
+                              ? (data?.price - data?.discount)?.toLocaleString(
+                                  "en-US"
+                                )
+                              : 0}
+                            &#x20AB;
+                          </del>
                         ) : (
-                          "Miễn phí"
+                          <></>
                         )}
-                      </h4>
-                    </div>
-                    <div className="course-buy-now text-center">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                          handleCourse();
-                        }}
-                      >
-                        Đăng ký ngay
-                      </Button>
-                    </div>
-                    <div className="teacher-bx">
-                      <div className="teacher-info">
-                        <div className="teacher-thumb">
-                          <img
-                            src="assets/images/testimonials/pic1.jpg"
-                            alt=""
-                          />
+
+                        <h4 className="ms-1 price">
+                          {data?.price ? (
+                            <>{data?.price?.toLocaleString("en-US")} &#x20AB;</>
+                          ) : (
+                            "Miễn phí"
+                          )}
+                        </h4>
+                      </div>
+                      <div className="course-buy-now text-center">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            handleCourse();
+                          }}
+                        >
+                          Đăng ký ngay
+                        </Button>
+                      </div>
+                      <div className="teacher-bx">
+                        <div className="teacher-info">
+                          <div className="teacher-thumb">
+                            <img
+                              src="assets/images/testimonials/pic1.jpg"
+                              alt=""
+                            />
+                          </div>
+                          <div className="teacher-name">
+                            <h5>Giảng viên</h5>
+                            <span>{data?.owner?.fullName}</span>
+                          </div>
                         </div>
-                        <div className="teacher-name">
-                          <h5>Giảng viên</h5>
-                          <span>{data?.owner?.fullName}</span>
+                      </div>
+                      <div className="cours-more-info">
+                        <div className="review">
+                          <span>{!!data?.comments?.length || 0} Đánh giá</span>
+                          <Rating value={ratingAverage} />
+                        </div>
+                        <div className="price categories">
+                          <span>Thể loại</span>
+                          <h5 className="text-primary">
+                            {data?.category?.name}
+                          </h5>
                         </div>
                       </div>
                     </div>
-                    <div className="cours-more-info">
-                      <div className="review">
-                        <span>{!!data?.comments?.length || 0} Đánh giá</span>
-                        <Rating value={ratingAverage} />
-                      </div>
-                      <div className="price categories">
-                        <span>Thể loại</span>
-                        <h5 className="text-primary">{data?.category?.name}</h5>
-                      </div>
-                    </div>
-                  </div>
+                  )}
                 </div>
                 <div className="col-lg-9 col-md-8 col-sm-12">
                   <div className="courses-post">
@@ -259,7 +271,7 @@ const CourseDetail = () => {
                     </div>
                   </div>
                   <div className="m-b30" id="group">
-                    <h4>Group </h4>
+                    <h4 className="text-primary mb-5">Group </h4>
                     <ul className="curriculum-list">
                       {!!data?.groups?.length &&
                         data?.groups?.map((item) => (
@@ -282,7 +294,7 @@ const CourseDetail = () => {
                     </ul>
                   </div>
                   <div className="m-b30" id="curriculum">
-                    <h4>Đề cương </h4>
+                    <h4 className="text-primary mb-5">Đề cương </h4>
                     <ul className="curriculum-list">
                       {!!data?.sections_info?.length &&
                         data?.sections_info?.map((item) => (
@@ -326,15 +338,19 @@ const CourseDetail = () => {
                     </ul>
                   </div>
                   <div className="" id="instructor">
-                    <h4>Giảng viên</h4>
+                    <h4 className="text-primary mb-5">Giảng viên</h4>
                     <div className="instructor-bx">
                       <div className="instructor-author">
-                        <img src="assets/images/testimonials/pic1.jpg" alt="" />
+                        <img
+                          style={{ height: "100%" }}
+                          src={data?.owner?.avatar || "../images/user.png"}
+                          alt=""
+                        />
                       </div>
                       <div className="instructor-info">
                         <h6>{data?.owner?.fullName}</h6>
                         <span>{data?.owner?.email}</span>
-                        <ul className="list-inline m-tb10">
+                        {/* <ul className="list-inline m-tb10">
                           <li>
                             <a href="#" className="btn sharp-sm facebook">
                               <i className="fa fa-facebook" />
@@ -355,20 +371,23 @@ const CourseDetail = () => {
                               <i className="fa fa-google-plus" />
                             </a>
                           </li>
-                        </ul>
-                        {/* <p className="m-b0">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry. Lorem Ipsum has been the
-                          industry's standard dummy text ever since the 1500s,
-                          when an unknown printer took a galley of type and
-                          scrambled it to make a type specimen book. It has
-                          survived not only five centuries
-                        </p> */}
+                        </ul> */}
+                        {!!data?.owner?.information && (
+                          <>
+                            <Divider />
+                            <p
+                              className="m-b0"
+                              dangerouslySetInnerHTML={{
+                                __html: data?.owner?.information,
+                              }}
+                            ></p>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
                   <div className="" id="reviews">
-                    <h4>Đánh giá</h4>
+                    <h4 className="text-primary mb-5">Đánh giá</h4>
                     <div className="review-bx">
                       <div className="all-review">
                         <h2
@@ -424,125 +443,153 @@ const CourseDetail = () => {
             </div>
           </div>
         </div>
-        <Row
-          id="tab3"
-          className="pt-5 p-3 pb-5 cmt mt-5"
-          style={{ backgroundColor: "#e9eef5", borderRadius: "25px" }}
-        >
-          <hr />
-          <Col>
-            <Row>
-              <div className="h2 mb-5 text-primary">Đánh giá</div>{" "}
-            </Row>
+        <Container>
+          <Row
+            id="tab3"
+            className="pt-5 p-3 pb-5 cmt mt-5"
+            style={{ backgroundColor: "#e9eef5", borderRadius: "25px" }}
+          >
+            <hr />
+            <Col>
+              <Row>
+                <div className="h2 mb-5 text-primary">Đánh giá</div>{" "}
+              </Row>
 
-            <Row className="p-3">
-              <List
-                sx={{
-                  width: "100%",
-                  maxHeight: "500px",
-                  overflowY: "auto",
-                  bgcolor: "background.paper",
-                }}
-              >
-                {!!data?.comments?.length ? (
-                  data?.comments?.map((comment) => (
-                    <div key={comment?._id}>
-                      <ListItem alignItems="flex-start">
-                        <ListItemAvatar>
-                          <Avatar
-                            alt="Travis Howard"
-                            src={comment?.user?.avatar || "../images/user.png"}
-                          />
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={[
-                            <p> {comment?.user?.fullName}</p>,
-                            <Rating
-                              name="read-only"
-                              value={comment?.rating}
-                              readOnly
-                              color="#1976d2"
-                            />,
-                          ]}
-                          secondary={
-                            <React.Fragment>
-                              <Typography
-                                sx={{ display: "inline" }}
-                                component="span"
-                                variant="body2"
-                                color="text.primary"
-                              >
-                                {comment?.comment}
-                              </Typography>
-                            </React.Fragment>
-                          }
-                        />
-                      </ListItem>
-                      <Divider variant="inset" component="li" />
-                    </div>
-                  ))
-                ) : (
-                  <Empty />
-                )}
-              </List>
-            </Row>
-          </Col>
-
-          <Col className="">
-            <Row>
-              {" "}
-              <div className="h2 mb-5 text-primary">Đánh giá khóa học này</div>
-            </Row>
-            <Row>
-              <Form onSubmit={submitHandler} className="w-100">
-                <Form.Group className="mb-3" controlId="custom4">
-                  <Form.Label className="text-primary h5">
-                    Xếp hạng đánh giá
-                  </Form.Label>
-                  <Form.Control
-                    onChange={onChangeForm}
-                    name="rating"
-                    form="add"
-                    as="select"
-                    placeholder="Rating"
-                    value={formValue.rating}
-                    className="w-100"
-                    required
-                  >
-                    <option value="">Chọn sao...</option>
-                    <option value="1">1- Rất Tệ</option>
-                    <option value="2">2- Tệ</option>
-                    <option value="3">3- Khá Tốt</option>
-                    <option value="4">4- Rất tốt</option>
-                    <option value="5">5- Xuất sắc</option>
-                  </Form.Control>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="custom5">
-                  <Form.Label className="text-primary h5">Bình luận</Form.Label>
-                  <Form.Control
-                    required
-                    as="textarea"
-                    rows={3}
-                    name="comment"
-                    value={formValue.comment}
-                    onChange={onChangeForm}
-                    placeholder="Nhap Comment"
-                  />
-                </Form.Group>
-
-                <Button
-                  className="w-100"
-                  color="primary"
-                  variant="contained"
-                  type="submit"
+              <Row className="p-3">
+                <List
+                  sx={{
+                    width: "100%",
+                    maxHeight: "500px",
+                    overflowY: "auto",
+                    bgcolor: "background.paper",
+                  }}
                 >
-                  Gởi
-                </Button>
-              </Form>
-            </Row>
-          </Col>
-        </Row>
+                  {!!data?.comments?.length ? (
+                    data?.comments?.map((comment) => (
+                      <div key={comment?._id}>
+                        <ListItem alignItems="flex-start">
+                          <ListItemAvatar>
+                            <Avatar
+                              alt="Travis Howard"
+                              src={
+                                comment?.user?.avatar || "../images/user.png"
+                              }
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={[
+                              <p>
+                                {" "}
+                                {comment?.user?.fullName}{" "}
+                                <span
+                                  style={{
+                                    fontSize: 10,
+                                    color: "gray",
+                                  }}
+                                >
+                                  {!!comment?.createdAt
+                                    ? format(
+                                        new Date(comment?.createdAt),
+                                        "yyyy-MM-dd HH:mm"
+                                      )
+                                    : ""}
+                                </span>
+                              </p>,
+                              <Rating
+                                name="read-only"
+                                value={comment?.rating}
+                                readOnly
+                                color="#1976d2"
+                              />,
+                            ]}
+                            secondary={
+                              <React.Fragment>
+                                <Typography
+                                  sx={{ display: "inline" }}
+                                  component="span"
+                                  variant="body2"
+                                  color="text.primary"
+                                >
+                                  {comment?.comment}
+                                </Typography>
+                              </React.Fragment>
+                            }
+                          />
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                      </div>
+                    ))
+                  ) : (
+                    <Empty />
+                  )}
+                </List>
+              </Row>
+            </Col>
 
+            <Col className="">
+              <Row>
+                <div className="h2 mb-5 text-primary">
+                  Đánh giá khóa học này
+                </div>
+              </Row>
+              <Row>
+                <Form onSubmit={submitHandler} className="w-100">
+                  <Form.Group className="mb-3" controlId="custom4">
+                    <Form.Label className="text-primary h5">
+                      Xếp hạng đánh giá
+                    </Form.Label>
+                    <Form.Control
+                      onChange={onChangeForm}
+                      name="rating"
+                      form="add"
+                      as="select"
+                      placeholder="Rating"
+                      value={formValue.rating}
+                      className="w-100"
+                      required
+                    >
+                      <option value="">Chọn sao...</option>
+                      <option value="1">1- Rất Tệ</option>
+                      <option value="2">2- Tệ</option>
+                      <option value="3">3- Khá Tốt</option>
+                      <option value="4">4- Rất tốt</option>
+                      <option value="5">5- Xuất sắc</option>
+                    </Form.Control>
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="custom5">
+                    <Form.Label className="text-primary h5">
+                      Bình luận
+                    </Form.Label>
+                    <Form.Control
+                      required
+                      as="textarea"
+                      rows={3}
+                      name="comment"
+                      value={formValue.comment}
+                      onChange={onChangeForm}
+                      placeholder="Nhap Comment"
+                    />
+                  </Form.Group>
+
+                  <Button
+                    className="w-100"
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    disabled={!isShowReview}
+                  >
+                    Gởi
+                  </Button>
+                  {!isShowReview && (
+                    <p className="mt-3 fw-bold">
+                      Chỉ thành viên mới có thể đánh giá khóa học này
+                    </p>
+                  )}
+                </Form>
+              </Row>
+            </Col>
+          </Row>
+        </Container>
         {/* contact area END */}
       </div>
       {/* Content END*/}

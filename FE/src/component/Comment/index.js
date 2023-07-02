@@ -74,10 +74,10 @@ const CommentAdd = () => {
       setComments([
         ...comments,
         {
-          author: data?.user?.fullNae,
+          author: data?.user?.fullName,
           avatar: !!data?.user?.avatar
             ? data?.user?.avatar
-            : "https://joeschmoe.io/api/v1/random",
+            : "../images/user.jpg",
           content: <p>{value}</p>,
           datetime: moment(new Date()).fromNow(),
         },
@@ -95,9 +95,7 @@ const CommentAdd = () => {
         avatar={
           <Avatar
             src={
-              !!data?.user?.avatar
-                ? data?.user?.avatar
-                : "https://joeschmoe.io/api/v1/random"
+              !!data?.user?.avatar ? data?.user?.avatar : "../images/user.jpg"
             }
             alt="Han Solo"
           />

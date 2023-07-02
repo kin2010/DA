@@ -127,7 +127,7 @@ const Checkout = () => {
                         <ul className="card-courses-view">
                           <li className="card-courses-categories">
                             <h5>Thể loại</h5>
-                            <h4>{cart?.category}</h4>
+                            <h4>{cart?.category?.name}</h4>
                           </li>
                           <li className="card-courses-review">
                             <h5>3 Review</h5>
