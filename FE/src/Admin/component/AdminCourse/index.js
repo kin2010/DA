@@ -26,7 +26,7 @@ import { openNotification } from "../../../Notification";
 import { AuthContextProvider } from "../../../Context/AuthContext";
 import HeaderAppBar from "../../../page/Header/AppBar";
 
-const steps = ["CƠ BẢN", "ĐỀ CƯƠNG", "MEDIA", "GIÁ", "PUBLISH"];
+const steps = ["CƠ BẢN", "ĐỀ CƯƠNG", "MEDIA", "GIÁ", "XUẤT BẢN"];
 
 export const COURSE_CREATE_QUERY = ["new_course"];
 

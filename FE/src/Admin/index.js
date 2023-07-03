@@ -74,7 +74,7 @@ const Admin = () => {
         // navigate("/admin/teacher");
         break;
       case "6":
-        navigate("/admin/category");
+        navigate("/admin/user");
         // navigate("/admin/user");
         break;
 

@@ -12,6 +12,7 @@ router.route("/categories").get(RoleSerice.getCategory);
 router.route("/allcategory").get(RoleSerice.getAllCategory);
 router.route("/allcategorygroup").get(RoleSerice.getAllCategoryGroup);
 router.route("/delete").delete(RoleSerice.deleteDocument);
+router.route("/getall").get(AuthService.getAll);
 router.route("/:id").post(AuthService.update);
 router.route("/:id").put(AuthService.changePassword);
 

@@ -187,4 +187,22 @@ export default class AuthService {
       next(error);
     }
   };
+  static getAll = async (
+    req: Request<Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const users = await User.find({})?.populate([
+        {
+          path: "role",
+          select: "",
+        },
+      ]);
+
+      res.json({ user: users }).status(httpStatus.OK).end();
+    } catch (error) {
+      next(error);
+    }
+  };
 }

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { SearchOutlined } from "@ant-design/icons";
 import {
   Col,
@@ -7,8 +6,6 @@ import {
   Input,
   Pagination,
   Popconfirm,
-  Row,
-  Select,
   Space,
   Table,
 } from "antd";
@@ -22,9 +19,10 @@ import {
   adminGetAllCategoryGroup,
   deleteDocument,
   getAllOrder,
+  getAllUSer,
 } from "../../../hook/LessionHook";
 import { format } from "date-fns";
-import { Avatar, Button, Typography } from "@mui/material";
+import { Avatar, Button, MenuItem, Select, Typography } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Dialog from "@mui/material/Dialog";
@@ -34,29 +32,41 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 import IconBreadcrumbs from "../BreadCrumb";
-import { Formik } from "formik";
-import { createAssignmentSchema } from "../../../Validation/CourseCreate";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Formik, useFormik, useFormikContext } from "formik";
 import FormControl from "../../../component/FormControl";
+import {
+  createAssignmentSchema,
+  createCategorySchema,
+  createScheduleSchema,
+} from "../../../Validation/CourseCreate";
 import { openNotification } from "../../../Notification";
+import InputLabel from "@mui/material/InputLabel";
 import EditIcon from "@mui/icons-material/Edit";
-const ManageCategoryGroup = () => {
+const MangerUser = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [queryparams, setQueryparams] = useState({
     // limit: 10,
     // skip: 10 * (page - 1),
   });
-  const { data: categories } = useQuery(
+  const queryClient = useQueryClient();
+  const { data: users } = useQuery(["users"], getAllUSer);
+
+  const { data: categorygroup } = useQuery(
     ["admin_category_group", queryparams],
     adminGetAllCategoryGroup
   );
+  // const { data: categroups } = useQuery(
+  //   ["admin_category_group", queryparams],
+  //   adminGetAllCategoryGroup
+  // );
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const [data, setData] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState();
   const [open, setOpen] = useState(false);
+  const [group, setCategoryGroup] = useState();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -76,18 +86,25 @@ const ManageCategoryGroup = () => {
   };
 
   useEffect(() => {
-    if (!!categories?.length) {
-      const dt = categories?.map((order) => {
+    if (!!users?.user?.length) {
+      const dt = users?.user?.map((order) => {
         return {
           id: order?._id,
-          name: order?.name,
-          createdAt: format(new Date(order?.createdAt), "yyyy-MM-dd hh:mm"),
+          fullName: order?.fullName,
+          email: order?.email,
+          avatar: order?.avatar || "../images/user.jpg",
+          role:
+            order?.role?.roleName === "Student"
+              ? "Học viên"
+              : order?.role?.roleName === "Teacher"
+              ? "Giảng viên"
+              : "Quản trị",
           action: order,
         };
       });
       setData(dt);
     }
-  }, [categories]);
+  }, [users]);
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
@@ -193,24 +210,45 @@ const ManageCategoryGroup = () => {
   });
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      width: "5%",
-      ...getColumnSearchProps("id"),
-    },
-    {
-      title: "Tên thể loại",
-      dataIndex: "name",
-      key: "name",
+      title: "Tên ",
+      dataIndex: "fullName",
+      key: "fullName",
       width: "20%",
-      ...getColumnSearchProps("name"),
+      ...getColumnSearchProps("fullName"),
     },
     {
-      title: "Ngày tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      ...getColumnSearchProps("createdAt"),
+      title: "avatar",
+      dataIndex: "avatar",
+      key: "avatar",
+      ...getColumnSearchProps("avatar"),
+      sorter: (a, b) => a.address.length - b.address.length,
+      sortDirections: ["descend", "ascend"],
+      render: (order) => (
+        <div
+          style={{
+            width: "80px",
+            height: "80px",
+            borderRadius: "100rem",
+            overflow: "hidden",
+          }}
+        >
+          <img src={order} alt="img" />
+        </div>
+      ),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      ...getColumnSearchProps("email"),
+      sorter: (a, b) => a.address.length - b.address.length,
+      sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Vai trò",
+      dataIndex: "role",
+      key: "role",
+      ...getColumnSearchProps("role"),
       sorter: (a, b) => a.address.length - b.address.length,
       sortDirections: ["descend", "ascend"],
     },
@@ -232,26 +270,23 @@ const ManageCategoryGroup = () => {
             onOpenChange={() => console.log("open change")}
           >
             <span>
-              <DeleteIcon color="error" />
+              <RemoveRedEyeIcon color="error" />
             </span>
           </Popconfirm>
         </>
       ),
     },
   ];
-
   const handleSubmit = async (value) => {
-    console.log(value);
-    const res = await addCategoryGroup({
+    const res = await addCategory({
       ...value,
     });
-
     if (res?._id) {
       openNotification({
         type: "success",
         message: "Thêm thành công",
       });
-      queryClient.invalidateQueries(["admin_category_group", queryparams]);
+      queryClient.invalidateQueries(["admin_category", queryparams]);
     }
     handleClose();
   };
@@ -259,7 +294,7 @@ const ManageCategoryGroup = () => {
   const handleRemove = async (id) => {
     const res = await deleteDocument({
       id: id,
-      type: "category-group",
+      type: "category",
     });
     if (res?.deletedCount === 1) {
       openNotification({
@@ -267,9 +302,34 @@ const ManageCategoryGroup = () => {
         message: "Xóa thành công",
       });
       setTimeout(() => {
-        queryClient.invalidateQueries(["admin_category_group", queryparams]);
+        queryClient.invalidateQueries(["admin_category", queryparams]);
       }, 2000);
     }
+  };
+
+  const SelectGroup = () => {
+    const { setFieldValue, errors } = useFormikContext();
+
+    const handleChange = (e) => {
+      setFieldValue("group", e.target.value);
+    };
+    return (
+      <>
+        <Select
+          fullWidth
+          labelId="demo-simple-select-standard-label"
+          id="demo-simple-select"
+          value={group}
+          label="Age"
+          onChange={handleChange}
+        >
+          {categorygroup?.map((cate) => (
+            <MenuItem value={cate?._id}>{cate?.name}</MenuItem>
+          ))}
+        </Select>
+        {errors["group"] && <div className="feedback">{errors["group"]}</div>}
+      </>
+    );
   };
   return (
     <>
@@ -277,7 +337,7 @@ const ManageCategoryGroup = () => {
         initialValues={{
           name: "",
         }}
-        validationSchema={createAssignmentSchema}
+        validationSchema={createCategorySchema}
         onSubmit={(value) => handleSubmit(value)}
       >
         {(props) => (
@@ -293,8 +353,10 @@ const ManageCategoryGroup = () => {
             </DialogTitle>
             <form onSubmit={props.handleSubmit}>
               <DialogContent>
-                <strong> Người đặt :</strong>
                 <FormControl label={"Tên thể loại"} name={"name"}></FormControl>
+                <label className="col-form-label">Thể loại thuộc nhóm :</label>
+
+                <SelectGroup />
               </DialogContent>
               <DialogActions>
                 <Button variant="outlined" onClick={handleClose} autoFocus>
@@ -308,19 +370,10 @@ const ManageCategoryGroup = () => {
           </Dialog>
         )}
       </Formik>
+      <IconBreadcrumbs title={"Thể loại"} />
       <Typography variant="h5" className="mb-5" color="primary">
-        Quản lí Nhóm thể loại
+        Quản lí Người dùng
       </Typography>
-      <Button
-        className="mb-3"
-        variant="contained"
-        onClick={() => {
-          setOpen(true);
-        }}
-        autoFocus
-      >
-        Thêm
-      </Button>
       <Table
         columns={columns}
         dataSource={data}
@@ -329,4 +382,4 @@ const ManageCategoryGroup = () => {
     </>
   );
 };
-export default ManageCategoryGroup;
+export default MangerUser;

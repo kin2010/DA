@@ -203,6 +203,14 @@ export const getGroupById = async ({ queryKey }) => {
   return data;
 };
 
+export const getAllUSer = async ({ queryKey }) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/getall",
+    method: "GET",
+  });
+  return data;
+};
+
 export const useLectureService = () => {
   const queryClient = useQueryClient();
   const addLectureMutation = useMutation(addLecture, {
@@ -224,6 +232,39 @@ export const useLectureService = () => {
   };
 };
 
+export const useUserService = () => {
+  const queryClient = useQueryClient();
+  const { id: _id } = useParams();
+  const [id, setId] = useState(_id);
+  const retryOptions = {
+    retry: 0, // Number of retry attempts
+    retryDelay: 5000, // Delay between retry attempts in milliseconds
+  };
+  const { data } = useQuery(["users"], getAllUSer, retryOptions);
+
+  const addMeetingMutation = useMutation(createMeeting, {
+    onSuccess: (data) => {
+      if (!data?.message) {
+        queryClient.invalidateQueries(["group_detail", id]);
+      } else {
+        // queryClient.setQueryData(["course", id], null);
+      }
+    },
+  });
+  return {
+    addMeeting: async (body) => {
+      return addMeetingMutation.mutateAsync({ ...body });
+    },
+
+    fetch: async (params) => {
+      const res = await queryClient.fetchQuery(
+        ["group_detail", params],
+        getGroupById
+      );
+      return res;
+    },
+  };
+};
 export const useGroupService = () => {
   const queryClient = useQueryClient();
   const { id: _id } = useParams();

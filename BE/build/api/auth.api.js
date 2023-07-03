@@ -240,6 +240,31 @@ var AuthService = /** @class */ (function () {
             }
         });
     }); };
+    AuthService.getAll = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var users, error_6;
+        var _b;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, ((_b = models_1.User.find({})) === null || _b === void 0 ? void 0 : _b.populate([
+                            {
+                                path: "role",
+                                select: "",
+                            },
+                        ]))];
+                case 1:
+                    users = _c.sent();
+                    res.json({ user: users }).status(http_status_1.default.OK).end();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_6 = _c.sent();
+                    next(error_6);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
     return AuthService;
 }());
 exports.default = AuthService;

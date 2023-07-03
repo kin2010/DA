@@ -29,6 +29,7 @@ import ManagerCourse from "./Admin/component/ManageCourse/ManageCourse";
 import ManagerOrder from "./Admin/component/ManagerOrder/ManagerOrder";
 import ManagerCategory from "./Admin/component/ManagerCategory/ManagerCategory";
 import Profile from "./page/Profile/Profile";
+import MangerUser from "./Admin/component/ManagerUser/MangerUser";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
@@ -131,6 +132,10 @@ function App() {
                 <Route
                   path="/admin/category"
                   element={<ManagerCategory></ManagerCategory>}
+                ></Route>
+                <Route
+                  path="/admin/user"
+                  element={<MangerUser></MangerUser>}
                 ></Route>
               </Route>
               <Route exact path="*" element={Error}></Route>

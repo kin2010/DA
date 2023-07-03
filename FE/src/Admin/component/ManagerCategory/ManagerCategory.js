@@ -42,6 +42,7 @@ import {
 } from "../../../Validation/CourseCreate";
 import { openNotification } from "../../../Notification";
 import InputLabel from "@mui/material/InputLabel";
+import EditIcon from "@mui/icons-material/Edit";
 const ManagerCategory = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -244,7 +245,9 @@ const ManagerCategory = () => {
       sortDirections: ["descend", "ascend"],
       render: (order) => (
         <>
+          <EditIcon color="success" />
           <Popconfirm
+            className="ms-2"
             title="Xác nhận"
             description="Bạn chắc chắn muốn xóa ?"
             onConfirm={() => handleRemove(order?._id)}
