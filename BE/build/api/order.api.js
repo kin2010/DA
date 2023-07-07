@@ -64,6 +64,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var http_status_1 = __importDefault(require("http-status"));
 var models_1 = require("../models");
 var APIError_1 = __importDefault(require("../utils/APIError"));
+var date_fns_1 = require("date-fns");
 var OrderApi = /** @class */ (function () {
     function OrderApi() {
     }
@@ -240,6 +241,114 @@ var OrderApi = /** @class */ (function () {
                     next(error_4);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
+            }
+        });
+    }); };
+    OrderApi.revenue = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, limit, skip, start, end, type, starttime1, endtime1, starttime2, endtime2, response_1, order2, error_5;
+        var _c;
+        return __generator(_a, function (_d) {
+            switch (_d.label) {
+                case 0:
+                    _d.trys.push([0, 2, , 3]);
+                    _b = req.query, limit = _b.limit, skip = _b.skip, start = _b.start, end = _b.end, type = _b.type;
+                    starttime1 = null;
+                    endtime1 = null;
+                    starttime2 = null;
+                    endtime2 = null;
+                    if (type === "month") {
+                        starttime1 = (0, date_fns_1.startOfMonth)(new Date(start)).toISOString();
+                        endtime1 = (0, date_fns_1.endOfMonth)(new Date(start)).toISOString();
+                        starttime2 = (0, date_fns_1.startOfMonth)(new Date(end)).toISOString();
+                        endtime2 = (0, date_fns_1.endOfMonth)(new Date(end)).toISOString();
+                    }
+                    if (type === "year") {
+                        starttime1 = (0, date_fns_1.startOfYear)(new Date(start)).toISOString();
+                        endtime1 = (0, date_fns_1.endOfYear)(new Date(start)).toISOString();
+                        starttime2 = (0, date_fns_1.startOfYear)(new Date(end)).toISOString();
+                        endtime2 = (0, date_fns_1.endOfYear)(new Date(end)).toISOString();
+                    }
+                    if (type === "week") {
+                        starttime1 = (0, date_fns_1.startOfWeek)(new Date(start)).toISOString();
+                        endtime1 = (0, date_fns_1.endOfWeek)(new Date(start)).toISOString();
+                        starttime2 = (0, date_fns_1.startOfWeek)(new Date(end)).toISOString();
+                        endtime2 = (0, date_fns_1.endOfWeek)(new Date(end)).toTimeString();
+                    }
+                    response_1 = null;
+                    if (type === "week") {
+                        models_1.Order.aggregate([
+                            {
+                                $match: {
+                                    createdAt: {
+                                        $gte: starttime1,
+                                        $lt: endtime1,
+                                    },
+                                },
+                            },
+                            // {
+                            //   $project: {
+                            //     total: 1,
+                            //     year: { $year: { date: "$createdAt" } },
+                            //     month: { $month: { date: "$createdAt" } },
+                            //     day: { $dayOfMonth: { date: "$createdAt" } },
+                            //     hour: { $hour: { date: "$createdAt" } },
+                            //     week: { $isoWeek: "$createdAt" },
+                            //     dayOfWeek: { $dayOfWeek: new Date(start) },
+                            //   },
+                            // },
+                            // {
+                            //   $group: {
+                            //     _id: {
+                            //       year: "$year",
+                            //       day: "$day",
+                            //     },
+                            //     total: { $sum: "$total" },
+                            //     data: { $push: "$$ROOT" },
+                            //   },
+                            // },
+                            // {
+                            //   $sort: {
+                            //     "_id.year": 1,
+                            //     "_id.month": 1,
+                            //     "_id.day": 1,
+                            //     "_id.hour": 1,
+                            //   },
+                            // },
+                        ]).exec(function (err, result) {
+                            console.log(result);
+                            response_1 = result;
+                        });
+                    }
+                    return [4 /*yield*/, ((_c = models_1.Order.find({
+                            createdAt: {
+                                $gte: starttime2,
+                                $lte: endtime2,
+                            },
+                        })) === null || _c === void 0 ? void 0 : _c.populate([
+                            {
+                                path: "courses",
+                                select: "",
+                            },
+                            {
+                                path: "user",
+                                select: "",
+                            },
+                        ]))];
+                case 1:
+                    order2 = _d.sent();
+                    res
+                        .json({
+                        data: order2,
+                        status: 200,
+                    })
+                        .status(http_status_1.default.OK)
+                        .end();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_5 = _d.sent();
+                    next(error_5);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     }); };
