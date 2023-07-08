@@ -25,7 +25,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+        while (_) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -245,38 +245,39 @@ var OrderApi = /** @class */ (function () {
         });
     }); };
     OrderApi.revenue = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, limit, skip, start, end, type, starttime1, endtime1, starttime2, endtime2, response_1, order2, error_5;
-        var _c;
-        return __generator(_a, function (_d) {
-            switch (_d.label) {
+        var _b, limit, skip, start, end, type, starttime1, endtime1, starttime2, endtime2, response, dt, count, error_5;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _d.trys.push([0, 2, , 3]);
+                    _c.trys.push([0, 6, , 7]);
                     _b = req.query, limit = _b.limit, skip = _b.skip, start = _b.start, end = _b.end, type = _b.type;
+                    console.log(req.query);
                     starttime1 = null;
                     endtime1 = null;
                     starttime2 = null;
                     endtime2 = null;
                     if (type === "month") {
-                        starttime1 = (0, date_fns_1.startOfMonth)(new Date(start)).toISOString();
-                        endtime1 = (0, date_fns_1.endOfMonth)(new Date(start)).toISOString();
-                        starttime2 = (0, date_fns_1.startOfMonth)(new Date(end)).toISOString();
-                        endtime2 = (0, date_fns_1.endOfMonth)(new Date(end)).toISOString();
+                        starttime1 = (0, date_fns_1.startOfMonth)(new Date(start));
+                        endtime1 = (0, date_fns_1.endOfMonth)(new Date(start));
+                        starttime2 = (0, date_fns_1.startOfMonth)(new Date(end));
+                        endtime2 = (0, date_fns_1.endOfMonth)(new Date(end));
                     }
                     if (type === "year") {
-                        starttime1 = (0, date_fns_1.startOfYear)(new Date(start)).toISOString();
-                        endtime1 = (0, date_fns_1.endOfYear)(new Date(start)).toISOString();
-                        starttime2 = (0, date_fns_1.startOfYear)(new Date(end)).toISOString();
-                        endtime2 = (0, date_fns_1.endOfYear)(new Date(end)).toISOString();
+                        starttime1 = (0, date_fns_1.startOfYear)(new Date(start));
+                        endtime1 = (0, date_fns_1.endOfYear)(new Date(start));
+                        starttime2 = (0, date_fns_1.startOfYear)(new Date(end));
+                        endtime2 = (0, date_fns_1.endOfYear)(new Date(end));
                     }
                     if (type === "week") {
-                        starttime1 = (0, date_fns_1.startOfWeek)(new Date(start)).toISOString();
-                        endtime1 = (0, date_fns_1.endOfWeek)(new Date(start)).toISOString();
-                        starttime2 = (0, date_fns_1.startOfWeek)(new Date(end)).toISOString();
-                        endtime2 = (0, date_fns_1.endOfWeek)(new Date(end)).toTimeString();
+                        starttime1 = (0, date_fns_1.startOfWeek)(new Date(start));
+                        endtime1 = (0, date_fns_1.endOfWeek)(new Date(start));
+                        starttime2 = (0, date_fns_1.startOfWeek)(new Date(end));
+                        endtime2 = (0, date_fns_1.endOfWeek)(new Date(end));
                     }
-                    response_1 = null;
-                    if (type === "week") {
-                        models_1.Order.aggregate([
+                    response = "";
+                    console.log(starttime1, endtime1);
+                    dt = "";
+                    return [4 /*yield*/, models_1.Order.aggregate([
                             {
                                 $match: {
                                     createdAt: {
@@ -285,70 +286,135 @@ var OrderApi = /** @class */ (function () {
                                     },
                                 },
                             },
+                        ])];
+                case 1:
+                    count = _c.sent();
+                    if (!(type === "year")) return [3 /*break*/, 3];
+                    return [4 /*yield*/, models_1.Order.aggregate([
+                            {
+                                $match: {
+                                    createdAt: {
+                                        $gte: starttime1,
+                                        $lt: endtime1,
+                                    },
+                                },
+                            },
+                            {
+                                $group: {
+                                    _id: { $month: "$createdAt" },
+                                    total_price: { $sum: "$total" },
+                                },
+                            },
+                            {
+                                $group: {
+                                    _id: null,
+                                    data: {
+                                        $push: {
+                                            time: "$_id",
+                                            total_price: "$total_price",
+                                        },
+                                    },
+                                },
+                            },
                             // {
                             //   $project: {
-                            //     total: 1,
-                            //     year: { $year: { date: "$createdAt" } },
-                            //     month: { $month: { date: "$createdAt" } },
-                            //     day: { $dayOfMonth: { date: "$createdAt" } },
-                            //     hour: { $hour: { date: "$createdAt" } },
-                            //     week: { $isoWeek: "$createdAt" },
-                            //     dayOfWeek: { $dayOfWeek: new Date(start) },
-                            //   },
-                            // },
-                            // {
-                            //   $group: {
-                            //     _id: {
-                            //       year: "$year",
-                            //       day: "$day",
+                            //     _id: 0,
+                            //     month: {
+                            //       $range: [1, 13],
                             //     },
-                            //     total: { $sum: "$total" },
-                            //     data: { $push: "$$ROOT" },
+                            //     total_price: {
+                            //       $map: {
+                            //         input: { $range: [1, 13] },
+                            //         as: "m",
+                            //         in: {
+                            //           $cond: [
+                            //             { $in: ["$$m", "$data.month"] },
+                            //             {
+                            //               $arrayElemAt: [
+                            //                 {
+                            //                   $filter: {
+                            //                     input: "$data",
+                            //                     cond: { $eq: ["$$this.month", "$$m"] },
+                            //                   },
+                            //                 },
+                            //                 0,
+                            //               ],
+                            //             },
+                            //             { month: "$$m", total_price: 0 },
+                            //           ],
+                            //         },
+                            //       },
+                            //     },
                             //   },
                             // },
                             // {
-                            //   $sort: {
-                            //     "_id.year": 1,
-                            //     "_id.month": 1,
-                            //     "_id.day": 1,
-                            //     "_id.hour": 1,
+                            //   $unwind: "$total_price",
+                            // },
+                            // {
+                            //   $replaceRoot: {
+                            //     newRoot: {
+                            //       $mergeObjects: ["$total_price", { month: "$total_price.month" }],
+                            //     },
                             //   },
                             // },
-                        ]).exec(function (err, result) {
-                            console.log(result);
-                            response_1 = result;
-                        });
-                    }
-                    return [4 /*yield*/, ((_c = models_1.Order.find({
-                            createdAt: {
-                                $gte: starttime2,
-                                $lte: endtime2,
-                            },
-                        })) === null || _c === void 0 ? void 0 : _c.populate([
                             {
-                                path: "courses",
-                                select: "",
+                                $sort: {
+                                    "data.time": -1,
+                                },
                             },
-                            {
-                                path: "user",
-                                select: "",
+                        ])];
+                case 2:
+                    dt = _c.sent();
+                    return [3 /*break*/, 5];
+                case 3: return [4 /*yield*/, models_1.Order.aggregate([
+                        {
+                            $match: {
+                                createdAt: {
+                                    $gte: starttime1,
+                                    $lt: endtime1,
+                                },
                             },
-                        ]))];
-                case 1:
-                    order2 = _d.sent();
+                        },
+                        {
+                            $group: {
+                                _id: { $dayOfMonth: "$createdAt" },
+                                total_price: { $sum: "$total" },
+                            },
+                        },
+                        {
+                            $group: {
+                                _id: null,
+                                data: {
+                                    $push: {
+                                        time: "$_id",
+                                        total_price: "$total_price",
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            $sort: {
+                                time: 1,
+                            },
+                        },
+                    ])];
+                case 4:
+                    dt = _c.sent();
+                    _c.label = 5;
+                case 5:
                     res
                         .json({
-                        data: order2,
+                        data: __assign(__assign({}, dt), { count: (count === null || count === void 0 ? void 0 : count.length) || 0 }),
                         status: 200,
                     })
                         .status(http_status_1.default.OK)
                         .end();
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_5 = _d.sent();
+                    return [3 /*break*/, 7];
+                case 6:
+                    error_5 = _c.sent();
                     next(error_5);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
             }
         });
     }); };

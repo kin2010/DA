@@ -658,6 +658,14 @@ export const changePass = async (body) => {
   });
   return data;
 };
+export const getRevenue = async ({ queryKey }) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/order/revenue",
+    method: "GET",
+    params: queryKey[1],
+  });
+  return data;
+};
 
 // export const useCategoryGroupService=()=>{
 //   const addCateGroupMutation = useMutation(updateGroup, {

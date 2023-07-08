@@ -181,31 +181,116 @@ export default class OrderApi {
   ) => {
     try {
       const { limit, skip, start, end, type } = req.query;
+      console.log(req.query);
       let starttime1: any = null;
       let endtime1: any = null;
       let starttime2: any = null;
       let endtime2: any = null;
       if (type === "month") {
-        starttime1 = startOfMonth(new Date(start)).toISOString();
-        endtime1 = endOfMonth(new Date(start)).toISOString();
-        starttime2 = startOfMonth(new Date(end)).toISOString();
-        endtime2 = endOfMonth(new Date(end)).toISOString();
+        starttime1 = startOfMonth(new Date(start));
+        endtime1 = endOfMonth(new Date(start));
+        starttime2 = startOfMonth(new Date(end));
+        endtime2 = endOfMonth(new Date(end));
       }
       if (type === "year") {
-        starttime1 = startOfYear(new Date(start)).toISOString();
-        endtime1 = endOfYear(new Date(start)).toISOString();
-        starttime2 = startOfYear(new Date(end)).toISOString();
-        endtime2 = endOfYear(new Date(end)).toISOString();
+        starttime1 = startOfYear(new Date(start));
+        endtime1 = endOfYear(new Date(start));
+        starttime2 = startOfYear(new Date(end));
+        endtime2 = endOfYear(new Date(end));
       }
       if (type === "week") {
-        starttime1 = startOfWeek(new Date(start)).toISOString();
-        endtime1 = endOfWeek(new Date(start)).toISOString();
-        starttime2 = startOfWeek(new Date(end)).toISOString();
-        endtime2 = endOfWeek(new Date(end)).toTimeString();
+        starttime1 = startOfWeek(new Date(start));
+        endtime1 = endOfWeek(new Date(start));
+        starttime2 = startOfWeek(new Date(end));
+        endtime2 = endOfWeek(new Date(end));
       }
-      let response = null;
-      if (type === "week") {
-        Order.aggregate([
+      let response: any = "";
+      console.log(starttime1, endtime1);
+      // const dt = await Order.aggregate([
+      //   {
+      //     $match: {
+      //       createdAt: {
+      //         $gte: starttime1,
+      //         $lt: endtime1,
+      //       },
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "courses", // Name of the collection containing the courses
+      //       localField: "courses",
+      //       foreignField: "_id",
+      //       as: "course_data",
+      //     },
+      //   },
+      //   {
+      //     $project: {
+      //       total: 1,
+      //       year: { $year: { date: "$createdAt" } },
+      //       // month: { $month: { date: "$createdAt" } },
+      //       day: { $dayOfMonth: { date: "$createdAt" } },
+      //       // hour: { $hour: { date: "$createdAt" } },
+      //       // week: { $isoWeek: "$createdAt" },
+      //       createdAt: "$createdAt",
+      //       courses: 1,
+      //       course_data: 1,
+      //     },
+      //   },
+      //   {
+      //     $group: {
+      //       _id: "$day",
+      //       day: { $push: "$day" },
+      //       total: { $sum: "$total" },
+      //       data: { $push: "$$ROOT" },
+      //     },
+      //   },
+
+      //   {
+      //     $sort: {
+      //       "_id.year": 1,
+      //       "_id.month": 1,
+      //       "_id.day": 1,
+      //       "_id.hour": 1,
+      //     },
+      //   },
+      //   {
+      //     $project: {
+      //       _id: 0,
+      //       months: {
+      //         $range: [1, 13],
+      //       },
+      //       totals: {
+      //         $map: {
+      //           input: {
+      //             $range: [1, 13],
+      //           },
+      //           as: "month",
+      //           in: {
+      //             $arrayElemAt: [
+      //               "$day",
+      //               {
+      //                 $indexOfArray: ["$months", "$$month"],
+      //               },
+      //             ],
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // ]);
+      let dt: any = "";
+      let count = await Order.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: starttime1,
+              $lt: endtime1,
+            },
+          },
+        },
+      ]);
+      if (type === "year") {
+        dt = await Order.aggregate([
           {
             $match: {
               createdAt: {
@@ -214,75 +299,108 @@ export default class OrderApi {
               },
             },
           },
+          {
+            $group: {
+              _id: { $month: "$createdAt" },
+              total_price: { $sum: "$total" },
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              data: {
+                $push: {
+                  time: "$_id",
+                  total_price: "$total_price",
+                },
+              },
+            },
+          },
+
           // {
           //   $project: {
-          //     total: 1,
-          //     year: { $year: { date: "$createdAt" } },
-          //     month: { $month: { date: "$createdAt" } },
-          //     day: { $dayOfMonth: { date: "$createdAt" } },
-          //     hour: { $hour: { date: "$createdAt" } },
-          //     week: { $isoWeek: "$createdAt" },
-          //     dayOfWeek: { $dayOfWeek: new Date(start) },
-          //   },
-          // },
-          // {
-          //   $group: {
-          //     _id: {
-          //       year: "$year",
-          //       day: "$day",
+          //     _id: 0,
+          //     month: {
+          //       $range: [1, 13],
           //     },
-          //     total: { $sum: "$total" },
-          //     data: { $push: "$$ROOT" },
+          //     total_price: {
+          //       $map: {
+          //         input: { $range: [1, 13] },
+          //         as: "m",
+          //         in: {
+          //           $cond: [
+          //             { $in: ["$$m", "$data.month"] },
+          //             {
+          //               $arrayElemAt: [
+          //                 {
+          //                   $filter: {
+          //                     input: "$data",
+          //                     cond: { $eq: ["$$this.month", "$$m"] },
+          //                   },
+          //                 },
+          //                 0,
+          //               ],
+          //             },
+          //             { month: "$$m", total_price: 0 },
+          //           ],
+          //         },
+          //       },
+          //     },
           //   },
           // },
           // {
-          //   $sort: {
-          //     "_id.year": 1,
-          //     "_id.month": 1,
-          //     "_id.day": 1,
-          //     "_id.hour": 1,
+          //   $unwind: "$total_price",
+          // },
+          // {
+          //   $replaceRoot: {
+          //     newRoot: {
+          //       $mergeObjects: ["$total_price", { month: "$total_price.month" }],
+          //     },
           //   },
           // },
-        ]).exec((err, result) => {
-          console.log(result);
-          response = result;
-        });
+          {
+            $sort: {
+              "data.time": -1,
+            },
+          },
+        ]);
+      } else {
+        dt = await Order.aggregate([
+          {
+            $match: {
+              createdAt: {
+                $gte: starttime1,
+                $lt: endtime1,
+              },
+            },
+          },
+          {
+            $group: {
+              _id: { $dayOfMonth: "$createdAt" },
+              total_price: { $sum: "$total" },
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              data: {
+                $push: {
+                  time: "$_id",
+                  total_price: "$total_price",
+                },
+              },
+            },
+          },
+          {
+            $sort: {
+              time: 1,
+            },
+          },
+        ]);
       }
-
-      // const order = await Order.find({
-      //   createdAt: {
-      //     $gte: starttime1,
-      //     $lte: endtime1,
-      //   },
-      // })?.populate([
-      //   {
-      //     path: "courses",
-      //     select: "",
-      //   },
-      //   {
-      //     path: "user",
-      //     select: "",
-      //   },
-      // ]);
-      const order2 = await Order.find({
-        createdAt: {
-          $gte: starttime2,
-          $lte: endtime2,
-        },
-      })?.populate([
-        {
-          path: "courses",
-          select: "",
-        },
-        {
-          path: "user",
-          select: "",
-        },
-      ]);
-
       res
         .json({
-          data: order2,
+          data: { ...dt, count: count?.length || 0 },
           status: 200,
         })
         .status(httpStatus.OK)
