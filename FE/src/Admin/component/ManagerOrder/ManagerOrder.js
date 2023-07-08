@@ -12,10 +12,10 @@ import {
 import { useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import IconBreadcrumbs from "../BreadCrumb";
-import { useQuery } from "@tanstack/react-query";
-import { getAllOrder } from "../../../hook/LessionHook";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteDocument, getAllOrder } from "../../../hook/LessionHook";
 import { format } from "date-fns";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, Chip, Rating } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Dialog from "@mui/material/Dialog";
@@ -23,7 +23,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getCourseRating, getDiscount } from "../../../ultis/course";
+import { openNotification } from "../../../Notification";
 const ManagerOrder = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -38,7 +40,7 @@ const ManagerOrder = () => {
   const [data, setData] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState();
   const [open, setOpen] = useState(false);
-
+  const queryClient = useQueryClient();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -46,6 +48,7 @@ const ManagerOrder = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -60,10 +63,10 @@ const ManagerOrder = () => {
     if (!!orders?.data?.length) {
       const dt = orders?.data?.map((order) => {
         return {
-          id: order?._id,
-          user: order?.user?.fullName,
-          price: order?.total,
-          status: order?.isPaid ? "Đã thanh toán" : "",
+          id: order?._id?.slice(0, 10) + "...",
+          user: order?.user,
+          price: order?.total?.toLocaleString("en-US") + " vnđ",
+          status: order?.isPaid,
           createdAt: format(new Date(order?.createdAt), "yyyy-MM-dd hh:mm"),
           action: order,
         };
@@ -176,7 +179,7 @@ const ManagerOrder = () => {
   });
   const columns = [
     {
-      title: "ID",
+      title: "ID Hóa đơn",
       dataIndex: "id",
       key: "id",
       width: "5%",
@@ -188,6 +191,14 @@ const ManagerOrder = () => {
       key: "user",
       width: "20%",
       ...getColumnSearchProps("user"),
+      render: (user) => {
+        return (
+          <div className="d-flex align-items-center">
+            <Avatar src={user?.avatar || "../images/user.jpg"} alt="" />
+            <p className="ms-2">{user?.fullName}</p>
+          </div>
+        );
+      },
     },
     {
       title: "Tổng tiền",
@@ -212,6 +223,16 @@ const ManagerOrder = () => {
       ...getColumnSearchProps("status"),
       sorter: (a, b) => a.address.length - b.address.length,
       sortDirections: ["descend", "ascend"],
+      render: (status) => {
+        return (
+          <>
+            <Chip
+              color={status ? "primary" : "warning"}
+              label={status ? "Đã thanh toán" : "Chưa thanh toán"}
+            />
+          </>
+        );
+      },
     },
     {
       title: "Thao tác  ",
@@ -231,15 +252,67 @@ const ManagerOrder = () => {
           >
             <RemoveRedEyeIcon color="primary" />
           </span>
-          <span>
+          <span
+            onClick={() => {
+              setRemoveOpen(true);
+              setIdRemove(order?._id);
+            }}
+          >
             <DeleteIcon color="error" />
           </span>
         </>
       ),
     },
   ];
+  const [removeOpen, setRemoveOpen] = useState(false);
+  const [idRemove, setIdRemove] = useState("");
+  const handleDeleteClose = () => {
+    setRemoveOpen(false);
+  };
+
+  const handleRemove = async (id) => {
+    const res = await deleteDocument({
+      id: id,
+      type: "order",
+    });
+    if (res?.deletedCount === 1) {
+      openNotification({
+        type: "success",
+        message: "Xóa thành công",
+      });
+      setTimeout(() => {
+        queryClient.invalidateQueries(["orders", queryparams]);
+      }, 1000);
+    }
+    setRemoveOpen(false);
+  };
   return (
     <>
+      <Dialog
+        open={removeOpen}
+        onClose={handleDeleteClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">{"Xác nhận xóa"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn chắc chắn là muốn xóa không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose}>
+            Quay lại
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => handleRemove(idRemove)}
+            autoFocus
+          >
+            Xác nhận
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog
         maxWidth={1000}
         open={open}
@@ -266,7 +339,7 @@ const ManagerOrder = () => {
               </Row>
               <div className="mt-2">
                 <strong>Tổng thanh toán : </strong>
-                {selectedOrder?.total || 0}₫{" "}
+                {selectedOrder?.total?.toLocaleString("en-US") || 0} ₫
               </div>
               <div className="mt-2">
                 <strong> Ngày mua : </strong>
@@ -289,45 +362,38 @@ const ManagerOrder = () => {
                       }}
                     >
                       <img
-                        src={cart?.thumbnai || "../images/course.jpg"}
+                        src={
+                          !!cart?.thumbnail?.length
+                            ? cart?.thumbnail[0]
+                            : "../images/course.jpg"
+                        }
                         alt=""
                       />
                     </div>
                     <div className="card-courses-full-dec">
                       <div className="card-courses-title">
-                        <h4 className="m-b5">{cart?.name}</h4>
+                        <h4 className="m-b5">
+                          <Link to={`/course/${cart?._id}`}>{cart?.name}</Link>
+                        </h4>
                       </div>
                       <div className="card-courses-list-bx">
                         <ul className="card-courses-view">
                           <li className="card-courses-categories">
                             <h5>Thể loại</h5>
-                            <h4>{cart?.category}</h4>
+                            <h4>{cart?.category?.name}</h4>
                           </li>
                           <li className="card-courses-review">
-                            <h5>3 Review</h5>
-                            <ul className="cours-star">
-                              <li className="active">
-                                <i className="fa fa-star" />
-                              </li>
-                              <li className="active">
-                                <i className="fa fa-star" />
-                              </li>
-                              <li className="active">
-                                <i className="fa fa-star" />
-                              </li>
-                              <li>
-                                <i className="fa fa-star" />
-                              </li>
-                              <li>
-                                <i className="fa fa-star" />
-                              </li>
-                            </ul>
+                            <h5>{cart?.courses?.length || 0} Đánh giá</h5>
+                            <Rating
+                              readOnly
+                              value={getCourseRating(cart?.courses?.comments)}
+                            />
                           </li>
                           <li className="card-courses-price">
-                            <del>{cart?.discount || 0}₫</del>
+                            <del>{getDiscount(cart)}</del>
                             {cart?.price && (
                               <h5 className="text-primary m-b0">
-                                {cart?.price}₫
+                                {cart?.price?.toLocaleString("en-US")}₫
                               </h5>
                             )}
                           </li>

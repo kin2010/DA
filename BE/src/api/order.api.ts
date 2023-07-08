@@ -1,7 +1,7 @@
 import { NextFunction, RequestHandler, Response } from "express";
 import httpStatus from "http-status";
 import { Query, Params, Request } from "../configs/types";
-import { Course, Group, Lecture, Order, Section } from "../models";
+import { Course, Group, Lecture, Order, Section, User } from "../models";
 import APIError from "../utils/APIError";
 import {
   endOfMonth,
@@ -155,6 +155,14 @@ export default class OrderApi {
                 path: "users",
                 select: "",
               },
+              {
+                path: "category",
+                select: "",
+              },
+              {
+                path: "comments",
+                select: "",
+              },
             ],
           },
           {
@@ -279,7 +287,7 @@ export default class OrderApi {
       //   },
       // ]);
       let dt: any = "";
-      let count = await Order.aggregate([
+      let count = await User.aggregate([
         {
           $match: {
             createdAt: {
@@ -400,7 +408,7 @@ export default class OrderApi {
       }
       res
         .json({
-          data: { ...dt, count: count?.length || 0 },
+          data: { ...dt[0], count: count?.length || 0 },
           status: 200,
         })
         .status(httpStatus.OK)

@@ -245,7 +245,13 @@ const ManagerCategory = () => {
       sortDirections: ["descend", "ascend"],
       render: (order) => (
         <>
-          <EditIcon color="success" />
+          <EditIcon
+            color="success"
+            onClick={() => {
+              setOpen(true);
+              setUpdateId(order?._id);
+            }}
+          />
           <Popconfirm
             className="ms-2"
             title="Xác nhận"
@@ -315,12 +321,28 @@ const ManagerCategory = () => {
       </>
     );
   };
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+  });
+
+  const [updateId, setUpdateId] = useState("");
+
+  useEffect(() => {
+    if (!!updateId) {
+      const order = categories?.find((category) => category?._id === updateId);
+      console.log(order, 999);
+      setFormData({
+        ...formData,
+        name: order?.name || "",
+      });
+    }
+  }, [updateId, categories]);
+
   return (
     <>
       <Formik
-        initialValues={{
-          name: "",
-        }}
+        initialValues={formData}
         validationSchema={createCategorySchema}
         onSubmit={(value) => handleSubmit(value)}
       >

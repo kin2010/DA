@@ -9,6 +9,7 @@ import {
   Course,
   Group,
   Lecture,
+  Order,
   Role,
   Section,
 } from "../models";
@@ -187,6 +188,9 @@ export default class RoleService {
           break;
         case "course":
           rs = await Course.deleteOne({ _id: id });
+          break;
+        case "order":
+          rs = await Order.deleteOne({ _id: id });
           break;
 
         default:

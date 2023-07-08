@@ -15,6 +15,7 @@ import { format } from "date-fns";
 import { Input } from "antd";
 import { openNotification } from "../../Notification";
 import AdminCourse from "../../Admin/component/AdminCourse";
+import { getCourseRating } from "../../ultis/course";
 const { Search } = Input;
 const TeacherCourse = () => {
   const [page, setPage] = useState(1);
@@ -30,6 +31,7 @@ const TeacherCourse = () => {
   const onSearch = (value) => console.log(value);
   const [active, setActive] = useState(0);
   const [edit, setEdit] = useState(false);
+
   const handlePaginationChange = (e, page) => {
     setPage(page);
     setQueryparams({
@@ -223,7 +225,10 @@ const TeacherCourse = () => {
                         <li className="card-courses-review">
                           <h5>Đánh giá</h5>
                           <ul className="cours-star">
-                            <Rating value={course?.comments} readOnly />
+                            <Rating
+                              value={getCourseRating(course?.comments)}
+                              readOnly
+                            />
                           </ul>
                         </li>
                         <li className="card-courses-stats">

@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -231,7 +231,7 @@ var RoleService = /** @class */ (function () {
         return __generator(_a, function (_d) {
             switch (_d.label) {
                 case 0:
-                    _d.trys.push([0, 17, , 18]);
+                    _d.trys.push([0, 19, , 20]);
                     _b = req.query, type = _b.type, id = _b.id;
                     console.log(req.query);
                     rs = void 0;
@@ -244,45 +244,50 @@ var RoleService = /** @class */ (function () {
                         case "lecture": return [3 /*break*/, 9];
                         case "assignment": return [3 /*break*/, 11];
                         case "course": return [3 /*break*/, 13];
+                        case "order": return [3 /*break*/, 15];
                     }
-                    return [3 /*break*/, 15];
+                    return [3 /*break*/, 17];
                 case 1: return [4 /*yield*/, models_1.Category.deleteOne({ _id: id })];
                 case 2:
                     rs = _d.sent();
-                    return [3 /*break*/, 16];
+                    return [3 /*break*/, 18];
                 case 3: return [4 /*yield*/, models_1.CategoryGroup.deleteOne({ _id: id })];
                 case 4:
                     rs = _d.sent();
-                    return [3 /*break*/, 16];
+                    return [3 /*break*/, 18];
                 case 5: return [4 /*yield*/, models_1.Group.deleteOne({ _id: id })];
                 case 6:
                     rs = _d.sent();
-                    return [3 /*break*/, 16];
+                    return [3 /*break*/, 18];
                 case 7: return [4 /*yield*/, models_1.Section.deleteOne({ _id: id })];
                 case 8:
                     rs = _d.sent();
-                    return [3 /*break*/, 16];
+                    return [3 /*break*/, 18];
                 case 9: return [4 /*yield*/, models_1.Lecture.deleteOne({ _id: id })];
                 case 10:
                     rs = _d.sent();
-                    return [3 /*break*/, 16];
+                    return [3 /*break*/, 18];
                 case 11: return [4 /*yield*/, models_1.Assignment.deleteOne({ _id: id })];
                 case 12:
                     rs = _d.sent();
-                    return [3 /*break*/, 16];
+                    return [3 /*break*/, 18];
                 case 13: return [4 /*yield*/, models_1.Course.deleteOne({ _id: id })];
                 case 14:
                     rs = _d.sent();
-                    return [3 /*break*/, 16];
-                case 15: return [3 /*break*/, 16];
-                case 16:
-                    res.json({ data: rs, status: 200 }).end();
                     return [3 /*break*/, 18];
-                case 17:
+                case 15: return [4 /*yield*/, models_1.Order.deleteOne({ _id: id })];
+                case 16:
+                    rs = _d.sent();
+                    return [3 /*break*/, 18];
+                case 17: return [3 /*break*/, 18];
+                case 18:
+                    res.json({ data: rs, status: 200 }).end();
+                    return [3 /*break*/, 20];
+                case 19:
                     error_7 = _d.sent();
                     next(error_7);
-                    return [3 /*break*/, 18];
-                case 18: return [2 /*return*/];
+                    return [3 /*break*/, 20];
+                case 20: return [2 /*return*/];
             }
         });
     }); };

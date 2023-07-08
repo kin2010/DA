@@ -44,7 +44,7 @@ const Login = () => {
       setTimeout(() => {
         switch (data?.user?.role) {
           case ROLE_ID.ADMIN:
-            navigate("/admin");
+            navigate("/admin/home");
             break;
           case ROLE_ID.TEACHER:
             navigate("/");

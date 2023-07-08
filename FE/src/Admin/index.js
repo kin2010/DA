@@ -37,7 +37,7 @@ function getItem(label, key, icon, children, type) {
 const items = [
   getItem("Dashboard", "sub1", <GridViewIcon />, [
     getItem(
-      "Item 1",
+      "",
       "g1",
       null,
       [

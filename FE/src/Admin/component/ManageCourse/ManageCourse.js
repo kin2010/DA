@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { SearchOutlined } from "@ant-design/icons";
-import { Space, Table } from "antd";
-import { forwardRef, useMemo, useRef, useState } from "react";
+import { Breadcrumb, Empty, Modal, Space, Table } from "antd";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import IconBreadcrumbs from "../BreadCrumb";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -17,6 +17,7 @@ import {
   DialogContentText,
   DialogTitle,
   Pagination,
+  Rating,
   Slide,
 } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -25,6 +26,8 @@ import { openNotification } from "../../../Notification";
 import TextArea from "antd/lib/input/TextArea";
 import { Input } from "antd";
 import React from "react";
+import { getCourseRating } from "../../../ultis/course";
+import AdminCourse from "../AdminCourse";
 const { Search } = Input;
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -93,7 +96,7 @@ const ManagerCourse = () => {
   const [action, setAction] = useState("");
   const courseService = useCourseService();
   const [selectedItems, setSelectedItems] = useState([]);
-
+  const [edit, setEdit] = useState(false);
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
   const handlePaginationChange = (e, page) => {
@@ -116,6 +119,12 @@ const ManagerCourse = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (!edit) {
+      sessionStorage.removeItem("new_course");
+    }
+  }, []);
 
   const publish = async () => {
     console.log(selectedId);
@@ -200,8 +209,23 @@ const ManagerCourse = () => {
     return { text1, text2 };
   }, [selectedId, action]);
   const onSearch = (value) => console.log(value);
+
+  const handleCloseModal = () => {
+    setEdit(false);
+    queryClient.invalidateQueries(["courses", queryparams]);
+    sessionStorage.removeItem("new_course");
+  };
+
   return (
     <>
+      <Modal
+        onCancel={handleCloseModal}
+        wrapClassName="antd-wrapper"
+        open={edit}
+        footer={<></>}
+      >
+        <AdminCourse edit={edit} />
+      </Modal>
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -254,7 +278,46 @@ const ManagerCourse = () => {
       </Dialog>
       <IconBreadcrumbs />
       <h4> Quản lí khóa học</h4>
-
+      <div className="feature-filters style1 ml-auto">
+        <ul className="filters" data-toggle="buttons">
+          <Breadcrumb>
+            <Breadcrumb.Item
+              href="#"
+              className=""
+              onClick={() => {
+                setQueryparams({
+                  ...queryparams,
+                  status: "",
+                });
+              }}
+            >
+              <span>Tất cả</span>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item
+              href="#"
+              onClick={() => {
+                setQueryparams({
+                  ...queryparams,
+                  status: "published",
+                });
+              }}
+            >
+              <span>Đã phát hành</span>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item
+              href="#"
+              onClick={() => {
+                setQueryparams({
+                  ...queryparams,
+                  status: "pending",
+                });
+              }}
+            >
+              <span>Chờ xác nhận</span>
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </ul>
+      </div>
       <div>
         <div className="col-lg-12 m-b20">
           <div className="d-flex align-items-center justify-content-between">
@@ -272,131 +335,136 @@ const ManagerCourse = () => {
         </div>
       </div>
       <div>
-        {data?.courses?.map((course) => (
-          <div className="card-courses-list admin-courses">
-            <div className="card-courses-media">
-              <img
-                src={
-                  !!course?.thumbnail?.length
-                    ? course?.thumbnail[0]
-                    : "../images/course.jpg"
-                }
-                alt=""
-              />
-            </div>
-            <div className="card-courses-full-dec">
-              <div className="card-courses-title">
-                <h4>
-                  <Link to={"/course/" + course?._id}>{course?.name}</Link>
-                </h4>
+        {data?.courses?.length ? (
+          data?.courses?.map((course) => (
+            <div className="card-courses-list admin-courses">
+              <div className="card-courses-media">
+                <img
+                  src={
+                    !!course?.thumbnail?.length
+                      ? course?.thumbnail[0]
+                      : "../images/course.jpg"
+                  }
+                  alt=""
+                />
               </div>
-              <div className="card-courses-list-bx">
-                <ul className="card-courses-view">
-                  <li className="card-courses-user">
-                    <div className="card-courses-user-pic">
-                      <img
-                        src={
-                          !!course?.owner?.avatar?.length
-                            ? !!course?.owner?.avatar[0]
-                            : "../images/user.jpg"
-                        }
-                        alt=""
+              <div className="card-courses-full-dec">
+                <div className="card-courses-title">
+                  <h4>
+                    <Link to={"/course/" + course?._id}>{course?.name}</Link>
+                  </h4>
+                </div>
+                <div className="card-courses-list-bx">
+                  <ul className="card-courses-view">
+                    <li className="card-courses-user">
+                      <div className="card-courses-user-pic">
+                        <img
+                          src={
+                            !!course?.owner?.avatar?.length
+                              ? !!course?.owner?.avatar[0]
+                              : "../images/user.jpg"
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div className="card-courses-user-info">
+                        <h5>Giảng viên</h5>
+                        <h4> {course?.owner?.fullName}</h4>
+                      </div>
+                    </li>
+                    <li className="card-courses-categories">
+                      <h5>Thể loại</h5>
+                      <h4>Backend</h4>
+                    </li>
+                    <li className="card-courses-review">
+                      <h5>Đánh giá</h5>
+                      <Rating
+                        readOnly
+                        value={getCourseRating(course?.comments)}
+                      ></Rating>
+                    </li>
+                    <li className="card-courses-stats">
+                      <Chip
+                        label={getStatus(course?.status)?.label}
+                        color={getStatus(course?.status)?.color}
+                        variant="contained"
                       />
-                    </div>
-                    <div className="card-courses-user-info">
-                      <h5>Giảng viên</h5>
-                      <h4> {course?.owner?.fullName}</h4>
-                    </div>
-                  </li>
-                  <li className="card-courses-categories">
-                    <h5>Thể loại</h5>
-                    <h4>Backend</h4>
-                  </li>
-                  <li className="card-courses-review">
-                    <h5>Đánh giá</h5>
-                    <ul className="cours-star">
-                      <li className="active">
-                        <i className="fa fa-star" />
-                      </li>
-                      <li className="active">
-                        <i className="fa fa-star" />
-                      </li>
-                      <li className="active">
-                        <i className="fa fa-star" />
-                      </li>
-                      <li>
-                        <i className="fa fa-star" />
-                      </li>
-                      <li>
-                        <i className="fa fa-star" />
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="card-courses-stats">
-                    <Chip
-                      label={getStatus(course?.status)?.label}
-                      color={getStatus(course?.status)?.color}
-                      variant="contained"
-                    />
-                  </li>
-                  <li className="card-courses-price">
-                    <del>{course?.descount}</del>
-                    <h5 className="text-primary">{course?.price || 0}₫</h5>
-                  </li>
-                </ul>
-              </div>
-              <h6 className="m-b10">
-                Ngày tạo :{" "}
-                {format(new Date(course?.createdAt), "yyyy-MM-dd hh:mm")}
-              </h6>
-              <div className="row card-courses-dec">
-                <div className="col-md-12">
-                  <h6 className="m-b10">Mô tả khóa học</h6>
-                  <p
-                    dangerouslySetInnerHTML={{ __html: course?.description }}
-                  ></p>
+                    </li>
+                    <li className="card-courses-price">
+                      <del>{course?.descount}</del>
+                      <h5 className="text-primary">{course?.price || 0}₫</h5>
+                    </li>
+                  </ul>
                 </div>
-                <div className="col-md-12">
-                  <Button
-                    variant="contained"
-                    className="me-2"
-                    color="primary"
-                    onClick={() => {
-                      setSelectedId(course);
-                      setOpen(true);
-                      setAction("1");
-                    }}
-                  >
-                    Xác nhận
-                  </Button>
-                  <Button
-                    variant="contained"
-                    className="me-2"
-                    color="error"
-                    onClick={() => {
-                      setSelectedId(course);
-                      setOpen(true);
-                      setAction("2");
-                    }}
-                  >
-                    Hủy bỏ
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() => {
-                      setSelectedId(course);
-                      setAction("3");
-                      setOpen(true);
-                    }}
-                  >
-                    Phản hồi
-                  </Button>
+                <h6 className="m-b10">
+                  Ngày tạo :{" "}
+                  {format(new Date(course?.createdAt), "yyyy-MM-dd hh:mm")}
+                </h6>
+                <div className="row card-courses-dec">
+                  <div className="col-md-12">
+                    <h6 className="m-b10">Mô tả khóa học</h6>
+                    <p
+                      style={{ maxHeight: "150px", overflowY: "hidden" }}
+                      dangerouslySetInnerHTML={{ __html: course?.description }}
+                    ></p>
+                  </div>
+                  <div className="col-md-12">
+                    <Button
+                      variant="contained"
+                      className="me-2"
+                      color="primary"
+                      onClick={() => {
+                        setSelectedId(course);
+                        setOpen(true);
+                        setAction("1");
+                      }}
+                      disabled={course?.publish}
+                    >
+                      Xác nhận
+                    </Button>
+                    <Button
+                      variant="contained"
+                      className="me-2"
+                      color="error"
+                      onClick={() => {
+                        setSelectedId(course);
+                        setOpen(true);
+                        setAction("2");
+                      }}
+                    >
+                      Từ chối
+                    </Button>
+                    <Button
+                      variant="contained"
+                      className="me-2"
+                      color="warning"
+                      onClick={() => {
+                        setSelectedId(course);
+                        setAction("3");
+                        setOpen(true);
+                      }}
+                    >
+                      Phản hồi
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        sessionStorage.setItem("new_course", course?._id);
+                        setEdit(true);
+                      }}
+                    >
+                      Sửa
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <Empty />
+        )}
       </div>
     </>
   );

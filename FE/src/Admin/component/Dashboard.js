@@ -42,7 +42,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     let arr = [];
-    const data = !!revenue?.length ? revenue[0]?.data : [];
+    const data = revenue?.data || [];
+    console.log(data, revenue, 2);
     if (type === "year") {
       for (let i = 0; i <= 11; i++) {
         arr.push({
@@ -69,14 +70,13 @@ const Dashboard = () => {
         });
       }
     }
-    console.log(arr, 8);
     setData(arr);
   }, [revenue, date, type]);
 
   const total = useMemo(() => {
-    return !!revenue?.length
-      ? revenue[0]?.data?.reduce((a, b) => {
-          return a + b?.total_price;
+    return !!revenue?.data?.length
+      ? revenue?.data?.reduce((a, b) => {
+          return a + b?.total_price || 0;
         }, 0)
       : 0;
   }, [revenue]);
@@ -118,6 +118,7 @@ const Dashboard = () => {
                 sx={{
                   backgroundColor: "white",
                 }}
+                defaultValue={dayjs(new Date())}
                 onChange={(newValue) => setDate(newValue)}
               />
             </DemoContainer>
@@ -152,7 +153,7 @@ const Dashboard = () => {
           <Card>
             <Statistic
               title={[<p>Người dùng mới </p>]}
-              value={revenue?.count || 0}
+              value={`${revenue?.count || 0} user`}
               precision={2}
               valueStyle={{
                 color: "#3f8600",
@@ -172,7 +173,7 @@ const Dashboard = () => {
               }}
               prefix={<ArrowUpOutlined />}
               // prefix={<ArrowDownOutlined />}
-              suffix="%"
+              suffix="đồng"
             />
           </Card>
         </Col>
