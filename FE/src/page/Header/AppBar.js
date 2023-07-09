@@ -231,7 +231,7 @@ export default function HeaderAppBar({ isAdmin }) {
               <>
                 {!!data?.user ? (
                   <>
-                    {getRoleID() === ROLE_ID.TEACHER && (
+                    {getRoleID() === ROLE_ID.TEACHER ? (
                       <IconButton
                         size="large"
                         aria-label="show 17 new notifications"
@@ -246,6 +246,23 @@ export default function HeaderAppBar({ isAdmin }) {
                           className="white"
                         >
                           Trang giáo viên
+                        </Link>
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        size="large"
+                        aria-label="show 17 new notifications"
+                        color="inherit"
+                      >
+                        <Person3Icon />
+                        <Link
+                          to="/profile"
+                          style={{
+                            fontSize: "20px",
+                          }}
+                          className="white"
+                        >
+                          Trang cá nhân
                         </Link>
                       </IconButton>
                     )}

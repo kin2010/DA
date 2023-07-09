@@ -208,7 +208,13 @@ const ManagerCourse = () => {
     }
     return { text1, text2 };
   }, [selectedId, action]);
-  const onSearch = (value) => console.log(value);
+  const onSearch = (e) => {
+    console.log(e?.target?.value);
+    setQueryparams({
+      ...queryparams,
+      text: e?.target?.value,
+    });
+  };
 
   const handleCloseModal = () => {
     setEdit(false);
@@ -329,7 +335,7 @@ const ManagerCourse = () => {
               />
             </div>
             <div>
-              <Search placeholder="Tìm kiếm" onSearch={onSearch} enterButton />
+              <Search placeholder="Tìm kiếm" onChange={onSearch} enterButton />
             </div>
           </div>
         </div>

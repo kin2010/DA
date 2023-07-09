@@ -17,14 +17,14 @@ import { openNotification } from "../../Notification";
 import AdminCourse from "../../Admin/component/AdminCourse";
 import { getCourseRating } from "../../ultis/course";
 const { Search } = Input;
-const TeacherCourse = () => {
+const UserCourse = () => {
   const [page, setPage] = useState(1);
   const { data: USER } = useQuery(["user"], getUserData);
   const [queryparams, setQueryparams] = useState({
     limit: 5,
     skip: 5 * (page - 1),
     text: "",
-    owner: USER?.user?._id,
+    user_id: USER?.user?._id,
   });
   const queryClient = useQueryClient();
   const { data } = useQuery(["courses", queryparams], getAllCourse);
@@ -231,7 +231,7 @@ const TeacherCourse = () => {
                             />
                           </ul>
                         </li>
-                        <li className="card-courses-stats">
+                        {/* <li className="card-courses-stats">
                           <Chip
                             label={getStatus(course?.status)?.label}
                             color={getStatus(course?.status)?.color}
@@ -243,11 +243,11 @@ const TeacherCourse = () => {
                           <h5 className="text-primary">
                             {course?.price || 0}₫
                           </h5>
-                        </li>
+                        </li> */}
                       </ul>
                     </div>
                     <h6 className="m-b10">
-                      Ngày tạo :{" "}
+                      Ngày mua :{" "}
                       {format(new Date(course?.createdAt), "yyyy-MM-dd hh:mm")}
                     </h6>
                     <div className="row card-courses-dec">
@@ -269,13 +269,14 @@ const TeacherCourse = () => {
                           className="me-2"
                           color="primary"
                           onClick={() => {
-                            sessionStorage.setItem("new_course", course?._id);
-                            setEdit(true);
+                            // sessionStorage.setItem("new_course", course?._id);
+                            // setEdit(true);
+                            navigate("/course/" + course?._id);
                           }}
                         >
-                          Sửa
+                          Truy cập
                         </Button>
-                        <Popconfirm
+                        {/* <Popconfirm
                           title="Xác nhận"
                           description="Bạn chắc chắn muốn xóa ?"
                           onConfirm={() => handleRemove(course?._id)}
@@ -288,7 +289,7 @@ const TeacherCourse = () => {
                           >
                             Xóa
                           </Button>
-                        </Popconfirm>
+                        </Popconfirm> */}
                       </div>
                     </div>
                   </div>
@@ -304,4 +305,4 @@ const TeacherCourse = () => {
   );
 };
 
-export default TeacherCourse;
+export default UserCourse;

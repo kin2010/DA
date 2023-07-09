@@ -4,6 +4,7 @@ import { Query, Params, Request } from "../configs/types";
 import { Chapter, Comment, Course, User } from "../models";
 import APIError from "../utils/APIError";
 import { pageParams } from ".";
+import { Collection } from "mongoose";
 export type IRequestCreateCourse = {
   teachers: string;
   users: any;
@@ -332,7 +333,7 @@ export default class CourseApi {
     try {
       const currentDate = new Date();
       const currentDateString = currentDate.toISOString().split("T")[0];
-      const { limit, skip, text, category, owner, status, end_date } =
+      const { limit, skip, text, category, owner, status, end_date, user_id } =
         req.query;
       let search: any = !!category ? { category: category } : {};
       if (owner) {
@@ -347,6 +348,10 @@ export default class CourseApi {
       if (end_date) {
         search = { ...search, end: { $gt: currentDateString } };
       }
+      if (user_id) {
+        search = { ...search, users: user_id };
+      }
+      console.log("first", user_id);
       const courses = await Course.find(search)
         .limit(parseInt(limit as string))
         .skip(parseInt(skip as string))

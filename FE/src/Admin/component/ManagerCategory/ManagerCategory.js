@@ -19,6 +19,7 @@ import {
   adminGetAllCategoryGroup,
   deleteDocument,
   getAllOrder,
+  updateCategory,
 } from "../../../hook/LessionHook";
 import { format } from "date-fns";
 import { Avatar, Button, MenuItem, Select, Typography } from "@mui/material";
@@ -268,13 +269,24 @@ const ManagerCategory = () => {
     },
   ];
   const handleSubmit = async (value) => {
-    const res = await addCategory({
-      ...value,
-    });
+    let res = "";
+    if (!updateId) {
+      res = await addCategory({
+        ...value,
+      });
+    } else {
+      const params = {
+        ...value,
+        id: updateId,
+      };
+      res = await updateCategory({
+        ...params,
+      });
+    }
     if (res?._id) {
       openNotification({
         type: "success",
-        message: "Thêm thành công",
+        message: "Thành công",
       });
       queryClient.invalidateQueries(["admin_category", queryparams]);
     }
@@ -303,6 +315,7 @@ const ManagerCategory = () => {
     const handleChange = (e) => {
       setFieldValue("group", e.target.value);
     };
+
     return (
       <>
         <Select
@@ -323,21 +336,50 @@ const ManagerCategory = () => {
   };
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
   });
 
   const [updateId, setUpdateId] = useState("");
 
-  useEffect(() => {
-    if (!!updateId) {
-      const order = categories?.find((category) => category?._id === updateId);
-      console.log(order, 999);
-      setFormData({
-        ...formData,
-        name: order?.name || "",
-      });
-    }
-  }, [updateId, categories]);
+  const Content = () => {
+    const { handleSubmit, setValues } = useFormikContext();
+    useEffect(() => {
+      if (!!updateId) {
+        const order = categories?.find(
+          (category) => category?._id === updateId
+        );
+        console.log(order, 22);
+        setValues({
+          group: order?.group?._id,
+          name: order?.name,
+        });
+        setCategoryGroup(order?.group?._id);
+      } else {
+        setValues({
+          group: "",
+          name: "",
+        });
+        setCategoryGroup("");
+      }
+    }, [updateId]);
+    return (
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <FormControl label={"Tên thể loại"} name={"name"}></FormControl>
+          <label className="col-form-label">Thể loại thuộc nhóm :</label>
+
+          <SelectGroup />
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleClose} autoFocus>
+            Thoát
+          </Button>
+          <Button variant="contained" type="submit" autoFocus>
+            Thêm
+          </Button>
+        </DialogActions>
+      </form>
+    );
+  };
 
   return (
     <>
@@ -357,22 +399,7 @@ const ManagerCategory = () => {
             <DialogTitle id="alert-dialog-title">
               {"Thêm nhóm thể loại"}
             </DialogTitle>
-            <form onSubmit={props.handleSubmit}>
-              <DialogContent>
-                <FormControl label={"Tên thể loại"} name={"name"}></FormControl>
-                <label className="col-form-label">Thể loại thuộc nhóm :</label>
-
-                <SelectGroup />
-              </DialogContent>
-              <DialogActions>
-                <Button variant="outlined" onClick={handleClose} autoFocus>
-                  Thoát
-                </Button>
-                <Button variant="contained" type="submit" autoFocus>
-                  Thêm
-                </Button>
-              </DialogActions>
-            </form>
+            <Content />
           </Dialog>
         )}
       </Formik>
@@ -384,6 +411,7 @@ const ManagerCategory = () => {
         className="mb-3"
         variant="contained"
         onClick={() => {
+          setUpdateId("");
           setOpen(true);
         }}
         autoFocus

@@ -22,6 +22,7 @@ import {
   adminGetAllCategoryGroup,
   deleteDocument,
   getAllOrder,
+  updateCategoryGroup,
 } from "../../../hook/LessionHook";
 import { format } from "date-fns";
 import { Avatar, Button, Typography } from "@mui/material";
@@ -34,7 +35,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 import IconBreadcrumbs from "../BreadCrumb";
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
 import { createAssignmentSchema } from "../../../Validation/CourseCreate";
 import FormControl from "../../../component/FormControl";
 import { openNotification } from "../../../Notification";
@@ -57,7 +58,7 @@ const ManageCategoryGroup = () => {
   const [data, setData] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState();
   const [open, setOpen] = useState(false);
-
+  const [updateId, setUpdateId] = useState("");
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -223,7 +224,13 @@ const ManageCategoryGroup = () => {
       sortDirections: ["descend", "ascend"],
       render: (order) => (
         <>
-          <EditIcon color="success" />
+          <EditIcon
+            color="success"
+            onClick={() => {
+              setOpen(true);
+              setUpdateId(order?._id);
+            }}
+          />
           <Popconfirm
             className="ms-2"
             title="Xác nhận"
@@ -241,10 +248,20 @@ const ManageCategoryGroup = () => {
   ];
 
   const handleSubmit = async (value) => {
-    console.log(value);
-    const res = await addCategoryGroup({
-      ...value,
-    });
+    let res = "";
+    if (!updateId) {
+      res = await addCategoryGroup({
+        ...value,
+      });
+    } else {
+      const params = {
+        ...value,
+        id: updateId,
+      };
+      res = await updateCategoryGroup({
+        ...params,
+      });
+    }
 
     if (res?._id) {
       openNotification({
@@ -271,6 +288,41 @@ const ManageCategoryGroup = () => {
       }, 2000);
     }
   };
+
+  const Content = () => {
+    const { handleSubmit, setValues } = useFormikContext();
+    useEffect(() => {
+      if (!!updateId) {
+        const order = categories?.find(
+          (category) => category?._id === updateId
+        );
+        setValues({
+          name: order?.name,
+        });
+      } else {
+        setValues({
+          name: "",
+        });
+      }
+    }, [updateId]);
+    return (
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <strong> Người đặt :</strong>
+          <FormControl label={"Tên thể loại"} name={"name"}></FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleClose} autoFocus>
+            Thoát
+          </Button>
+          <Button variant="contained" type="submit" autoFocus>
+            {!!updateId ? "Cập nhật" : "Thêm"}
+          </Button>
+        </DialogActions>
+      </form>
+    );
+  };
+
   return (
     <>
       <Formik
@@ -291,20 +343,7 @@ const ManageCategoryGroup = () => {
             <DialogTitle id="alert-dialog-title">
               {"Thêm nhóm thể loại"}
             </DialogTitle>
-            <form onSubmit={props.handleSubmit}>
-              <DialogContent>
-                <strong> Người đặt :</strong>
-                <FormControl label={"Tên thể loại"} name={"name"}></FormControl>
-              </DialogContent>
-              <DialogActions>
-                <Button variant="outlined" onClick={handleClose} autoFocus>
-                  Thoát
-                </Button>
-                <Button variant="contained" type="submit" autoFocus>
-                  Thêm
-                </Button>
-              </DialogActions>
-            </form>
+            <Content />
           </Dialog>
         )}
       </Formik>
@@ -316,6 +355,7 @@ const ManageCategoryGroup = () => {
         variant="contained"
         onClick={() => {
           setOpen(true);
+          setUpdateId("");
         }}
         autoFocus
       >

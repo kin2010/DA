@@ -84,6 +84,15 @@ function App() {
                   </ProtectedRoute>
                 }
               ></Route>
+              <Route
+                exact
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route path="/group">
                 <Route exact path=":id" element={<GroupDetail />}></Route>
               </Route>

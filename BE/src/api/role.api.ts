@@ -22,6 +22,7 @@ export type IRole = {
 export type ICategory = {
   name: number;
   group: string;
+  id: string;
 };
 
 export default class RoleService {
@@ -72,6 +73,54 @@ export default class RoleService {
         group: group,
       });
       res.json({ data: cate, status: 200 }).end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  static updateCategory = async (
+    req: Request<ICategory, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id, ...other } = req.body;
+      const r = await Category.findByIdAndUpdate(
+        id,
+        { ...other },
+        { new: true }
+      );
+      // if (!group) {
+      //   throw new APIError({
+      //     message: "Please choose a category group",
+      //     status: httpStatus.BAD_REQUEST,
+      //   });
+      // }
+
+      res.json({ data: r, status: 200 }).end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  static updateCategoryGroup = async (
+    req: Request<ICategory, Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id, ...other } = req.body;
+      const r = await CategoryGroup.findByIdAndUpdate(
+        id,
+        { ...other },
+        { new: true }
+      );
+      // if (!group) {
+      //   throw new APIError({
+      //     message: "Please choose a category group",
+      //     status: httpStatus.BAD_REQUEST,
+      //   });
+      // }
+
+      res.json({ data: r, status: 200 }).end();
     } catch (error) {
       next(error);
     }

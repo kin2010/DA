@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,6 +45,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
+};
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -116,8 +138,60 @@ var RoleService = /** @class */ (function () {
             }
         });
     }); };
+    RoleService.updateCategory = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, id, other, r, error_3;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 2, , 3]);
+                    _b = req.body, id = _b.id, other = __rest(_b, ["id"]);
+                    return [4 /*yield*/, models_1.Category.findByIdAndUpdate(id, __assign({}, other), { new: true })];
+                case 1:
+                    r = _c.sent();
+                    // if (!group) {
+                    //   throw new APIError({
+                    //     message: "Please choose a category group",
+                    //     status: httpStatus.BAD_REQUEST,
+                    //   });
+                    // }
+                    res.json({ data: r, status: 200 }).end();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_3 = _c.sent();
+                    next(error_3);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+    RoleService.updateCategoryGroup = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, id, other, r, error_4;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 2, , 3]);
+                    _b = req.body, id = _b.id, other = __rest(_b, ["id"]);
+                    return [4 /*yield*/, models_1.CategoryGroup.findByIdAndUpdate(id, __assign({}, other), { new: true })];
+                case 1:
+                    r = _c.sent();
+                    // if (!group) {
+                    //   throw new APIError({
+                    //     message: "Please choose a category group",
+                    //     status: httpStatus.BAD_REQUEST,
+                    //   });
+                    // }
+                    res.json({ data: r, status: 200 }).end();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _c.sent();
+                    next(error_4);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
     RoleService.addCategoryGroup = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var r, groups, error_3;
+        var r, groups, error_5;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -139,15 +213,15 @@ var RoleService = /** @class */ (function () {
                     res.json({ data: groups, status: 200 }).end();
                     return [3 /*break*/, 4];
                 case 3:
-                    error_3 = _b.sent();
-                    next(error_3);
+                    error_5 = _b.sent();
+                    next(error_5);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
         });
     }); };
     RoleService.getCategory = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var categorys, error_4;
+        var categorys, error_6;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -176,15 +250,15 @@ var RoleService = /** @class */ (function () {
                     res.json({ data: categorys, status: 200 }).end();
                     return [3 /*break*/, 3];
                 case 2:
-                    error_4 = _b.sent();
-                    next(error_4);
+                    error_6 = _b.sent();
+                    next(error_6);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); };
     RoleService.getAllCategory = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var categorys, error_5;
+        var categorys, error_7;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -200,15 +274,15 @@ var RoleService = /** @class */ (function () {
                     res.json({ data: categorys, status: 200 }).end();
                     return [3 /*break*/, 3];
                 case 2:
-                    error_5 = _b.sent();
-                    next(error_5);
+                    error_7 = _b.sent();
+                    next(error_7);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); };
     RoleService.getAllCategoryGroup = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var categorys, error_6;
+        var categorys, error_8;
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -219,15 +293,15 @@ var RoleService = /** @class */ (function () {
                     res.json({ data: categorys, status: 200 }).end();
                     return [3 /*break*/, 3];
                 case 2:
-                    error_6 = _b.sent();
-                    next(error_6);
+                    error_8 = _b.sent();
+                    next(error_8);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); };
     RoleService.deleteDocument = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, type, id, rs, _c, error_7;
+        var _b, type, id, rs, _c, error_9;
         return __generator(_a, function (_d) {
             switch (_d.label) {
                 case 0:
@@ -284,8 +358,8 @@ var RoleService = /** @class */ (function () {
                     res.json({ data: rs, status: 200 }).end();
                     return [3 /*break*/, 20];
                 case 19:
-                    error_7 = _d.sent();
-                    next(error_7);
+                    error_9 = _d.sent();
+                    next(error_9);
                     return [3 /*break*/, 20];
                 case 20: return [2 /*return*/];
             }

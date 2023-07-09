@@ -16,6 +16,8 @@ router.route("/categorygroup").post(api_2.RoleSerice.addCategoryGroup);
 router.route("/categories").get(api_2.RoleSerice.getCategory);
 router.route("/allcategory").get(api_2.RoleSerice.getAllCategory);
 router.route("/allcategorygroup").get(api_2.RoleSerice.getAllCategoryGroup);
+router.route("/updatecategory").put(api_2.RoleSerice.updateCategory);
+router.route("/updatecategorygroup").put(api_2.RoleSerice.updateCategoryGroup);
 router.route("/delete").delete(api_2.RoleSerice.deleteDocument);
 router.route("/getall").get(api_1.AuthService.getAll);
 router.route("/:id").post(api_1.AuthService.update);

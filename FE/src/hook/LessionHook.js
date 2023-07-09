@@ -613,6 +613,22 @@ export const addCategory = async (body) => {
   });
   return data;
 };
+export const updateCategory = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/updatecategory",
+    method: "PUT",
+    data: body,
+  });
+  return data;
+};
+export const updateCategoryGroup = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/auth/updatecategorygroup",
+    method: "PUT",
+    data: body,
+  });
+  return data;
+};
 
 export const addCategoryGroup = async (body) => {
   const data = await serviceFetch({
