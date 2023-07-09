@@ -71,6 +71,9 @@ const CourseTab2 = ({ setStep }) => {
   };
   const addNewGroup = () => {
     setOpenGroup(true);
+    setInit({
+      name: "12412g4h1g",
+    });
   };
 
   const handeAddSectionSumbit = async (value) => {
@@ -78,12 +81,12 @@ const CourseTab2 = ({ setStep }) => {
     if (!res?.message) {
       openNotification({
         type: "success",
-        message: "Created successfully",
+        message: "Tạo thành công",
       });
     } else {
       openNotification({
         type: "error",
-        message: "Creation failed",
+        message: "Tạo thất bại",
       });
     }
     setOpen(false);
@@ -94,17 +97,19 @@ const CourseTab2 = ({ setStep }) => {
     if (!res?.message) {
       openNotification({
         type: "success",
-        message: "Created successfully",
+        message: "Tạo thành công",
       });
     } else {
       openNotification({
         type: "error",
-        message: "Creation failed",
+        message: "Tạo thất bại",
       });
     }
     setOpenGroup(false);
   };
-
+  const [init, setInit] = useState({
+    name: "dad",
+  });
   return (
     <>
       <Formik

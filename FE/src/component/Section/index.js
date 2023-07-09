@@ -34,7 +34,7 @@ const Section = ({ propData }) => {
       setIsEdit(false);
       setShowLecture(true);
     } else if (tab === "3") {
-      setIsEdit(false);
+      setIsEditassignment(false);
       setShowAssessment(true);
     }
   };

@@ -11,27 +11,27 @@ import { Player } from "video-react";
 import { uploadFile } from "../../hook/LessionHook";
 import { useFormikContext } from "formik";
 import BBackdrop from "../BackDrop";
-const FileUpload = ({ formName, btnName, label, thumbnail, ...props }) => {
-  const [fileList, setFileList] = useState([]);
+const FileUpload = ({
+  formName,
+  btnName,
+  label,
+  thumbnail,
+  init,
+  ...props
+}) => {
   const cloudaryUploadRef = useRef();
   const widgetRef = useRef();
   const { values, setFieldValue } = useFormikContext();
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    cloudaryUploadRef.current = window.cloudinary;
-    widgetRef.current = cloudaryUploadRef.current.createUploadWidget(
-      {
-        cloudName: "drvb2kjug",
-        uploadPreset: "dzvpbt10",
-      },
-      function (error, result) {
-        if (!error && result && result?.event === "success") {
-          // const imageUrl = result.info.secure_url;
-        }
-      }
-    );
-  }, []);
-
+  const arr =
+    init?.map((z) => {
+      return {
+        name: z,
+        status: "done",
+        url: z,
+      };
+    }) || [];
+  const [defaultFileList, setDefault] = useState(arr);
   // useEffect(() => {
   //   if (!!values[formName]?.length) {
   //     console.log(22, values[formName]);
@@ -48,40 +48,34 @@ const FileUpload = ({ formName, btnName, label, thumbnail, ...props }) => {
 
   const handleChange = async ({ file, fileList }) => {
     if (fileList.length > 0) {
+      console.log(fileList, 2);
       if (fileList?.every((file) => file?.status === "done")) {
+        console.log("LÍT FILE", fileList);
         handleUpload(fileList);
       }
     }
-    // if (file.status === "done") {
-    //   const formData = new FormData();
-    //   formData.append("file", file?.originFileObj);
-    //   formData.append("upload_preset", "dzvpbt10");
-    //   formData.append("api_key", "772276885786162");
-    //   const res = await uploadFile(formData);
-    //   if (res?.data?.url) {
-    //     console.log(res?.data?.url);
-    //     if (!!formName) {
-    //       setFieldValue(formName, res?.data?.url);
-    //     }
-    //   }
-    // }
   };
 
   const handleUpload = async (files) => {
     let arr = [];
     setLoading(true);
     if (files?.length) {
+      console.log("UP", files?.length);
       for (const file of files) {
-        const formData = new FormData();
-        formData.append("file", file?.originFileObj);
-        formData.append("upload_preset", "dzvpbt10");
-        formData.append("api_key", "772276885786162");
-        const res = await uploadFile(formData);
-        console.log(res?.data?.url, 333);
-        if (res?.data?.url) {
-          if (!!formName) {
-            arr.push(res?.data?.url);
+        if (file?.originFileObj) {
+          const formData = new FormData();
+          formData.append("file", file?.originFileObj);
+          formData.append("upload_preset", "dzvpbt10");
+          formData.append("api_key", "772276885786162");
+          const res = await uploadFile(formData);
+          console.log(res?.data?.url, 333);
+          if (res?.data?.url) {
+            if (!!formName) {
+              arr.push(res?.data?.url);
+            }
           }
+        } else {
+          arr.push(file?.url);
         }
       }
       setLoading(false);
@@ -112,57 +106,71 @@ const FileUpload = ({ formName, btnName, label, thumbnail, ...props }) => {
     >
       <BBackdrop open={loading} setOpen={setLoading}></BBackdrop>
       <Upload
+        defaultFileList={defaultFileList}
         beforeUpload={beforeUpload}
         customRequest={dummyRequest}
         listType="picture"
-        defaultFileList={[...fileList]}
         itemRender={(originNode, file, currFileList, actions) => {
-          if (file?.type?.includes("video") || file.url?.includes("webm")) {
-            const reader = new FileReader();
-            const url = !!file.originFileObj
-              ? URL.createObjectURL(file.originFileObj)
-              : file.url;
+          console.log(4214141, file);
+          if (file?.status === "done") {
+            console.log(
+              file?.type?.includes("video") || file.url?.includes("webm"),
+              "file",
+              file
+            );
+            if (file?.type?.includes("video") || file.url?.includes("webm")) {
+              const url = !!file.originFileObj
+                ? URL.createObjectURL(file.originFileObj)
+                : file.url;
+              console.log(url, 9);
+              return (
+                <>
+                  <Player
+                    className="mt-3"
+                    playsInline
+                    poster="/assets/poster.png"
+                    src={url}
+                  />
+                </>
+              );
+            }
             return (
-              <Player
-                className="mt-3"
-                playsInline
-                poster="/assets/poster.png"
-                src={url}
-              />
+              <div
+                style={{
+                  border: "0.5px solid gray",
+                  borderRadius: "5px",
+                  padding: "5px",
+                }}
+                className="d-flex align-items-center justify-content-between flex-colum my-2"
+              >
+                {file?.type?.includes("image") ? (
+                  <img alt="thumbnail" src={file?.thumbUrl}></img>
+                ) : (
+                  <AttachFileIcon
+                    color="info"
+                    style={{ fontSize: "50px" }}
+                  ></AttachFileIcon>
+                )}
+                <div>
+                  {file?.name?.length > 40
+                    ? file?.name?.slice(0, 40) + "..."
+                    : file?.name}
+                </div>
+                <Button
+                  onClick={() => {
+                    actions.remove();
+                  }}
+                  variant="outlined"
+                  color="error"
+                >
+                  <DeleteSweepIcon></DeleteSweepIcon>
+                </Button>
+              </div>
             );
           }
-          return (
-            <div
-              style={{
-                border: "0.5px solid gray",
-                borderRadius: "5px",
-                padding: "5px",
-              }}
-              className="d-flex align-items-center justify-content-between flex-colum my-2"
-            >
-              {file?.type?.includes("image") ? (
-                <img alt="thumbnail" src={file?.thumbUrl}></img>
-              ) : (
-                <AttachFileIcon
-                  color="info"
-                  style={{ fontSize: "50px" }}
-                ></AttachFileIcon>
-              )}
-              <div>{file?.name}</div>
-              <Button
-                onClick={() => {
-                  actions.remove();
-                }}
-                variant="outlined"
-                color="error"
-              >
-                <DeleteSweepIcon></DeleteSweepIcon>
-              </Button>
-            </div>
-          );
         }}
-        {...props}
         onChange={handleChange}
+        {...props}
       >
         <Button variant="outlined" icon={<UploadOutlined />}>
           <AddBoxIcon

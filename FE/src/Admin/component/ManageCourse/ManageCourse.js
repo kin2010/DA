@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { SearchOutlined } from "@ant-design/icons";
-import { Breadcrumb, Empty, Modal, Space, Table } from "antd";
+import { Breadcrumb, Empty, Modal, Space, Table, Upload } from "antd";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import IconBreadcrumbs from "../BreadCrumb";
@@ -470,7 +470,7 @@ const ManagerCourse = () => {
           ))
         ) : (
           <Empty />
-        )}
+        )}{" "}
       </div>
     </>
   );

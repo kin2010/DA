@@ -498,7 +498,7 @@ export const getAllCategories = async (body) => {
 };
 
 export const uploadFile = async (body) => {
-  console.log("body: " + JSON.stringify(body));
+  // console.log("body: " + JSON.stringify(body));
   const res = await axios.post(
     "https://api.cloudinary.com/v1_1/drvb2kjug/upload",
     body

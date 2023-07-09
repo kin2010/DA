@@ -28,12 +28,12 @@ const GroupAdd = ({ open, setOpen, group }) => {
     if (!res?.message) {
       openNotification({
         type: "success",
-        message: "Created successfully",
+        message: "Tạo thành công",
       });
     } else {
       openNotification({
         type: "error",
-        message: "Creation failed",
+        message: "Tạo thất bại",
       });
     }
     setOpen(false);

@@ -23,10 +23,6 @@ const FormControl = ({ name, type, label, children, inputType, ...other }) => {
     );
   }
 
-  useEffect(() => {
-    console.log(values, 33);
-  }, []);
-
   if (type === "editor") {
     return (
       <div className="mb-3">

@@ -124,7 +124,7 @@ const LectureAdd = ({ open, setOpen, section, isEdit, lectureUpdateId }) => {
 
     return (
       <>
-        <label className="col-form-label">Video hiện tại :</label>
+        {isEdit && <label className="col-form-label">Video hiện tại :</label>}
         {isEdit && !!data?.video?.length && (
           <Player
             className="mt-3"
@@ -155,6 +155,7 @@ const LectureAdd = ({ open, setOpen, section, isEdit, lectureUpdateId }) => {
               allowFullScreen
               title="Embedded youtube"
               className="w-75"
+              style={{ height: "270px" }}
             />
           </div>
         )}
@@ -173,6 +174,7 @@ const LectureAdd = ({ open, setOpen, section, isEdit, lectureUpdateId }) => {
           accept="image/*, .pdf"
           formName="attachments"
           multiple
+          init={data?.attachments || []}
         ></FileUpload>
       </>
     );

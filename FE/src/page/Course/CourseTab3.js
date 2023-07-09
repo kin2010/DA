@@ -65,6 +65,7 @@ const CourseTab3 = ({ setStep, step }) => {
                     label="Supports: mp4"
                     accept="video/mp4,video/x-m4v,video/*"
                     formName="video"
+                    init={data?.video || []}
                   />
                 </div>
               </div>
@@ -76,6 +77,7 @@ const CourseTab3 = ({ setStep, step }) => {
                     label={"Supports: jpg,jpeg, or png"}
                     accept="image/*"
                     formName="thumbnail"
+                    init={data?.thumbnail || []}
                   ></FileUpload>
                 </div>
               </div>
