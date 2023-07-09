@@ -7,17 +7,18 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { UploadOutlined } from "@ant-design/icons";
 import FileUpload from "../../component/FileUpload/FileUpload";
 import { Formik } from "formik";
-import { useCourseService } from "../../hook/LessionHook";
+import { getCourse, useCourseService } from "../../hook/LessionHook";
 import { openNotification } from "../../Notification";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const CourseTab3 = ({ setStep, step }) => {
   const [fileList, setFileList] = useState([]);
   const courseService = useCourseService();
   const courseId = sessionStorage.getItem("new_course");
   const queryClient = useQueryClient();
-  const data = courseService.get();
-  console.log(data, 23323);
+  const id = sessionStorage.getItem("new_course");
+  const { data } = useQuery(["course", id], getCourse);
+
   const handeAddLessonSumbit = async (value) => {
     console.log(value);
     const res = await courseService.updateCourse({

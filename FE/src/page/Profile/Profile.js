@@ -60,6 +60,9 @@ const Profile = () => {
                         <Tab
                           style={{ alignItems: "start" }}
                           label="Tạo khóa học"
+                          onClick={() => {
+                            sessionStorage.removeItem("new_course");
+                          }}
                         />
                       )}
                       <Tab

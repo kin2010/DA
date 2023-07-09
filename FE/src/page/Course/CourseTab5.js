@@ -2,12 +2,14 @@ import { Button } from "@mui/material";
 import { Result } from "antd";
 import React from "react";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
-import { useCourseService } from "../../hook/LessionHook";
+import { getCourse, useCourseService } from "../../hook/LessionHook";
 import { openNotification } from "../../Notification";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 const CourseTab5 = () => {
   const courseService = useCourseService();
-  const courseData = courseService.get();
+  const id = sessionStorage.getItem("new_course");
+  const { data: courseData } = useQuery(["course", id], getCourse);
   const handleSumbmit = async () => {
     const res = await courseService.updateCourse({
       id: courseData?._id,

@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 
 import { Divider, Empty } from "antd";
-import { addSection, useCourseService } from "../../hook/LessionHook";
+import {
+  addSection,
+  getCourse,
+  useCourseService,
+} from "../../hook/LessionHook";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +25,7 @@ import ViewListIcon from "@mui/icons-material/ViewList";
 import { Modal } from "antd";
 import Section from "../../component/Section";
 import { openNotification } from "../../Notification";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Group from "../Group";
 
 const CourseTab2 = ({ setStep }) => {
@@ -32,6 +36,9 @@ const CourseTab2 = ({ setStep }) => {
   const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState(false);
   const courseId = sessionStorage.getItem("new_course");
+  const id = sessionStorage.getItem("new_course");
+  const [query, setQuery] = useState();
+  const { data: courseData } = useQuery(["course", id], getCourse);
   const handleOk = () => {
     setLoading(true);
     setTimeout(() => {
@@ -58,7 +65,6 @@ const CourseTab2 = ({ setStep }) => {
     setStep(0);
   }
   const courseService = useCourseService();
-  const courseData = queryClient.getQueryData(["course", courseId]);
 
   const addNewSection = () => {
     setOpen(true);

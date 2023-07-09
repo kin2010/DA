@@ -3,16 +3,18 @@ import FormControl from "../../component/FormControl";
 import { InputNumber, Switch } from "antd";
 import { Formik, useFormikContext } from "formik";
 import { openNotification } from "../../Notification";
-import { useCourseService } from "../../hook/LessionHook";
+import { getCourse, useCourseService } from "../../hook/LessionHook";
 import { Button } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 
 const CourseTab4 = ({ setStep, step }) => {
   const courseService = useCourseService();
   const courseId = sessionStorage.getItem("new_course");
   const [disabled, setDisabled] = useState(false);
-  const courseData = courseService.get();
+  const id = sessionStorage.getItem("new_course");
+  const { data: courseData } = useQuery(["course", id], getCourse);
   const { handleSubmit, setFieldValue, setValues, values } = useFormikContext();
-  const [data, setData] = useState();
+
   const handeAddLessonSumbit = async (value) => {
     console.log(value);
     const res = await courseService.updateCourse({

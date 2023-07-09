@@ -5,7 +5,11 @@ import React, { useEffect, useState } from "react";
 
 import { Col, Row } from "antd";
 import AddIcon from "@mui/icons-material/Add";
-import { getAllCategories, useCourseService } from "../../hook/LessionHook";
+import {
+  getAllCategories,
+  getCourse,
+  useCourseService,
+} from "../../hook/LessionHook";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Tab2 from "../Tab2";
 import TeacherModal from "../../component/TeacherModal";
@@ -14,7 +18,7 @@ import { apiURL } from "../../Context/constant";
 import VirtualList from "rc-virtual-list";
 import { Avatar, List } from "antd";
 import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContextProvider } from "../../Context/AppContext";
 import Uploadd from "../../component/Upload";
 import DataSaverOnIcon from "@mui/icons-material/DataSaverOn";
@@ -43,7 +47,9 @@ const CourseTab1 = ({ course, setCourse, changeTab, dataTeacher }) => {
   const courseId = sessionStorage.getItem("new_course");
   const { data } = useQuery(["categories"], getAllCategories);
   const courseService = useCourseService();
-  const courseData = courseService.get();
+  const id = sessionStorage.getItem("new_course");
+  const [query, setQuery] = useState();
+  const { data: courseData } = useQuery(["course", id], getCourse);
   const [date, setDate] = useState({
     start: dayjs(new Date()),
     end: dayjs(new Date()),

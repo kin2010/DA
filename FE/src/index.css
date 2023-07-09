@@ -82,6 +82,7 @@ body {
 }
 .ant-notification-notice {
   z-index: 9999999999 !important;
+  top: 100px;
 }
 .ant-tabs-nav-list {
   width: 100%;

@@ -222,15 +222,7 @@ const TeacherCourse = () => {
                           <h5>Thể loại</h5>
                           <h4>Backend</h4>
                         </li>
-                        <li className="card-courses-review">
-                          <h5>Đánh giá</h5>
-                          <ul className="cours-star">
-                            <Rating
-                              value={getCourseRating(course?.comments)}
-                              readOnly
-                            />
-                          </ul>
-                        </li>
+
                         <li className="card-courses-stats">
                           <Chip
                             label={getStatus(course?.status)?.label}
@@ -246,12 +238,23 @@ const TeacherCourse = () => {
                         </li>
                       </ul>
                     </div>
+                    <div>
+                      <p className="card-courses-review">
+                        <h5>Đánh giá</h5>
+                        <ul className="cours-star">
+                          <Rating
+                            value={getCourseRating(course?.comments)}
+                            readOnly
+                          />
+                        </ul>
+                      </p>
+                    </div>
                     <h6 className="m-b10">
                       Ngày tạo :{" "}
                       {format(new Date(course?.createdAt), "yyyy-MM-dd hh:mm")}
                     </h6>
                     <div className="row card-courses-dec">
-                      <div className="col-md-12">
+                      {/* <div className="col-md-12">
                         <h6 className="m-b10">Mô tả khóa học</h6>
                         <p
                           dangerouslySetInnerHTML={{
@@ -262,7 +265,7 @@ const TeacherCourse = () => {
                             overflowY: "hidden",
                           }}
                         ></p>
-                      </div>
+                      </div> */}
                       <div className="col-md-12">
                         <Button
                           variant="contained"

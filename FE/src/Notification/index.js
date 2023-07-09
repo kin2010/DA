@@ -1,9 +1,7 @@
 import { Button, notification } from "antd";
 import React from "react";
 const close = () => {
-  console.log(
-    "Notification was closed. Either the close button was clicked or duration time elapsed."
-  );
+  //
 };
 export const openNotification = ({ type, message }) => {
   const key = `open${Date.now()}`;
