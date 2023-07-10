@@ -83,7 +83,7 @@ var AssignmentService = /** @class */ (function () {
         return __generator(_a, function (_b) {
             switch (_b.label) {
                 case 0:
-                    _b.trys.push([0, 5, , 6]);
+                    _b.trys.push([0, 4, , 5]);
                     section = req.body.section;
                     console.log(section, 3);
                     return [4 /*yield*/, models_1.Section.findById(section)];
@@ -96,8 +96,7 @@ var AssignmentService = /** @class */ (function () {
                         });
                     }
                     return [4 /*yield*/, models_1.Assignment.create(__assign({}, req.body))];
-                case 2: return [4 /*yield*/, _b.sent()];
-                case 3:
+                case 2:
                     assignment = _b.sent();
                     //   .populate([
                     //     {
@@ -128,7 +127,7 @@ var AssignmentService = /** @class */ (function () {
                     return [4 /*yield*/, ch.updateOne({
                             $set: { assignments: __spreadArray(__spreadArray([], ch.assignments, true), [assignment === null || assignment === void 0 ? void 0 : assignment._id], false) },
                         })];
-                case 4:
+                case 3:
                     //   .populate([
                     //     {
                     //       path: "teacher",
@@ -162,62 +161,60 @@ var AssignmentService = /** @class */ (function () {
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
-                    return [3 /*break*/, 6];
-                case 5:
+                    return [3 /*break*/, 5];
+                case 4:
                     error_1 = _b.sent();
                     next(error_1);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     }); };
     AssignmentService.getById = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var coures, error_2;
-        return __generator(_a, function (_b) {
-            switch (_b.label) {
+        var assignment, sectionId, section, courseData, error_2;
+        var _b;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, models_1.Assignment.findById(req.params.id)];
+                    _c.trys.push([0, 5, , 6]);
+                    return [4 /*yield*/, ((_b = models_1.Assignment.findById(req.params.id)) === null || _b === void 0 ? void 0 : _b.populate([
+                            {
+                                path: "",
+                                select: "",
+                                // populate:[
+                                //   path:'user',
+                                //   select:""
+                                // ]
+                            },
+                        ]))];
                 case 1:
-                    coures = _b.sent();
-                    //   ?.populate([
-                    //     {
-                    //       path: "teacher",
-                    //       select: "fullName",
-                    //     },
-                    //     {
-                    //       path: "users",
-                    //       select: "avatar email fullName address phone online",
-                    //     },
-                    //     {
-                    //       path: "ralseHand",
-                    //       select: "time user",
-                    //       populate: {
-                    //         path: "user",
-                    //         select: "avatar email fullName address phone online",
-                    //       },
-                    //     },
-                    //     {
-                    //       path: "plusMark",
-                    //       select: "time user",
-                    //       populate: {
-                    //         path: "user",
-                    //         select: "avatar email fullName address phone online",
-                    //       },
-                    //     },
-                    //   ]);
+                    assignment = _c.sent();
+                    sectionId = assignment === null || assignment === void 0 ? void 0 : assignment.section;
+                    return [4 /*yield*/, models_1.Section.findById(sectionId)];
+                case 2:
+                    section = _c.sent();
+                    courseData = void 0;
+                    if (!(section === null || section === void 0 ? void 0 : section.course)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, models_1.Course.findById(section.course)];
+                case 3:
+                    courseData = _c.sent();
+                    _c.label = 4;
+                case 4:
+                    if (assignment) {
+                        assignment.course = courseData;
+                    }
                     res
                         .json({
-                        data: coures,
+                        data: assignment,
                         status: 200,
                     })
                         .status(http_status_1.default.OK);
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_2 = _b.sent();
-                    next();
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_2 = _c.sent();
+                    next(error_2);
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     }); };

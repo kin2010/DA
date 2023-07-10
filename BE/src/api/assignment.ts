@@ -39,7 +39,7 @@ export default class AssignmentService {
           status: httpStatus.INTERNAL_SERVER_ERROR,
         });
       }
-      const assignment = await await Assignment.create({ ...req.body });
+      const assignment = await Assignment.create({ ...req.body });
       //   .populate([
       //     {
       //       path: "teacher",
@@ -85,41 +85,33 @@ export default class AssignmentService {
     next: NextFunction
   ) => {
     try {
-      const coures = await Assignment.findById(req.params.id);
-      //   ?.populate([
-      //     {
-      //       path: "teacher",
-      //       select: "fullName",
-      //     },
-      //     {
-      //       path: "users",
-      //       select: "avatar email fullName address phone online",
-      //     },
-      //     {
-      //       path: "ralseHand",
-      //       select: "time user",
-      //       populate: {
-      //         path: "user",
-      //         select: "avatar email fullName address phone online",
-      //       },
-      //     },
-      //     {
-      //       path: "plusMark",
-      //       select: "time user",
-      //       populate: {
-      //         path: "user",
-      //         select: "avatar email fullName address phone online",
-      //       },
-      //     },
-      //   ]);
+      const assignment = await Assignment.findById(req.params.id)?.populate([
+        {
+          path: "",
+          select: "",
+          // populate:[
+          //   path:'user',
+          //   select:""
+          // ]
+        },
+      ]);
+      const sectionId = assignment?.section;
+      const section = await Section.findById(sectionId);
+      let courseData: any;
+      if (section?.course) {
+        courseData = await Course.findById(section.course);
+      }
+      if (assignment) {
+        assignment.course = courseData;
+      }
       res
         .json({
-          data: coures,
+          data: assignment,
           status: 200,
         })
         .status(httpStatus.OK);
     } catch (error) {
-      next();
+      next(error);
     }
   };
   static update = async (

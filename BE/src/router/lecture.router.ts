@@ -8,5 +8,6 @@ router.route("/section").post(LectureService.addChapter);
 router.route("/section/:id").put(LectureService.updateChapter);
 router.route("/sectionid/:id").get(LectureService.getChapter);
 router.route("/allsection").get(LectureService.getChapters);
+router.route("/comment").post(LectureService.addComment);
 
 export default router;

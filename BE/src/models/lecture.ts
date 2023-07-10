@@ -27,6 +27,7 @@ export interface ILecture extends Document {
   youtube_url: string;
   section: string;
   course: Object;
+  comments: Object;
 }
 
 const roleSchema = new Schema(
@@ -91,15 +92,16 @@ const roleSchema = new Schema(
         },
       },
     ],
-    plusMark: [
+    comments: [
       {
         user: {
           type: "ObjectId",
           ref: "User",
         },
-        mark: {
-          type: Number,
+        comment: {
+          type: String,
         },
+        time: String,
       },
     ],
     baitap: [

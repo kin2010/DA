@@ -1,7 +1,7 @@
 import { NextFunction, RequestHandler, Response } from "express";
 import httpStatus from "http-status";
 import { Query, Params, Request } from "../configs/types";
-import { Course, Lecture, Section } from "../models";
+import { Assignment, Course, Lecture, Section } from "../models";
 import Chapter from "../models/chapter";
 import APIError from "../utils/APIError";
 import { request } from "http";
@@ -132,8 +132,8 @@ export default class LectureApi {
           },
         },
         {
-          path: "plusMark",
-          select: "time user",
+          path: "comments",
+          select: "",
           populate: {
             path: "user",
             select: "",
@@ -406,6 +406,54 @@ export default class LectureApi {
         })
         .status(httpStatus.OK)
         .end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  static addComment = async (
+    req: Request<Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id, type } = req.body;
+      console.log(req.body, 3);
+      let re: any = "";
+      if (type === "lecture") {
+        re = await Lecture.findByIdAndUpdate(
+          id,
+          {
+            $push: {
+              comments: {
+                time: new Date(),
+                ...req.body,
+              },
+            },
+          },
+          { new: true }
+        );
+        console.log(re, 21421);
+      } else {
+        re = await Assignment.findByIdAndUpdate(
+          id,
+          {
+            $push: {
+              comments: {
+                time: new Date(),
+                ...req.body,
+              },
+            },
+          },
+          { new: true }
+        );
+      }
+
+      res
+        .json({
+          data: re,
+          status: 200,
+        })
+        .status(httpStatus.OK);
     } catch (error) {
       next(error);
     }

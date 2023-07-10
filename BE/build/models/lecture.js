@@ -62,15 +62,16 @@ var roleSchema = new mongoose_1.Schema({
             },
         },
     ],
-    plusMark: [
+    comments: [
         {
             user: {
                 type: "ObjectId",
                 ref: "User",
             },
-            mark: {
-                type: Number,
+            comment: {
+                type: String,
             },
+            time: String,
         },
     ],
     baitap: [

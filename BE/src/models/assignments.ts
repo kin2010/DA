@@ -8,6 +8,8 @@ export interface IAssignment extends Document {
   mark: number;
   attachments: string[];
   section: string;
+  course: string;
+  comments: string;
 }
 
 export const AssignmentSchema = new Schema(
@@ -35,6 +37,22 @@ export const AssignmentSchema = new Schema(
     section: {
       type: String,
     },
+    course: {
+      type: "ObjectId",
+      ref: "Course",
+    },
+    comments: [
+      {
+        user: {
+          type: "ObjectId",
+          ref: "User",
+        },
+        comment: {
+          type: String,
+        },
+        time: { type: String },
+      },
+    ],
   },
   { timestamps: true }
 );

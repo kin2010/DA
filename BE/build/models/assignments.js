@@ -26,6 +26,22 @@ exports.AssignmentSchema = new mongoose_1.Schema({
     section: {
         type: String,
     },
+    course: {
+        type: "ObjectId",
+        ref: "Course",
+    },
+    comments: [
+        {
+            user: {
+                type: "ObjectId",
+                ref: "User",
+            },
+            comment: {
+                type: String,
+            },
+            time: { type: String },
+        },
+    ],
 }, { timestamps: true });
 var Assignment = (0, mongoose_1.model)("Assignment", exports.AssignmentSchema);
 exports.default = Assignment;

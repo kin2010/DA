@@ -13,4 +13,5 @@ router.route("/section").post(api_1.LectureService.addChapter);
 router.route("/section/:id").put(api_1.LectureService.updateChapter);
 router.route("/sectionid/:id").get(api_1.LectureService.getChapter);
 router.route("/allsection").get(api_1.LectureService.getChapters);
+router.route("/comment").post(api_1.LectureService.addComment);
 exports.default = router;

@@ -169,8 +169,8 @@ var LectureApi = /** @class */ (function () {
                             },
                         },
                         {
-                            path: "plusMark",
-                            select: "time user",
+                            path: "comments",
+                            select: "",
                             populate: {
                                 path: "user",
                                 select: "",
@@ -491,6 +491,49 @@ var LectureApi = /** @class */ (function () {
                     next(error_7);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
+            }
+        });
+    }); };
+    LectureApi.addComment = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var _b, id, type, re, error_8;
+        return __generator(_a, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 5, , 6]);
+                    _b = req.body, id = _b.id, type = _b.type;
+                    console.log(req.body, 3);
+                    re = "";
+                    if (!(type === "lecture")) return [3 /*break*/, 2];
+                    return [4 /*yield*/, models_1.Lecture.findByIdAndUpdate(id, {
+                            $push: {
+                                comments: __assign({ time: new Date() }, req.body),
+                            },
+                        }, { new: true })];
+                case 1:
+                    re = _c.sent();
+                    console.log(re, 21421);
+                    return [3 /*break*/, 4];
+                case 2: return [4 /*yield*/, models_1.Assignment.findByIdAndUpdate(id, {
+                        $push: {
+                            comments: __assign({ time: new Date() }, req.body),
+                        },
+                    }, { new: true })];
+                case 3:
+                    re = _c.sent();
+                    _c.label = 4;
+                case 4:
+                    res
+                        .json({
+                        data: re,
+                        status: 200,
+                    })
+                        .status(http_status_1.default.OK);
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_8 = _c.sent();
+                    next(error_8);
+                    return [3 /*break*/, 6];
+                case 6: return [2 /*return*/];
             }
         });
     }); };
