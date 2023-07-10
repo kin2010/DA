@@ -107,6 +107,13 @@ export const getLectureById = async ({ queryKey }) => {
   });
   return data;
 };
+export const getAssignmentById = async ({ queryKey }) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/assignment/" + queryKey[1],
+    method: "GET",
+  });
+  return data;
+};
 
 export const updateCourse = async (body) => {
   const data = await serviceFetch({
@@ -509,6 +516,17 @@ export const uploadFile = async (body) => {
 export const addAssignment = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/assignment",
+    method: "POST",
+    data: {
+      ...body,
+    },
+  });
+  return data;
+};
+
+export const addLessonComment = async (body) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/lesson/comment",
     method: "POST",
     data: {
       ...body,

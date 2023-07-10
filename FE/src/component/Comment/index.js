@@ -2,8 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Avatar, Comment, Divider, Form, Input, List } from "antd";
 import moment from "moment";
 import React, { useState } from "react";
-import { getUserData } from "../../hook/LessionHook";
+import { addLessonComment, getUserData } from "../../hook/LessionHook";
 import { Button } from "@mui/material";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import EditorCommon from "../EdittorCommon/EdittorCommon";
+import EditorCustom from "./EditorCustom";
 const { TextArea } = Input;
 const ExampleComment = ({ children }) => (
   <Comment
@@ -20,17 +24,10 @@ const ExampleComment = ({ children }) => (
     {children}
   </Comment>
 );
-const CommentComponent = () => (
+const CommentComponent = ({ id, type }) => (
   <>
     <Divider></Divider>
-
-    {/* <ExampleComment>
-      <ExampleComment>
-        <ExampleComment />
-        <ExampleComment />
-      </ExampleComment>
-    </ExampleComment> */}
-    <CommentAdd></CommentAdd>
+    <CommentAdd type={type} id={id}></CommentAdd>
   </>
 );
 
@@ -42,51 +39,68 @@ const CommentList = ({ comments }) => (
     renderItem={(props) => <Comment {...props} />}
   />
 );
-const Editor = ({ onChange, onSubmit, submitting, value }) => (
-  <>
-    <Form.Item>
-      <TextArea rows={4} onChange={onChange} value={value} />
-    </Form.Item>
-    <Form.Item>
-      <Button
-        htmlType="submit"
-        loading={submitting}
-        onClick={onSubmit}
-        type="primary"
-        variant="contained"
-      >
-        Thêm bình luận
-      </Button>
-    </Form.Item>
-  </>
-);
-const CommentAdd = () => {
+
+const Editor = ({ onChange, onSubmit, submitting, value, setValue }) => {
+  const handleChange = (name, data) => {
+    console.log(data, 22);
+    setValue(data);
+  };
+  return (
+    <>
+      <Form.Item>
+        <EditorCustom handleChange={handleChange} name="comment" />
+      </Form.Item>
+      <Form.Item>
+        <Button
+          htmlType="submit"
+          loading={submitting}
+          onClick={onSubmit}
+          type="primary"
+          variant="contained"
+        >
+          Thêm bình luận
+        </Button>
+      </Form.Item>
+    </>
+  );
+};
+
+const CommentAdd = ({ type, id }) => {
   const { data } = useQuery(["user"], getUserData);
   const [comments, setComments] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [value, setValue] = useState("");
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!value) return;
-    setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setValue("");
-      setComments([
-        ...comments,
-        {
-          author: data?.user?.fullName,
-          avatar: !!data?.user?.avatar
-            ? data?.user?.avatar
-            : "../images/user.jpg",
-          content: <p>{value}</p>,
-          datetime: moment(new Date()).fromNow(),
-        },
-      ]);
-    }, 1000);
+    const res = await addLessonComment({
+      user: data?.user?._id,
+      type: type,
+      comment: value,
+      id: id,
+    });
+    console.log(res, 2323, {
+      user: data?.user?._id,
+      type: type,
+      id: id,
+    });
+    // setSubmitting(true);
+    // setTimeout(() => {
+    //   setSubmitting(false);
+    //   setValue("");
+    //   setComments([
+    //     ...comments,
+    //     {
+    //       author: data?.user?.fullName,
+    //       avatar: !!data?.user?.avatar
+    //         ? data?.user?.avatar
+    //         : "../images/user.jpg",
+    //       content: <p>{value}</p>,
+    //       datetime: moment(new Date()).fromNow(),
+    //     },
+    //   ]);
+    // }, 1000);
   };
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
+
   return (
     <>
       <p>{comments?.length || 0} Bình luận</p>
@@ -101,12 +115,7 @@ const CommentAdd = () => {
           />
         }
         content={
-          <Editor
-            onChange={handleChange}
-            onSubmit={handleSubmit}
-            submitting={submitting}
-            value={value}
-          />
+          <Editor onSubmit={handleSubmit} value={value} setValue={setValue} />
         }
       />
     </>

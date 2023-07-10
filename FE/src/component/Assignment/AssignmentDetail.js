@@ -5,7 +5,11 @@ import Header from "../../page/Header";
 import HeaderAppBar from "../../page/Header/AppBar";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { getCourse, getLectureById } from "../../hook/LessionHook";
+import {
+  getAssignmentById,
+  getCourse,
+  getLectureById,
+} from "../../hook/LessionHook";
 import { format } from "date-fns";
 import { Player } from "video-react";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -16,9 +20,9 @@ import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import CommentComponent from "../Comment";
 
-const LectureDetail = () => {
+const AssignmentDetail = () => {
   const { id } = useParams();
-  const { data } = useQuery(["lecture_detail", id], getLectureById);
+  const { data } = useQuery(["assignment_detail", id], getAssignmentById);
   const { data: courseData } = useQuery(
     ["course_detail", data?.course?._id],
     getCourse
@@ -198,8 +202,7 @@ const LectureDetail = () => {
                       </div>
                     )}
                   </div>
-                  {/* comment */}
-                  <CommentComponent id={data?._id} type="lecture" />
+                  <CommentComponent id={data?._id} type="assignment" />
                 </div>
 
                 <div className="col-lg-4 col-xl-4">
@@ -260,4 +263,4 @@ const LectureDetail = () => {
   );
 };
 
-export default LectureDetail;
+export default AssignmentDetail;

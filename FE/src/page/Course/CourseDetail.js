@@ -324,7 +324,7 @@ const CourseDetail = () => {
                                       </span>
 
                                       <Link
-                                        to={`/lecture/${lecture?.item?._id}`}
+                                        to={`/${lecture?.type}/${lecture?.item?._id}`}
                                       >
                                         {lecture?.item?.name}
                                       </Link>

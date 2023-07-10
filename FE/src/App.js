@@ -30,6 +30,7 @@ import ManagerOrder from "./Admin/component/ManagerOrder/ManagerOrder";
 import ManagerCategory from "./Admin/component/ManagerCategory/ManagerCategory";
 import Profile from "./page/Profile/Profile";
 import MangerUser from "./Admin/component/ManagerUser/MangerUser";
+import AssignmentDetail from "./component/Assignment/AssignmentDetail";
 // Create a client
 const queryClient = new QueryClient();
 function App() {
@@ -117,6 +118,9 @@ function App() {
               </Route> */}
               <Route path="/lecture">
                 <Route path=":id" element={<LectureDetail />}></Route>
+              </Route>
+              <Route path="/assignment">
+                <Route path=":id" element={<AssignmentDetail />}></Route>
               </Route>
               <Route
                 path="/admin"
