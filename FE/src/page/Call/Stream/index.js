@@ -328,9 +328,9 @@ const Stream = (props) => {
 
     const userExit = async (data) => {
       console.log("user-exit", data);
-      if (data?.meeting) {
-        setRoomMember(data?.meeting?.users || []);
-        setMessages(data?.meeting?.chat || []);
+      if (data?.data?.meeting) {
+        setRoomMember(data?.data?.meeting?.users || []);
+        setMessages(data?.data?.meeting?.chat || []);
       }
     };
 
@@ -532,7 +532,7 @@ const Stream = (props) => {
       e.preventDefault();
       e.stopPropagation();
       let elem = document.getElementById("toggle-video");
-      console.log((myStream.getVideoTracks(), "aa"));
+      // console.log((myStream.getVideoTracks(), "aa"));
       if (myStream.getVideoTracks()[0].enabled) {
         e.target.classList.remove("fa-video");
         e.target.classList.add("fa-video-slash");

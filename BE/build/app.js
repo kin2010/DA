@@ -301,7 +301,7 @@ io.on("connect", function (socket) {
                     case 1:
                         rs = _a.sent();
                         // const newOnlines = rs?.meeting?.users || [];
-                        console.log(rs, "exit");
+                        console.log(rs, userId, roomQuery, "exit");
                         socket.to(roomQuery).emit("user_exit", {
                             data: rs,
                         });

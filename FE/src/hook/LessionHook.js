@@ -591,6 +591,14 @@ export const getOrder = async ({ queryKey }) => {
   return data;
 };
 
+export const getGroupByUser = async ({ queryKey }) => {
+  const data = await serviceFetch({
+    url: apiURL + "/api/group/getbyuser/" + queryKey[1]?.id,
+    method: "GET",
+  });
+  return data;
+};
+
 export const createMeeting = async (body) => {
   const data = await serviceFetch({
     url: apiURL + "/api/meeting",

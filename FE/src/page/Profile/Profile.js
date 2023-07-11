@@ -10,6 +10,7 @@ import ChangePassword from "./ChangePass";
 import { getRoleID } from "../../ultis/Common";
 import { ROLE_ID } from "../../ultis/PrivateRoute";
 import UserCourse from "./UserCourse";
+import MyGroup from "./MyGroup";
 
 const Profile = () => {
   const { data } = useQuery(["user"], getUserData);
@@ -71,12 +72,16 @@ const Profile = () => {
                       />
                       <Tab
                         style={{ alignItems: "start" }}
+                        label="Nhóm của tôi"
+                      />
+                      <Tab
+                        style={{ alignItems: "start" }}
                         label="Thông tin cá nhân"
-                      />{" "}
+                      />
                       <Tab
                         style={{ alignItems: "start" }}
                         label="Đổi mật khẩu"
-                      />{" "}
+                      />
                     </Tabs>
                   </div>
                 </div>
@@ -88,15 +93,17 @@ const Profile = () => {
                       <>
                         {value === 0 && <AdminCourse />}
                         {value === 1 && <TeacherCourse />}
-                        {value === 2 && <UserInfo />}
-                        {value === 3 && <ChangePassword />}
+                        {value === 2 && <MyGroup />}
+                        {value === 3 && <UserInfo />}
+                        {value === 4 && <ChangePassword />}
                       </>
                     )}
                     {getRoleID() === ROLE_ID.USER && (
                       <>
                         {value === 0 && <UserCourse />}
-                        {value === 1 && <UserInfo />}
-                        {value === 2 && <ChangePassword />}
+                        {value === 1 && <MyGroup />}
+                        {value === 2 && <UserInfo />}
+                        {value === 3 && <ChangePassword />}
                       </>
                     )}
                   </div>

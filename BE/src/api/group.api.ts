@@ -4,6 +4,7 @@ import { Query, Params, Request } from "../configs/types";
 import { Course, Group, Lecture, Section, User } from "../models";
 import APIError from "../utils/APIError";
 import { MeetingChatType } from "./meeting.api";
+import { Schema } from "mongoose";
 
 export type IGroup = {
   id: string;
@@ -143,6 +144,96 @@ export default class GroupApi {
       res
         .json({
           data: groupRes,
+          status: 200,
+        })
+        .status(httpStatus.OK)
+        .end();
+    } catch (error) {
+      next(error);
+    }
+  };
+  static getByUser = async (
+    req: Request<Query, Params>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { id } = req?.params;
+      console.log(id, 21);
+      // const group = await Group.find({
+      //   course: { users: { $in: [id] } },
+      // }).populate([
+      //   {
+      //     path: "course",
+      //     select: "",
+      //     populate: [
+      //       {
+      //         path: "teachers",
+      //         select: "",
+      //       },
+      //       {
+      //         path: "users",
+      //         select: "",
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     path: "chats",
+      //     select: "",
+      //     populate: [
+      //       {
+      //         path: "user",
+      //         select: "",
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     path: "meetings",
+      //     select: "",
+      //     populate: [
+      //       {
+      //         path: "users",
+      //         select: "",
+      //       },
+      //       {
+      //         path: "attendance",
+      //         select: "",
+      //       },
+      //       {
+      //         path: "createdby",
+      //         select: "",
+      //       },
+      //     ],
+      //   },
+      // ]);
+      const group = await Group.aggregate([
+        {
+          $lookup: {
+            from: "courses",
+            localField: "course",
+            foreignField: "_id",
+            as: "course",
+          },
+        },
+        {
+          $unwind: "$course",
+        },
+        // {
+        //   $match: {
+        //     "course.users": {
+        //       $elemMatch: { $eq: "63708cf77f4f6836c48bdb5f" },
+        //     },
+        //   },
+        // },
+      ]);
+      const resGr =
+        group?.filter((gr) => {
+          const arr = gr?.course?.users?.map((z: any) => z?.toString());
+          return arr?.includes(id);
+        }) || [];
+      res
+        .json({
+          data: resGr || [],
           status: 200,
         })
         .status(httpStatus.OK)

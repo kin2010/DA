@@ -115,6 +115,7 @@ export default function AdminCourse({ edit }) {
         ...value,
         owner: userData?.user?._id,
         status: "draft",
+        users: [userData?.user?._id],
       });
       if (!res?.message) {
         openNotification({

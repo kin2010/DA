@@ -230,6 +230,28 @@ const GroupDetail = () => {
           <Row>
             <h3 className="mt-3">{data?.name}</h3>
           </Row>
+          <p className="mb-2">
+            Khóa học:
+            <i
+              onClick={() => {
+                navigate("/course/" + data?.course?._id);
+              }}
+              className="ms-2"
+              style={{
+                fontWeight: "500",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              {data?.course?.name}
+            </i>
+          </p>
+          <p
+            className="mb-3"
+            dangerouslySetInnerHTML={{
+              __html: data?.description || "",
+            }}
+          ></p>
           <div
             className="d-flex justify-content-end"
             style={{
@@ -456,7 +478,7 @@ const GroupDetail = () => {
                                       !!content?.data?.createdAt
                                         ? format(
                                             new Date(content?.data?.createdAt),
-                                            "yyyy-dd-mm hh:mm"
+                                            "yyyy-MM-dd hh:mm"
                                           )
                                         : new Date().getDay()
                                     }
@@ -465,7 +487,7 @@ const GroupDetail = () => {
                                       {!!content?.data?.createdAt
                                         ? format(
                                             new Date(content?.data?.createdAt),
-                                            "yyyy-dd-mm hh:mm"
+                                            "yyyy-MM-dd hh:mm"
                                           )
                                         : new Date().getDay()}
                                     </span>
@@ -520,17 +542,27 @@ const GroupDetail = () => {
                                     bottom: "30px",
                                   }}
                                 >
-                                  <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => {
-                                      window.open(
-                                        URL + "/meeting/" + content?.data?._id
-                                      );
-                                    }}
-                                  >
-                                    Tham gia
-                                  </Button>
+                                  {content?.data?.status === "end" ? (
+                                    <p>
+                                      Cuộc họp đã kết thúc vào:{" "}
+                                      {format(
+                                        new Date(content?.data?.updatedAt),
+                                        "HH:mm"
+                                      )}
+                                    </p>
+                                  ) : (
+                                    <Button
+                                      variant="contained"
+                                      color="primary"
+                                      onClick={() => {
+                                        window.open(
+                                          URL + "/meeting/" + content?.data?._id
+                                        );
+                                      }}
+                                    >
+                                      Tham gia
+                                    </Button>
+                                  )}
                                 </div>
                               )}
                             </div>

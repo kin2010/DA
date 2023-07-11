@@ -236,8 +236,59 @@ var GroupApi = /** @class */ (function () {
             }
         });
     }); };
+    GroupApi.getByUser = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var id_1, group, resGr, error_4;
+        return __generator(_a, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 2, , 3]);
+                    id_1 = (req === null || req === void 0 ? void 0 : req.params).id;
+                    console.log(id_1, 21);
+                    return [4 /*yield*/, models_1.Group.aggregate([
+                            {
+                                $lookup: {
+                                    from: "courses",
+                                    localField: "course",
+                                    foreignField: "_id",
+                                    as: "course",
+                                },
+                            },
+                            {
+                                $unwind: "$course",
+                            },
+                            // {
+                            //   $match: {
+                            //     "course.users": {
+                            //       $elemMatch: { $eq: "63708cf77f4f6836c48bdb5f" },
+                            //     },
+                            //   },
+                            // },
+                        ])];
+                case 1:
+                    group = _b.sent();
+                    resGr = (group === null || group === void 0 ? void 0 : group.filter(function (gr) {
+                        var _b, _c;
+                        var arr = (_c = (_b = gr === null || gr === void 0 ? void 0 : gr.course) === null || _b === void 0 ? void 0 : _b.users) === null || _c === void 0 ? void 0 : _c.map(function (z) { return z === null || z === void 0 ? void 0 : z.toString(); });
+                        return arr === null || arr === void 0 ? void 0 : arr.includes(id_1);
+                    })) || [];
+                    res
+                        .json({
+                        data: resGr || [],
+                        status: 200,
+                    })
+                        .status(http_status_1.default.OK)
+                        .end();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _b.sent();
+                    next(error_4);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
     GroupApi.chat = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, group, userId, msg, time, r, user, messages, newChats, rs, error_4;
+        var _b, group, userId, msg, time, r, user, messages, newChats, rs, error_5;
         var _c;
         return __generator(_a, function (_d) {
             switch (_d.label) {
@@ -297,8 +348,8 @@ var GroupApi = /** @class */ (function () {
                         .end();
                     return [3 /*break*/, 6];
                 case 5:
-                    error_4 = _d.sent();
-                    next(error_4);
+                    error_5 = _d.sent();
+                    next(error_5);
                     return [3 /*break*/, 6];
                 case 6: return [2 /*return*/];
             }

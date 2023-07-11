@@ -148,3 +148,14 @@ a:hover {
   width: 1000px !important;
   padding: 0 80x;
 }
+.text_cmt img {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  max-width: 500px;
+}
+.text_cmt {
+  color: rgb(117, 117, 117);
+  padding: 10px;
+  border-radius: 5px;
+  background: #75757510;
+}

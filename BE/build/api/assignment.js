@@ -179,12 +179,9 @@ var AssignmentService = /** @class */ (function () {
                     _c.trys.push([0, 5, , 6]);
                     return [4 /*yield*/, ((_b = models_1.Assignment.findById(req.params.id)) === null || _b === void 0 ? void 0 : _b.populate([
                             {
-                                path: "",
+                                path: "comments",
                                 select: "",
-                                // populate:[
-                                //   path:'user',
-                                //   select:""
-                                // ]
+                                populate: [{ path: "user", select: "" }],
                             },
                         ]))];
                 case 1:

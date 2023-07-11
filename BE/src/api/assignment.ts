@@ -87,12 +87,9 @@ export default class AssignmentService {
     try {
       const assignment = await Assignment.findById(req.params.id)?.populate([
         {
-          path: "",
+          path: "comments",
           select: "",
-          // populate:[
-          //   path:'user',
-          //   select:""
-          // ]
+          populate: [{ path: "user", select: "" }],
         },
       ]);
       const sectionId = assignment?.section;

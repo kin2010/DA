@@ -116,8 +116,14 @@ export default function HeaderAppBar({ isAdmin }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Hồ sơ</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Khóa học của tôi</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          navigate("/profile");
+        }}
+      >
+        Hồ sơ
+      </MenuItem>
       <MenuItem onClick={handleMenuLogout}>Đăng xuất</MenuItem>
     </Menu>
   );

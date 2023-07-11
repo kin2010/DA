@@ -9,7 +9,17 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Breadcrumb, Empty, Modal, Popconfirm } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Chip, Dialog, Pagination, Rating } from "@mui/material";
+import {
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Pagination,
+  Rating,
+} from "@mui/material";
 import { getStatus } from "../../Admin/component/ManageCourse/ManageCourse";
 import { format } from "date-fns";
 import { Input } from "antd";
@@ -92,7 +102,12 @@ const TeacherCourse = () => {
       clearInterval(interval.current);
     };
   }, [queryparams, search]);
+  const [commentADmin, setCommentAdmin] = useState(false);
+  const [courseselect, setSelectCourse] = useState();
 
+  const close = () => {
+    setCommentAdmin(false);
+  };
   return (
     <div>
       <Modal
@@ -103,6 +118,31 @@ const TeacherCourse = () => {
       >
         <AdminCourse edit={edit} />
       </Modal>
+      <Dialog
+        open={commentADmin}
+        onClose={close}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        style={{
+          minHeight: "300px",
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          Nhận xét của Admin về khóa học
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {courseselect?.admin_comment
+              ? courseselect?.admin_comment
+              : "Không có nhận xét nào ~"}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={close} autoFocus>
+            Thoát
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div className="profile-head">
         <h3>Khóa học của tôi</h3>
 
@@ -251,7 +291,7 @@ const TeacherCourse = () => {
                     </div>
                     <h6 className="m-b10">
                       Ngày tạo :{" "}
-                      {format(new Date(course?.createdAt), "yyyy-MM-dd hh:mm")}
+                      {format(new Date(course?.createdAt), "yyyy-MM-dd ")}
                     </h6>
                     <div className="row card-courses-dec">
                       {/* <div className="col-md-12">
@@ -292,6 +332,17 @@ const TeacherCourse = () => {
                             Xóa
                           </Button>
                         </Popconfirm>
+                        <Button
+                          variant="contained"
+                          className="me-2"
+                          color="primary"
+                          onClick={() => {
+                            setSelectCourse(course);
+                            setCommentAdmin(true);
+                          }}
+                        >
+                          Xem phản hồi
+                        </Button>
                       </div>
                     </div>
                   </div>

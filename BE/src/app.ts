@@ -225,7 +225,7 @@ io.on("connect", (socket: any) => {
     socket.on("disconnect", async () => {
       const rs = await userExit(userId, roomQuery);
       // const newOnlines = rs?.meeting?.users || [];
-      console.log(rs, "exit");
+      console.log(rs, userId, roomQuery, "exit");
       socket.to(roomQuery).emit("user_exit", {
         data: rs,
       });

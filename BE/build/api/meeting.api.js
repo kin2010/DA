@@ -244,24 +244,22 @@ var MeetingApi = /** @class */ (function () {
     }); };
     //
     MeetingApi.online = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var _b, userId, room, type, roomExist, rs, r, users, set, error_4;
-        var _c, _d;
-        return __generator(_a, function (_e) {
-            switch (_e.label) {
+        var _b, userId, room, type, roomExist, rs, r, users, set, pr, error_4;
+        var _c, _d, _e;
+        return __generator(_a, function (_f) {
+            switch (_f.label) {
                 case 0:
-                    _e.trys.push([0, 9, , 10]);
+                    _f.trys.push([0, 9, , 10]);
                     _b = req.body, userId = _b.userId, room = _b.room, type = _b.type;
-                    return [4 /*yield*/, models_1.Meeting.findOne({
-                            url: room,
-                        })];
+                    return [4 /*yield*/, models_1.Meeting.findById(room)];
                 case 1:
-                    roomExist = _e.sent();
+                    roomExist = _f.sent();
                     rs = void 0;
                     if (!!roomExist) return [3 /*break*/, 4];
                     return [4 /*yield*/, models_1.Meeting.create({
                             user: [userId],
                         })];
-                case 2: return [4 /*yield*/, (_e.sent()).populate([
+                case 2: return [4 /*yield*/, (_f.sent()).populate([
                         {
                             path: "teacher",
                             select: "fullName",
@@ -296,11 +294,11 @@ var MeetingApi = /** @class */ (function () {
                         },
                     ])];
                 case 3:
-                    rs = _e.sent();
+                    rs = _f.sent();
                     return [3 /*break*/, 8];
-                case 4: return [4 /*yield*/, models_1.Meeting.findOne({ url: room })];
+                case 4: return [4 /*yield*/, models_1.Meeting.findById(room)];
                 case 5:
-                    r = _e.sent();
+                    r = _f.sent();
                     users = (_c = r === null || r === void 0 ? void 0 : r.users) === null || _c === void 0 ? void 0 : _c.map(function (vl) { return vl === null || vl === void 0 ? void 0 : vl.valueOf(); });
                     set = new Set(users);
                     if (type === "delete") {
@@ -311,26 +309,28 @@ var MeetingApi = /** @class */ (function () {
                         set.add(userId);
                     }
                     console.log("after", set);
-                    return [4 /*yield*/, models_1.Meeting.findOneAndUpdate({
-                            url: room,
-                        }, {
-                            users: Array.from(set),
-                        }, { new: true })];
-                case 6: return [4 /*yield*/, ((_d = (_e.sent())) === null || _d === void 0 ? void 0 : _d.populate([
+                    pr = {
+                        users: Array.from(set),
+                    };
+                    if (((_d = Array.from(set)) === null || _d === void 0 ? void 0 : _d.length) === 0) {
+                        pr = __assign(__assign({}, pr), { status: "end" });
+                    }
+                    return [4 /*yield*/, models_1.Meeting.findByIdAndUpdate(room, __assign({}, pr), { new: true })];
+                case 6: return [4 /*yield*/, ((_e = (_f.sent())) === null || _e === void 0 ? void 0 : _e.populate([
                         {
                             path: "teacher",
                             select: "fullName",
                         },
                         {
                             path: "users",
-                            select: "avatar email fullName address phone online",
+                            select: "",
                         },
                         {
                             path: "ralseHand",
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -338,7 +338,7 @@ var MeetingApi = /** @class */ (function () {
                             select: "time user",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                         {
@@ -346,14 +346,15 @@ var MeetingApi = /** @class */ (function () {
                             select: "user time msg",
                             populate: {
                                 path: "user",
-                                select: "avatar email fullName address phone online",
+                                select: "",
                             },
                         },
                     ]))];
                 case 7:
-                    rs = _e.sent();
-                    _e.label = 8;
+                    rs = _f.sent();
+                    _f.label = 8;
                 case 8:
+                    console.log("kq", rs);
                     res
                         .json({
                         meeting: rs,
@@ -363,7 +364,7 @@ var MeetingApi = /** @class */ (function () {
                         .end();
                     return [3 /*break*/, 10];
                 case 9:
-                    error_4 = _e.sent();
+                    error_4 = _f.sent();
                     next(error_4);
                     return [3 /*break*/, 10];
                 case 10: return [2 /*return*/];

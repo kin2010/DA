@@ -55,7 +55,13 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useFormikContext } from "formik";
 import { uploadFile } from "../../hook/LessionHook";
 
-const EditorCustom = ({ handleChange, name }) => {
+const EditorCustom = ({ handleChange, name, init }) => {
+  const [data, setData] = useState(init || "");
+
+  useEffect(() => {
+    setData(init || "");
+  }, [init]);
+
   function uploadAdapter(loader) {
     return {
       upload: async () => {
@@ -89,6 +95,7 @@ const EditorCustom = ({ handleChange, name }) => {
     <div className="App">
       <CKEditor
         editor={ClassicEditor}
+        data={data}
         config={{
           extraPlugins: [uploadPlugin],
         }}

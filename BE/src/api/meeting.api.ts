@@ -190,9 +190,7 @@ export default class MeetingApi {
   ) => {
     try {
       const { userId, room, type } = req.body;
-      const roomExist = await Meeting.findOne({
-        url: room,
-      });
+      const roomExist = await Meeting.findById(room);
       let rs: any;
       if (!roomExist) {
         rs = await (
@@ -234,7 +232,7 @@ export default class MeetingApi {
           },
         ]);
       } else {
-        const r = await Meeting.findOne({ url: room });
+        const r = await Meeting.findById(room);
         const users = r?.users?.map((vl) => vl?.valueOf());
         const set = new Set(users);
         if (type === "delete") {
@@ -244,13 +242,17 @@ export default class MeetingApi {
           set.add(userId);
         }
         console.log("after", set);
+        let pr: any = {
+          users: Array.from(set),
+        };
+        if (Array.from(set)?.length === 0) {
+          pr = { ...pr, status: "end" };
+        }
         rs = await (
-          await Meeting.findOneAndUpdate(
+          await Meeting.findByIdAndUpdate(
+            room,
             {
-              url: room,
-            },
-            {
-              users: Array.from(set),
+              ...pr,
             },
             { new: true }
           )
@@ -261,14 +263,14 @@ export default class MeetingApi {
           },
           {
             path: "users",
-            select: "avatar email fullName address phone online",
+            select: "",
           },
           {
             path: "ralseHand",
             select: "time user",
             populate: {
               path: "user",
-              select: "avatar email fullName address phone online",
+              select: "",
             },
           },
           {
@@ -276,7 +278,7 @@ export default class MeetingApi {
             select: "time user",
             populate: {
               path: "user",
-              select: "avatar email fullName address phone online",
+              select: "",
             },
           },
           {
@@ -284,11 +286,12 @@ export default class MeetingApi {
             select: "user time msg",
             populate: {
               path: "user",
-              select: "avatar email fullName address phone online",
+              select: "",
             },
           },
         ]);
       }
+      console.log("kq", rs);
       res
         .json({
           meeting: rs,

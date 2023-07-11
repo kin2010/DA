@@ -3,7 +3,7 @@ import { Container } from "@mui/material";
 import React from "react";
 import Header from "../../page/Header";
 import HeaderAppBar from "../../page/Header/AppBar";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { getCourse, getLectureById } from "../../hook/LessionHook";
 import { format } from "date-fns";
@@ -19,11 +19,14 @@ import CommentComponent from "../Comment";
 const LectureDetail = () => {
   const { id } = useParams();
   const { data } = useQuery(["lecture_detail", id], getLectureById);
+  const queryClient = useQueryClient();
   const { data: courseData } = useQuery(
     ["course_detail", data?.course?._id],
     getCourse
   );
-
+  const refetch = () => {
+    queryClient.invalidateQueries(["lecture_detail", id]);
+  };
   return (
     <div>
       <HeaderAppBar></HeaderAppBar>
@@ -199,7 +202,12 @@ const LectureDetail = () => {
                     )}
                   </div>
                   {/* comment */}
-                  <CommentComponent id={data?._id} type="lecture" />
+                  <CommentComponent
+                    id={data?._id}
+                    type="lecture"
+                    refetch={refetch}
+                    data={data?.comments}
+                  />
                 </div>
 
                 <div className="col-lg-4 col-xl-4">

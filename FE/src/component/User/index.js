@@ -12,7 +12,6 @@ import React from "react";
 const User = (props) => {
   const { user, time, message, status, size } = props;
   const { email, fullName, avatar } = user;
-  console.log(999, fullName);
   return (
     <>
       <ListItem className="p-0" alignItems="flex-start">
