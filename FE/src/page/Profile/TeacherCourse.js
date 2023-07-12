@@ -273,7 +273,7 @@ const TeacherCourse = () => {
                         <li className="card-courses-price">
                           <del>{course?.descount}</del>
                           <h5 className="text-primary">
-                            {course?.price || 0}₫
+                            {course?.price?.toLocaleString("en-US") || 0}₫
                           </h5>
                         </li>
                       </ul>

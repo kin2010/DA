@@ -426,7 +426,6 @@ const ManagerCourse = () => {
                         setOpen(true);
                         setAction("1");
                       }}
-                      disabled={course?.publish}
                     >
                       Xác nhận
                     </Button>
