@@ -130,9 +130,8 @@ a:hover {
 .ant-divider {
   border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
-.css-hz1bth-MuiDialog-container > div {
-  min-width: 600px;
-  max-width: 80vw;
+.MuiDialog-container > div {
+  width: 600px;
 }
 .css-1hju3x6-MuiPaper-root-MuiDialog-paper {
   /* min-width: 600px;

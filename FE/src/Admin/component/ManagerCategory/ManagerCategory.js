@@ -411,12 +411,7 @@ const ManagerCategory = () => {
             aria-describedby="alert-dialog-description"
             style={{ width: "601px", margin: "0 auto" }}
           >
-            <DialogTitle
-              id="alert-dialog-title"
-              style={{
-                minWidth: "600px",
-              }}
-            >
+            <DialogTitle id="alert-dialog-title">
               {"Thêm nhóm thể loại"}
             </DialogTitle>
             <Content
