@@ -84,14 +84,6 @@ export default class LectureApi {
             select: "",
           },
         },
-        {
-          path: "plusMark",
-          select: "time user",
-          populate: {
-            path: "user",
-            select: "",
-          },
-        },
       ]);
       await ch.updateOne({
         $set: { lectures: [...ch.lectures, lecture?._id] },
@@ -199,14 +191,6 @@ export default class LectureApi {
         },
         {
           path: "ralseHand",
-          select: "time user",
-          populate: {
-            path: "user",
-            select: "",
-          },
-        },
-        {
-          path: "plusMark",
           select: "time user",
           populate: {
             path: "user",
@@ -331,14 +315,6 @@ export default class LectureApi {
                 select: "",
               },
             },
-            {
-              path: "plusMark",
-              select: "time user",
-              populate: {
-                path: "user",
-                select: "",
-              },
-            },
           ],
         },
       ]);
@@ -382,14 +358,6 @@ export default class LectureApi {
             },
             {
               path: "ralseHand",
-              select: "time user",
-              populate: {
-                path: "user",
-                select: "",
-              },
-            },
-            {
-              path: "plusMark",
               select: "time user",
               populate: {
                 path: "user",

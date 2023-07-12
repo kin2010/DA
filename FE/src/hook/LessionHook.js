@@ -323,8 +323,8 @@ export const useGroupService = () => {
 
 export const useCourseService = () => {
   const retryOptions = {
-    retry: 1, // Number of retry attempts
-    retryDelay: 5000, // Delay between retry attempts in milliseconds
+    retry: 0, // Number of retry attempts
+    retryDelay: 70000, // Delay between retry attempts in milliseconds
   };
   const [id, setId] = useState(
     !!sessionStorage.getItem("new_course")

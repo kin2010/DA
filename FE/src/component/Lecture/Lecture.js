@@ -18,7 +18,73 @@ import FileUpload from "../FileUpload/FileUpload";
 import { getYoutubeId } from "../../ultis/func";
 import { useQueryClient } from "@tanstack/react-query";
 import { Player } from "video-react";
+const Tab3 = ({ data }) => {
+  const [uploading, setUploading] = useState(false);
+  const [fileList, setFileList] = useState([]);
 
+  return (
+    <>
+      <FileUpload
+        btnName="Thêm tệp đính kèm"
+        label="hỗ trợ: jpg, jpeg, png, pdf or .zip"
+        accept="image/*, .pdf"
+        formName="attachments"
+        multiple
+        init={data?.attachments || []}
+      ></FileUpload>
+    </>
+  );
+};
+const Tab2 = ({ data, isEdit }) => {
+  const { values, setFieldValue } = useFormikContext();
+
+  useEffect(() => {
+    if (!!data) {
+      setFieldValue("video", !!data?.video ? data?.video[0] : []);
+      setFieldValue("youtube_url", data?.youtube_url || "");
+    }
+  }, [data]);
+
+  return (
+    <>
+      {isEdit && <label className="col-form-label">Video hiện tại :</label>}
+      {isEdit && !!data?.video?.length && (
+        <Player
+          className="mt-3"
+          playsInline
+          poster="/assets/poster.png"
+          src={data?.video[0]}
+        />
+      )}
+      <label className="col-form-label">Chọn video bài giảng :</label>
+      <FileUpload
+        btnName="Chọn video"
+        label="Hỗ trợ: mp4"
+        accept="video/mp4,video/x-m4v,video/*"
+        formName="video"
+      />
+      <FormControl
+        name="youtube_url"
+        label={"Đường dẫn yoututbe*"}
+      ></FormControl>
+      {!!getYoutubeId(values["youtube_url"]) && (
+        <div className="text-center mt-3">
+          <iframe
+            src={`https://www.youtube.com/embed/${getYoutubeId(
+              values["youtube_url"]
+            )}?controls=1`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
+            allowFullScreen
+            title="Embedded youtube"
+            className="w-75"
+            style={{ height: "270px" }}
+          />
+        </div>
+      )}
+    </>
+  );
+};
 const LectureAdd = ({ open, setOpen, section, isEdit, lectureUpdateId }) => {
   const courseService = useCourseService();
   const [data, setData] = useState();
@@ -111,74 +177,6 @@ const LectureAdd = ({ open, setOpen, section, isEdit, lectureUpdateId }) => {
       </>
     );
   };
-  const Tab2 = () => {
-    const { values, setFieldValue } = useFormikContext();
-
-    useEffect(() => {
-      if (!!data) {
-        setFieldValue("video", !!data?.video ? data?.video[0] : []);
-        setFieldValue("youtube_url", data?.youtube_url || "");
-        console.log("cjameg");
-      }
-    }, [data]);
-
-    return (
-      <>
-        {isEdit && <label className="col-form-label">Video hiện tại :</label>}
-        {isEdit && !!data?.video?.length && (
-          <Player
-            className="mt-3"
-            playsInline
-            poster="/assets/poster.png"
-            src={data?.video[0]}
-          />
-        )}
-        <label className="col-form-label">Chọn video bài giảng :</label>
-        <FileUpload
-          btnName="Chọn video"
-          label="Hỗ trợ: mp4"
-          accept="video/mp4,video/x-m4v,video/*"
-          formName="video"
-        />
-        <FormControl
-          name="youtube_url"
-          label={"Đường dẫn yoututbe*"}
-        ></FormControl>
-        {!!getYoutubeId(values["youtube_url"]) && (
-          <div className="text-center mt-3">
-            <iframe
-              src={`https://www.youtube.com/embed/${getYoutubeId(
-                values["youtube_url"]
-              )}?controls=1`}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
-              allowFullScreen
-              title="Embedded youtube"
-              className="w-75"
-              style={{ height: "270px" }}
-            />
-          </div>
-        )}
-      </>
-    );
-  };
-  const Tab3 = () => {
-    const [uploading, setUploading] = useState(false);
-    const [fileList, setFileList] = useState([]);
-
-    return (
-      <>
-        <FileUpload
-          btnName="Thêm tệp đính kèm"
-          label="hỗ trợ: jpg, jpeg, png, pdf or .zip"
-          accept="image/*, .pdf"
-          formName="attachments"
-          multiple
-          init={data?.attachments || []}
-        ></FileUpload>
-      </>
-    );
-  };
 
   const items = [
     {
@@ -189,12 +187,12 @@ const LectureAdd = ({ open, setOpen, section, isEdit, lectureUpdateId }) => {
     {
       key: "2",
       label: `Video`,
-      children: <Tab2 />,
+      children: <Tab2 data={data} isEdit={isEdit} />,
     },
     {
       key: "3",
       label: `Đính kèm`,
-      children: <Tab3 />,
+      children: <Tab3 data={data} />,
     },
   ];
   return (

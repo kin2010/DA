@@ -17,6 +17,59 @@ import { DatePicker, Space } from "antd";
 import EditorCommon from "../EdittorCommon/EdittorCommon";
 import FileUpload from "../FileUpload/FileUpload";
 const { RangePicker } = DatePicker;
+const Content = ({ data }) => {
+  const { handleSubmit, setFieldValue } = useFormikContext();
+  useEffect(() => {
+    if (!!data) {
+      setFieldValue("name", data?.name);
+      setFieldValue("description", data?.description || "");
+    } else {
+      // resetForm();
+    }
+  }, [data]);
+  return (
+    <form onSubmit={handleSubmit} className="mb-3">
+      <div className="mt-3 ">
+        <FormControl name="name" label={"Tiêu đề*"}></FormControl>
+        <FormControl name="description" label={"Mô tả*"}>
+          <EditorCommon></EditorCommon>
+        </FormControl>
+        <br></br>
+        {/* <label className="col-form-label ">Thời gian*</label>
+  <br></br>
+  <RangeTimePicker />
+  <br></br>
+  <div className="col-6 mb-3">
+    <FormControl
+      name="mark"
+      inputType={"number"}
+      label={"Tổng số điểm:*"}
+    ></FormControl>
+  </div> */}
+
+        <FileUpload
+          btnName={"Đính kèm"}
+          formName={"attachments"}
+          label={"hỗ trợ: jpg, jpeg, png, pdf or .zip"}
+          accept="image/*,.pdf,.zip,.txt"
+          multiple
+          init={data?.attachments || []}
+        ></FileUpload>
+        <div className="d-flex justify-content-end">
+          <Button
+            size="small"
+            className="mt-2"
+            variant="contained"
+            key="submit"
+            type="submit"
+          >
+            Thêm Nhiệm vụ / Bài tập
+          </Button>
+        </div>
+      </div>
+    </form>
+  );
+};
 const AssignmentAdd = ({
   open,
   setOpen,
@@ -111,59 +164,6 @@ const AssignmentAdd = ({
     );
   };
 
-  const Content = () => {
-    const { handleSubmit, setFieldValue } = useFormikContext();
-    useEffect(() => {
-      if (!!data) {
-        setFieldValue("name", data?.name);
-        setFieldValue("description", data?.description || "");
-      } else {
-        // resetForm();
-      }
-    }, [data]);
-    return (
-      <form onSubmit={handleSubmit} className="mb-3">
-        <div className="mt-3 ">
-          <FormControl name="name" label={"Tiêu đề*"}></FormControl>
-          <FormControl name="description" label={"Mô tả*"}>
-            <EditorCommon></EditorCommon>
-          </FormControl>
-          <br></br>
-          {/* <label className="col-form-label ">Thời gian*</label>
-    <br></br>
-    <RangeTimePicker />
-    <br></br>
-    <div className="col-6 mb-3">
-      <FormControl
-        name="mark"
-        inputType={"number"}
-        label={"Tổng số điểm:*"}
-      ></FormControl>
-    </div> */}
-
-          <FileUpload
-            btnName={"Đính kèm"}
-            formName={"attachments"}
-            label={"hỗ trợ: jpg, jpeg, png, pdf or .zip"}
-            accept="image/*,.pdf,.zip,.txt"
-            multiple
-            init={data?.attachments || []}
-          ></FileUpload>
-          <div className="d-flex justify-content-end">
-            <Button
-              size="small"
-              className="mt-2"
-              variant="contained"
-              key="submit"
-              type="submit"
-            >
-              Thêm Nhiệm vụ / Bài tập
-            </Button>
-          </div>
-        </div>
-      </form>
-    );
-  };
   return (
     <Formik
       initialValues={{ name: "" }}
@@ -180,7 +180,7 @@ const AssignmentAdd = ({
             width={700}
             title="Thêm nhiệm vụ / bài tập"
           >
-            <Content />
+            <Content data={data} />
           </Modal>
         );
       }}

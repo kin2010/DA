@@ -120,7 +120,7 @@ export default class SectionService {
       const chapter = await Section.find({ course: idCourse }).populate([
         {
           path: "lessions",
-          select: "name mota teacher users ralseHand plusMark",
+          select: " ",
           populate: [
             {
               path: "teacher",
@@ -132,14 +132,6 @@ export default class SectionService {
             },
             {
               path: "ralseHand",
-              select: "time user",
-              populate: {
-                path: "user",
-                select: "avatar email fullName address phone online",
-              },
-            },
-            {
-              path: "plusMark",
               select: "time user",
               populate: {
                 path: "user",
@@ -189,14 +181,6 @@ export default class SectionService {
             },
             {
               path: "ralseHand",
-              select: "time user",
-              populate: {
-                path: "user",
-                select: "avatar email fullName address phone online",
-              },
-            },
-            {
-              path: "plusMark",
               select: "time user",
               populate: {
                 path: "user",

@@ -45,22 +45,7 @@ export default class MeetingApi {
           path: "users",
           select: "",
         },
-        {
-          path: "ralseHand",
-          select: "",
-          populate: {
-            path: "user",
-            select: "",
-          },
-        },
-        {
-          path: "plusMark",
-          select: "",
-          populate: {
-            path: "user",
-            select: "",
-          },
-        },
+
         {
           path: "chat",
           select: "",
@@ -148,14 +133,7 @@ export default class MeetingApi {
             select: "",
           },
         },
-        {
-          path: "plusMark",
-          select: "time user",
-          populate: {
-            path: "user",
-            select: "",
-          },
-        },
+
         {
           path: "chat",
           select: "user time msg",
@@ -214,14 +192,7 @@ export default class MeetingApi {
               select: "avatar email fullName address phone online",
             },
           },
-          {
-            path: "plusMark",
-            select: "time user",
-            populate: {
-              path: "user",
-              select: "avatar email fullName address phone online",
-            },
-          },
+
           {
             path: "chat",
             select: "user time msg",
@@ -273,14 +244,7 @@ export default class MeetingApi {
               select: "",
             },
           },
-          {
-            path: "plusMark",
-            select: "time user",
-            populate: {
-              path: "user",
-              select: "",
-            },
-          },
+
           {
             path: "chat",
             select: "user time msg",
@@ -354,14 +318,7 @@ export default class MeetingApi {
             select: "",
           },
         },
-        {
-          path: "plusMark",
-          select: "time user",
-          populate: {
-            path: "user",
-            select: "",
-          },
-        },
+
         {
           path: "chat",
           select: "user time msg",

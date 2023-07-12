@@ -189,7 +189,7 @@ var SectionService = /** @class */ (function () {
                     return [4 /*yield*/, models_1.Section.find({ course: idCourse }).populate([
                             {
                                 path: "lessions",
-                                select: "name mota teacher users ralseHand plusMark",
+                                select: " ",
                                 populate: [
                                     {
                                         path: "teacher",
@@ -201,14 +201,6 @@ var SectionService = /** @class */ (function () {
                                     },
                                     {
                                         path: "ralseHand",
-                                        select: "time user",
-                                        populate: {
-                                            path: "user",
-                                            select: "avatar email fullName address phone online",
-                                        },
-                                    },
-                                    {
-                                        path: "plusMark",
                                         select: "time user",
                                         populate: {
                                             path: "user",
@@ -267,14 +259,6 @@ var SectionService = /** @class */ (function () {
                                     },
                                     {
                                         path: "ralseHand",
-                                        select: "time user",
-                                        populate: {
-                                            path: "user",
-                                            select: "avatar email fullName address phone online",
-                                        },
-                                    },
-                                    {
-                                        path: "plusMark",
                                         select: "time user",
                                         populate: {
                                             path: "user",

@@ -32,19 +32,9 @@ const FileUpload = ({
       };
     }) || [];
   const [defaultFileList, setDefault] = useState(arr);
-  // useEffect(() => {
-  //   if (!!values[formName]?.length) {
-  //     console.log(22, values[formName]);
-  //     setFileList([
-  //       {
-  //         uid: "-1",
-  //         name: values[formName][0],
-  //         status: "done",
-  //         url: values[formName][0],
-  //       },
-  //     ]);
-  //   }
-  // }, [values[formName]]);
+  useEffect(() => {
+    console.log("render");
+  }, []);
 
   const handleChange = async ({ file, fileList }) => {
     if (fileList.length > 0) {

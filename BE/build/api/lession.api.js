@@ -112,14 +112,6 @@ var LectureApi = /** @class */ (function () {
                                 select: "",
                             },
                         },
-                        {
-                            path: "plusMark",
-                            select: "time user",
-                            populate: {
-                                path: "user",
-                                select: "",
-                            },
-                        },
                     ])];
                 case 3:
                     lecture = _b.sent();
@@ -245,14 +237,6 @@ var LectureApi = /** @class */ (function () {
                         },
                         {
                             path: "ralseHand",
-                            select: "time user",
-                            populate: {
-                                path: "user",
-                                select: "",
-                            },
-                        },
-                        {
-                            path: "plusMark",
                             select: "time user",
                             populate: {
                                 path: "user",
@@ -399,14 +383,6 @@ var LectureApi = /** @class */ (function () {
                                             select: "",
                                         },
                                     },
-                                    {
-                                        path: "plusMark",
-                                        select: "time user",
-                                        populate: {
-                                            path: "user",
-                                            select: "",
-                                        },
-                                    },
                                 ],
                             },
                         ])];
@@ -459,14 +435,6 @@ var LectureApi = /** @class */ (function () {
                                     },
                                     {
                                         path: "ralseHand",
-                                        select: "time user",
-                                        populate: {
-                                            path: "user",
-                                            select: "",
-                                        },
-                                    },
-                                    {
-                                        path: "plusMark",
                                         select: "time user",
                                         populate: {
                                             path: "user",
