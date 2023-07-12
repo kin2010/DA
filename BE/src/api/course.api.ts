@@ -339,9 +339,6 @@ export default class CourseApi {
       if (owner) {
         search.owner = owner;
       }
-      if (owner) {
-        search.owner = owner;
-      }
       if (status) {
         search.status = status;
       }
@@ -351,7 +348,9 @@ export default class CourseApi {
       if (user_id) {
         search = { ...search, users: user_id };
       }
-      console.log("first", user_id);
+      const count = await Course.find(search);
+      console.log("first", count, search);
+
       const courses = await Course.find(search)
         .limit(parseInt(limit as string))
         .skip(parseInt(skip as string))
@@ -410,11 +409,12 @@ export default class CourseApi {
             ?.includes((text as string)?.toUpperCase());
         });
       }
+      const lm = parseInt(limit as string);
       res
         .json({
           courses: rs,
           status: 200,
-          count: rs?.length,
+          count: count?.length || 0,
         })
         .status(httpStatus.OK);
     } catch (error) {

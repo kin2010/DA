@@ -373,18 +373,15 @@ var CourseApi = /** @class */ (function () {
         });
     }); };
     CourseApi.allCourse = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var currentDate, currentDateString, _b, limit, skip, text_1, category, owner, status_1, end_date, user_id, search, courses, rs, error_5;
+        var currentDate, currentDateString, _b, limit, skip, text_1, category, owner, status_1, end_date, user_id, search, count, courses, rs, lm, error_5;
         return __generator(_a, function (_c) {
             switch (_c.label) {
                 case 0:
-                    _c.trys.push([0, 2, , 3]);
+                    _c.trys.push([0, 3, , 4]);
                     currentDate = new Date();
                     currentDateString = currentDate.toISOString().split("T")[0];
                     _b = req.query, limit = _b.limit, skip = _b.skip, text_1 = _b.text, category = _b.category, owner = _b.owner, status_1 = _b.status, end_date = _b.end_date, user_id = _b.user_id;
                     search = !!category ? { category: category } : {};
-                    if (owner) {
-                        search.owner = owner;
-                    }
                     if (owner) {
                         search.owner = owner;
                     }
@@ -397,7 +394,10 @@ var CourseApi = /** @class */ (function () {
                     if (user_id) {
                         search = __assign(__assign({}, search), { users: user_id });
                     }
-                    console.log("first", user_id);
+                    return [4 /*yield*/, models_1.Course.find(search)];
+                case 1:
+                    count = _c.sent();
+                    console.log("first", count, search);
                     return [4 /*yield*/, models_1.Course.find(search)
                             .limit(parseInt(limit))
                             .skip(parseInt(skip))
@@ -448,7 +448,7 @@ var CourseApi = /** @class */ (function () {
                                 select: "",
                             },
                         ])];
-                case 1:
+                case 2:
                     courses = _c.sent();
                     rs = courses;
                     if (!!text_1) {
@@ -457,19 +457,20 @@ var CourseApi = /** @class */ (function () {
                             return !!((_c = (_b = item === null || item === void 0 ? void 0 : item.name) === null || _b === void 0 ? void 0 : _b.toUpperCase()) === null || _c === void 0 ? void 0 : _c.includes(text_1 === null || text_1 === void 0 ? void 0 : text_1.toUpperCase()));
                         });
                     }
+                    lm = parseInt(limit);
                     res
                         .json({
                         courses: rs,
                         status: 200,
-                        count: rs === null || rs === void 0 ? void 0 : rs.length,
+                        count: (count === null || count === void 0 ? void 0 : count.length) || 0,
                     })
                         .status(http_status_1.default.OK);
-                    return [3 /*break*/, 3];
-                case 2:
+                    return [3 /*break*/, 4];
+                case 3:
                     error_5 = _c.sent();
                     next(error_5);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     }); };
