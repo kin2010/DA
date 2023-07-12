@@ -314,6 +314,7 @@ const ManagerCategory = () => {
 
     const handleChange = (e) => {
       setFieldValue("group", e.target.value);
+      setCategoryGroup(e.target.value);
     };
 
     return (
@@ -358,7 +359,7 @@ const ManagerCategory = () => {
           group: "",
           name: "",
         });
-        setCategoryGroup("");
+        console.log("22");
       }
     }, [updateId]);
     return (
