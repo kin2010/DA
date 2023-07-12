@@ -26,7 +26,7 @@ import { openNotification } from "../../../Notification";
 import TextArea from "antd/lib/input/TextArea";
 import { Input } from "antd";
 import React from "react";
-import { getCourseRating } from "../../../ultis/course";
+import { getCourseRating, getDiscount } from "../../../ultis/course";
 import AdminCourse from "../AdminCourse";
 const { Search } = Input;
 const Transition = forwardRef(function Transition(props, ref) {
@@ -397,14 +397,16 @@ const ManagerCourse = () => {
                       />
                     </li>
                     <li className="card-courses-price">
-                      <del>{course?.descount}</del>
-                      <h5 className="text-primary">{course?.price || 0}₫</h5>
+                      {course?.discount && <del>{getDiscount(course)}</del>}
+                      <h5 className="text-primary">
+                        {course?.price?.toLocaleString("en-US") || 0}₫
+                      </h5>
                     </li>
                   </ul>
                 </div>
                 <h6 className="m-b10">
                   Ngày tạo :{" "}
-                  {format(new Date(course?.createdAt), "yyyy-MM-dd hh:mm")}
+                  {format(new Date(course?.createdAt), "yyyy-MM-dd ")}
                 </h6>
                 <div className="row card-courses-dec">
                   <div className="col-md-12">

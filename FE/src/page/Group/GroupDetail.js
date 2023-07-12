@@ -289,8 +289,8 @@ const GroupDetail = () => {
                 horizontal: "left",
               }}
             >
-              <MenuItem onClick={handleMeetingNow}>Meeting ngay</MenuItem>
               <MenuItem onClick={handleScheduleMeeting}>Lên lịch</MenuItem>
+              <MenuItem onClick={handleMeetingNow}>Meeting ngay</MenuItem>
             </Menu>
           </div>
           <Row>
@@ -380,13 +380,13 @@ const GroupDetail = () => {
                               <Tooltip
                                 title={format(
                                   new Date(content?.data?.time),
-                                  "yyyy-dd-mm hh:mm"
+                                  "yyyy-dd-MM hh:mm"
                                 )}
                               >
                                 <span>
                                   {format(
                                     new Date(content?.data?.time),
-                                    "yyyy-dd-mm hh:mm"
+                                    "yyyy-dd-MM hh:mm"
                                   )}
                                 </span>
                               </Tooltip>
@@ -517,7 +517,7 @@ const GroupDetail = () => {
                                     <span>
                                       {format(
                                         new Date(content?.data?.start_time),
-                                        "yyyy-dd-mm hh:mm"
+                                        "yyyy-dd-MM hh:mm"
                                       )}
                                     </span>
                                   </strong>
@@ -528,7 +528,7 @@ const GroupDetail = () => {
                                         <span>
                                           {format(
                                             new Date(content?.data?.end_time),
-                                            "yyyy-dd-mm hh:mm"
+                                            "yyyy-dd-MM hh:mm"
                                           )}
                                         </span>
                                       </strong>

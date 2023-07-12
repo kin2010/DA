@@ -215,22 +215,24 @@ export default function HeaderAppBar({ isAdmin }) {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            <Link
-              style={{
-                color: "white!important",
-              }}
-              className="white"
-              to="/course"
+          {getRoleID() !== ROLE_ID.ADMIN && (
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: "none", sm: "block" } }}
             >
-              Tất cả khóa học
-            </Link>
-          </Typography>
+              <Link
+                style={{
+                  color: "white!important",
+                }}
+                className="white"
+                to="/course"
+              >
+                Tất cả khóa học
+              </Link>
+            </Typography>
+          )}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {!isLoading && (
@@ -260,16 +262,20 @@ export default function HeaderAppBar({ isAdmin }) {
                         aria-label="show 17 new notifications"
                         color="inherit"
                       >
-                        <Person3Icon />
-                        <Link
-                          to="/profile"
-                          style={{
-                            fontSize: "20px",
-                          }}
-                          className="white"
-                        >
-                          Trang cá nhân
-                        </Link>
+                        {getRoleID() !== ROLE_ID.ADMIN && (
+                          <>
+                            <Person3Icon />
+                            <Link
+                              to="/profile"
+                              style={{
+                                fontSize: "20px",
+                              }}
+                              className="white"
+                            >
+                              Trang cá nhân
+                            </Link>
+                          </>
+                        )}
                       </IconButton>
                     )}
                     {/* <IconButton
