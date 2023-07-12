@@ -343,7 +343,7 @@ const CourseDetail = () => {
                       <div className="instructor-author">
                         <img
                           style={{ height: "100%" }}
-                          src={data?.owner?.avatar || "../images/user.png"}
+                          src={data?.owner?.avatar || "../images/user.jpg"}
                           alt=""
                         />
                       </div>
