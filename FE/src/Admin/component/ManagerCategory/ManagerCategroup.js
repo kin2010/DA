@@ -339,6 +339,7 @@ const ManageCategoryGroup = () => {
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
+            style={{ width: "601px", margin: "0 auto" }}
           >
             <DialogTitle id="alert-dialog-title">
               {"Thêm nhóm thể loại"}

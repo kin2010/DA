@@ -130,9 +130,13 @@ a:hover {
 .ant-divider {
   border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
-.css-1hju3x6-MuiPaper-root-MuiDialog-paper {
+.css-hz1bth-MuiDialog-container > div {
   min-width: 600px;
   max-width: 80vw;
+}
+.css-1hju3x6-MuiPaper-root-MuiDialog-paper {
+  /* min-width: 600px;
+  max-width: 80vw; */
 }
 .css-ryrseu-MuiRating-root {
   color: #1890ff !important;
