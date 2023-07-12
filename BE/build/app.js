@@ -83,8 +83,14 @@ var getRoomMember = function (id) {
 };
 (0, morgan_1.default)("tiny");
 /** Parser the request **/
-app.use(body_parser_1.default.urlencoded({ extended: false }));
-app.use(body_parser_1.default.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+app.use(body_parser_1.default.json({ limit: "50mb" }));
+app.use(body_parser_1.default.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+}));
 /** Cors **/
 app.use((0, cors_1.default)());
 /** Rules of our API **/
@@ -97,9 +103,9 @@ app.use(function (req, res, next) {
     }
     return next();
 });
-var groupOnlines = {};
-app.use("/api", index_1.default);
-var secret = "sk_test_51LMxCAI6HAK9mOVZ7xKAVLvrxjVYNFzMs76u982XHNRqlpSPsY0gzaTDlJ8UxaiqMR7CarhZauZxCFuvP2S15zM500edPrGS1g";
+var secret = "sk_test_51NSwitH1GWauTBDrCTiLBvfsUK7yN7YxZk6qDYwTGBxrL4MRHQZstMSI3K9Br4cjHMosA1VU6sN8mTUUWZUSHF8n00M9bEiZLP";
+// let secret =
+//   "sk_test_51LMxCAI6HAK9mOVZ7xKAVLvrxjVYNFzMs76u982XHNRqlpSPsY0gzaTDlJ8UxaiqMR7CarhZauZxCFuvP2S15zM500edPrGS1g";
 var stripe = require("stripe")(secret);
 app.post("/payment", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var session, course, e_1;
@@ -107,7 +113,7 @@ app.post("/payment", function (req, res) { return __awaiter(void 0, void 0, void
     return __generator(this, function (_j) {
         switch (_j.label) {
             case 0:
-                console.log(req === null || req === void 0 ? void 0 : req.body);
+                console.log(req === null || req === void 0 ? void 0 : req.body, 42424);
                 _j.label = 1;
             case 1:
                 _j.trys.push([1, 4, , 5]);
@@ -124,7 +130,7 @@ app.post("/payment", function (req, res) { return __awaiter(void 0, void 0, void
                                         images: [
                                             !!((_a = item === null || item === void 0 ? void 0 : item.thumbnail) === null || _a === void 0 ? void 0 : _a.length)
                                                 ? item === null || item === void 0 ? void 0 : item.thumbnail[0]
-                                                : "http://localhost:3000/images/course.jpg",
+                                                : "../images/course.jpg",
                                         ],
                                     },
                                     unit_amount: item === null || item === void 0 ? void 0 : item.price,
@@ -151,12 +157,15 @@ app.post("/payment", function (req, res) { return __awaiter(void 0, void 0, void
                 return [3 /*break*/, 5];
             case 4:
                 e_1 = _j.sent();
+                console.log(2222222, e_1 === null || e_1 === void 0 ? void 0 : e_1.message);
                 res.status(500).json({ error: e_1 === null || e_1 === void 0 ? void 0 : e_1.message });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
     });
 }); });
+var groupOnlines = {};
+app.use("/api", index_1.default);
 var onlineUsers = new Map();
 io.on("connect", function (socket) {
     var _a, _b, _c;

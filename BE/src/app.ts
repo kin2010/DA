@@ -41,9 +41,16 @@ const getRoomMember = (id: any) => {
 morgan("tiny");
 
 /** Parser the request **/
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 /** Cors **/
 app.use(cors());
 
@@ -61,14 +68,13 @@ app.use((req: any, res: any, next: any) => {
 
   return next();
 });
-
-const groupOnlines: any = {};
-app.use("/api", route);
 let secret =
-  "sk_test_51LMxCAI6HAK9mOVZ7xKAVLvrxjVYNFzMs76u982XHNRqlpSPsY0gzaTDlJ8UxaiqMR7CarhZauZxCFuvP2S15zM500edPrGS1g";
+  "sk_test_51NSwitH1GWauTBDrCTiLBvfsUK7yN7YxZk6qDYwTGBxrL4MRHQZstMSI3K9Br4cjHMosA1VU6sN8mTUUWZUSHF8n00M9bEiZLP";
+// let secret =
+//   "sk_test_51LMxCAI6HAK9mOVZ7xKAVLvrxjVYNFzMs76u982XHNRqlpSPsY0gzaTDlJ8UxaiqMR7CarhZauZxCFuvP2S15zM500edPrGS1g";
 const stripe = require("stripe")(secret);
 app.post("/payment", async (req: any, res: any) => {
-  console.log(req?.body);
+  console.log(req?.body, 42424);
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -83,7 +89,7 @@ app.post("/payment", async (req: any, res: any) => {
               images: [
                 !!item?.thumbnail?.length
                   ? item?.thumbnail[0]
-                  : "http://localhost:3000/images/course.jpg",
+                  : "../images/course.jpg",
               ],
             },
             unit_amount: item?.price,
@@ -109,9 +115,13 @@ app.post("/payment", async (req: any, res: any) => {
     console.log(11, course, req?.body?.user);
     res.json({ url: session.url });
   } catch (e: any) {
+    console.log(2222222, e?.message);
     res.status(500).json({ error: e?.message });
   }
 });
+const groupOnlines: any = {};
+app.use("/api", route);
+
 const onlineUsers = new Map();
 
 io.on("connect", (socket: any) => {
