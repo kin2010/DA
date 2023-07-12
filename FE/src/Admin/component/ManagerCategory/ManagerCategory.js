@@ -44,6 +44,87 @@ import {
 import { openNotification } from "../../../Notification";
 import InputLabel from "@mui/material/InputLabel";
 import EditIcon from "@mui/icons-material/Edit";
+const Content = ({
+  updateId,
+  categories,
+  setCategoryGroup,
+  categorygroup,
+  group,
+  handleClose,
+}) => {
+  const { handleSubmit, setValues } = useFormikContext();
+  useEffect(() => {
+    if (!!updateId) {
+      const order = categories?.find((category) => category?._id === updateId);
+      console.log(order, 22);
+      setValues({
+        group: order?.group?._id,
+        name: order?.name,
+      });
+      setCategoryGroup(order?.group?._id);
+    } else {
+      setValues({
+        group: "",
+        name: "",
+      });
+      console.log("22");
+    }
+  }, [updateId]);
+  return (
+    <form onSubmit={handleSubmit}>
+      <DialogContent>
+        <FormControl label={"Tên thể loại"} name={"name"}></FormControl>
+        <label className="col-form-label">Thể loại thuộc nhóm :</label>
+
+        <SelectGroup
+          categorygroup={categorygroup}
+          group={group}
+          setCategoryGroup={setCategoryGroup}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={handleClose} autoFocus>
+          Thoát
+        </Button>
+        <Button variant="contained" type="submit" autoFocus>
+          Thêm
+        </Button>
+      </DialogActions>
+    </form>
+  );
+};
+
+const SelectGroup = ({ setCategoryGroup, group, categorygroup }) => {
+  const { setFieldValue, errors, values } = useFormikContext();
+
+  const handleChange = (e) => {
+    setFieldValue("group", e.target.value);
+    setCategoryGroup(e.target.value);
+  };
+
+  useEffect(() => {
+    console.log(values, 4141);
+  }, [values]);
+
+  return (
+    <>
+      <Select
+        fullWidth
+        labelId="demo-simple-select-standard-label"
+        id="demo-simple-select"
+        value={group}
+        label="Age"
+        onChange={handleChange}
+      >
+        {categorygroup?.map((cate) => (
+          <MenuItem value={cate?._id}>{cate?.name}</MenuItem>
+        ))}
+      </Select>
+      {errors["group"] && <div className="feedback">{errors["group"]}</div>}
+    </>
+  );
+};
+
 const ManagerCategory = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -71,6 +152,7 @@ const ManagerCategory = () => {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [group, setCategoryGroup] = useState();
+  const [updateId, setUpdateId] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -309,78 +391,9 @@ const ManagerCategory = () => {
     }
   };
 
-  const SelectGroup = () => {
-    const { setFieldValue, errors } = useFormikContext();
-
-    const handleChange = (e) => {
-      setFieldValue("group", e.target.value);
-      setCategoryGroup(e.target.value);
-    };
-
-    return (
-      <>
-        <Select
-          fullWidth
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select"
-          value={group}
-          label="Age"
-          onChange={handleChange}
-        >
-          {categorygroup?.map((cate) => (
-            <MenuItem value={cate?._id}>{cate?.name}</MenuItem>
-          ))}
-        </Select>
-        {errors["group"] && <div className="feedback">{errors["group"]}</div>}
-      </>
-    );
-  };
   const [formData, setFormData] = useState({
     name: "",
   });
-
-  const [updateId, setUpdateId] = useState("");
-
-  const Content = () => {
-    const { handleSubmit, setValues } = useFormikContext();
-    useEffect(() => {
-      if (!!updateId) {
-        const order = categories?.find(
-          (category) => category?._id === updateId
-        );
-        console.log(order, 22);
-        setValues({
-          group: order?.group?._id,
-          name: order?.name,
-        });
-        setCategoryGroup(order?.group?._id);
-      } else {
-        setValues({
-          group: "",
-          name: "",
-        });
-        console.log("22");
-      }
-    }, [updateId]);
-    return (
-      <form onSubmit={handleSubmit}>
-        <DialogContent>
-          <FormControl label={"Tên thể loại"} name={"name"}></FormControl>
-          <label className="col-form-label">Thể loại thuộc nhóm :</label>
-
-          <SelectGroup />
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleClose} autoFocus>
-            Thoát
-          </Button>
-          <Button variant="contained" type="submit" autoFocus>
-            Thêm
-          </Button>
-        </DialogActions>
-      </form>
-    );
-  };
 
   return (
     <>
@@ -406,7 +419,14 @@ const ManagerCategory = () => {
             >
               {"Thêm nhóm thể loại"}
             </DialogTitle>
-            <Content />
+            <Content
+              categories={categories}
+              categorygroup={categorygroup}
+              group={group}
+              handleClose={handleClose}
+              setCategoryGroup={setCategoryGroup}
+              updateId={updateId}
+            />
           </Dialog>
         )}
       </Formik>
